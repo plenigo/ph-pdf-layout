@@ -15,7 +15,21 @@
  * limitations under the License.
  */
 package com.plenigo.pdflayout;
-
+import com.helger.commons.ValueEnforcer;
+import com.helger.commons.annotation.ReturnsMutableCopy;
+import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.commons.datetime.PDTConfig;
+import com.helger.commons.datetime.PDTFactory;
+import com.helger.commons.io.file.FileHelper;
+import com.helger.commons.io.stream.StreamHelper;
+import com.helger.commons.state.EChange;
+import com.helger.commons.string.StringHelper;
+import com.plenigo.pdflayout.base.IPLVisitable;
+import com.plenigo.pdflayout.base.IPLVisitor;
+import com.plenigo.pdflayout.base.PLPageSet;
+import com.plenigo.pdflayout.base.PLPageSetPrepareResult;
+import com.plenigo.pdflayout.render.PreparationContextGlobal;
 import java.awt.color.ColorSpace;
 import java.awt.color.ICC_Profile;
 import java.io.File;
@@ -49,16 +63,22 @@ import org.apache.xmpbox.xml.XmpSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.WillClose;
 import javax.annotation.concurrent.NotThreadSafe;
+import java.awt.color.ColorSpace;
+import java.awt.color.ICC_Profile;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 
 /**
  * Main class for creating layouted PDFs. This class contains the meta data as
@@ -103,26 +123,24 @@ public class PageLayoutPDF implements IPLVisitable
     m_sDocumentCreator = VendorInfo.getVendorName ();
   }
 
-  /**
-   * @return if PDF content should be compressed or not.
-   */
-  public final boolean isCompressPDF ()
-  {
-    return m_bCompressPDF;
-  }
+    /**
+     * @return if PDF content should be compressed or not.
+     */
+    public final boolean isCompressPDF() {
+        return m_bCompressPDF;
+    }
 
-  /**
-   * @param bCompressPDF
-   *        <code>true</code> to enable creation of compressed PDFs,
-   *        <code>false</code> to disable it.
-   * @return this for chaining
-   */
-  @Nonnull
-  public final PageLayoutPDF setCompressPDF (final boolean bCompressPDF)
-  {
-    m_bCompressPDF = bCompressPDF;
-    return this;
-  }
+    /**
+     * @param bCompressPDF <code>true</code> to enable creation of compressed PDFs,
+     *                     <code>false</code> to disable it.
+     *
+     * @return this for chaining
+     */
+    @Nonnull
+    public final PageLayoutPDF setCompressPDF(final boolean bCompressPDF) {
+        m_bCompressPDF = bCompressPDF;
+        return this;
+    }
 
   /**
    * @return if PDF/A conformant PDF should be created or not.
@@ -275,20 +293,19 @@ public class PageLayoutPDF implements IPLVisitable
     return ret;
   }
 
-  /**
-   * Render this layout to an OutputStream.
-   *
-   * @param aOS
-   *        The output stream to write to. May not be <code>null</code>. Is
-   *        closed automatically.
-   * @return this for chaining
-   * @throws PDFCreationException
-   *         In case of an error
-   */
-  @Nonnull
-  public PageLayoutPDF renderTo (@Nonnull @WillClose final OutputStream aOS) throws PDFCreationException
-  {
-    ValueEnforcer.notNull (aOS, "OutputStream");
+    /**
+     * Render this layout to an OutputStream.
+     *
+     * @param aOS The output stream to write to. May not be <code>null</code>. Is
+     *            closed automatically.
+     *
+     * @return this for chaining
+     *
+     * @throws PDFCreationException In case of an error
+     */
+    @Nonnull
+    public PageLayoutPDF renderTo(@Nonnull @WillClose final OutputStream aOS) throws PDFCreationException {
+        ValueEnforcer.notNull(aOS, "OutputStream");
 
     try (final NonBlockingByteArrayOutputStream aTmpOS = new NonBlockingByteArrayOutputStream ())
     {
@@ -500,50 +517,46 @@ public class PageLayoutPDF implements IPLVisitable
     return this;
   }
 
-  /**
-   * Render this layout to an OutputStream.
-   *
-   * @param aCustomizer
-   *        The customizer to be invoked before the document is written to the
-   *        stream. May be <code>null</code>.
-   * @param aOS
-   *        The output stream to write to. May not be <code>null</code>. Is
-   *        closed automatically.
-   * @return this for chaining
-   * @throws PDFCreationException
-   *         In case of an error
-   * @deprecated Since 5.1.0; Call
-   *             {@link #setDocumentCustomizer(IPDDocumentCustomizer)} and than
-   *             {@link #renderTo(OutputStream)}
-   */
-  @Nonnull
-  @Deprecated
-  public final PageLayoutPDF renderTo (@Nullable final IPDDocumentCustomizer aCustomizer,
-                                       @Nonnull @WillClose final OutputStream aOS) throws PDFCreationException
-  {
-    setDocumentCustomizer (aCustomizer);
-    return renderTo (aOS);
-  }
+    /**
+     * Render this layout to an OutputStream.
+     *
+     * @param aCustomizer The customizer to be invoked before the document is written to the
+     *                    stream. May be <code>null</code>.
+     * @param aOS         The output stream to write to. May not be <code>null</code>. Is
+     *                    closed automatically.
+     *
+     * @return this for chaining
+     *
+     * @throws PDFCreationException In case of an error
+     * @deprecated Since 5.1.0; Call
+     * {@link #setDocumentCustomizer(IPDDocumentCustomizer)} and than
+     * {@link #renderTo(OutputStream)}
+     */
+    @Nonnull
+    @Deprecated
+    public final PageLayoutPDF renderTo(@Nullable final IPDDocumentCustomizer aCustomizer,
+            @Nonnull @WillClose final OutputStream aOS) throws PDFCreationException {
+        setDocumentCustomizer(aCustomizer);
+        return renderTo(aOS);
+    }
 
-  /**
-   * Render this layout to a {@link File}.
-   *
-   * @param aFile
-   *        The output stream to write to. May not be <code>null</code>. Is
-   *        closed automatically.
-   * @return this for chaining
-   * @throws PDFCreationException
-   *         In case of an error
-   * @throws IllegalArgumentException
-   *         In case the file cannot be opened for writing
-   * @since 5.1.0
-   */
-  @Nonnull
-  public PageLayoutPDF renderTo (@Nonnull final File aFile) throws PDFCreationException
-  {
-    final OutputStream aOS = FileHelper.getOutputStream (aFile);
-    if (aOS == null)
-      throw new IllegalArgumentException ("Failed to open file '" + aFile.getAbsolutePath () + "' for writing");
-    return renderTo (aOS);
-  }
+    /**
+     * Render this layout to a {@link File}.
+     *
+     * @param aFile The output stream to write to. May not be <code>null</code>. Is
+     *              closed automatically.
+     *
+     * @return this for chaining
+     *
+     * @throws PDFCreationException     In case of an error
+     * @throws IllegalArgumentException In case the file cannot be opened for writing
+     * @since 5.1.0
+     */
+    @Nonnull
+    public PageLayoutPDF renderTo(@Nonnull final File aFile) throws PDFCreationException {
+        final OutputStream aOS = FileHelper.getOutputStream(aFile);
+        if (aOS == null)
+            throw new IllegalArgumentException("Failed to open file '" + aFile.getAbsolutePath() + "' for writing");
+        return renderTo(aOS);
+    }
 }
