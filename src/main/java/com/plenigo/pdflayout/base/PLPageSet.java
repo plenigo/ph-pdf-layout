@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2022 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -122,15 +122,36 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
         m_FontExtraBoldItalic = PreloadFont.createEmbedding(EFontResourceOpenSans.OPEN_SANS_EXTRA_BOLD_ITALIC.getFontResource());
     }
 
+    /**
+     * @return The page size as specified in the constructor. Never
+     * <code>null</code>.
+     *
+     * @see #getPageWidth()
+     * @see #getPageHeight()
+     */
     @Nonnull
     public final SizeSpec getPageSize() {
         return m_aPageSize;
     }
 
+    /**
+     * @return The page width as specified in the constructor. Never
+     * <code>null</code>.
+     *
+     * @see #getPageSize()
+     * @see #getPageHeight()
+     */
     public final float getPageWidth() {
         return m_aPageSize.getWidth();
     }
 
+    /**
+     * @return The page height as specified in the constructor. Never
+     * <code>null</code>.
+     *
+     * @see #getPageSize()
+     * @see #getPageWidth()
+     */
     public final float getPageHeight() {
         return m_aPageSize.getHeight();
     }

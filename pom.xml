@@ -21,7 +21,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.plenigo</groupId>
   <artifactId>ph-pdf-layout</artifactId>
-  <version>7.0.1-SNAPSHOT</version>
+  <version>7.0.1</version>
   <packaging>bundle</packaging>
   <name>ph-pdf-layout</name>
   <description>Library for creating nicely layouted PDF documents based on PDFBox</description>
@@ -48,7 +48,7 @@
   </organization>
 
   <properties>
-      <pdfbox.version>2.0.26</pdfbox.version>
+      <pdfbox.version>2.0.27</pdfbox.version>
       <maven.compiler.source>17</maven.compiler.source>
       <maven.compiler.target>17</maven.compiler.target>
   </properties>
@@ -95,10 +95,16 @@
         <version>3.0.4</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.pdfbox</groupId>
-        <artifactId>xmpbox</artifactId>
-        <version>2.0.26</version>
+        <groupId>de.rototor.pdfbox</groupId>
+        <artifactId>graphics2d</artifactId>
+        <version>0.42</version>
       </dependency>
+      <dependency>
+        <groupId>com.formdev</groupId>
+        <artifactId>svgSalamander</artifactId>
+        <version>1.1.4</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
@@ -127,7 +133,14 @@
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>de.rototor.pdfbox</groupId>
+      <artifactId>graphics2d</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.formdev</groupId>
+      <artifactId>svgSalamander</artifactId>
+    </dependency>
     <dependency>
       <groupId>com.helger.commons</groupId>
       <artifactId>ph-xml</artifactId>
@@ -181,11 +194,6 @@
     </dependency>
     <dependency>
       <groupId>com.helger.font</groupId>
-      <artifactId>ph-fonts-open-sans</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.helger.font</groupId>
       <artifactId>ph-fonts-roboto</artifactId>
       <scope>test</scope>
     </dependency>
@@ -223,6 +231,11 @@
           <groupId>com.helger.font</groupId>
           <artifactId>ph-fonts-open-sans</artifactId>
       </dependency>
+    <dependency>
+      <groupId>com.plenigo</groupId>
+      <artifactId>ph-pdf-layout</artifactId>
+      <version>7.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
   <build>
