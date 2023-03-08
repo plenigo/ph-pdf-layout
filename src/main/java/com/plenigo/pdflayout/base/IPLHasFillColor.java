@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2022 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,6 +31,9 @@ import java.awt.*;
  */
 public interface IPLHasFillColor <IMPLTYPE extends IPLHasFillColor <IMPLTYPE>> extends IGenericImplTrait <IMPLTYPE>
 {
+  /**
+   * By default nothing is filled, so the default value is <code>null</code>.
+   */
   Color DEFAULT_FILL_COLOR = null;
 
   /**

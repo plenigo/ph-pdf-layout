@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2022 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,17 +32,18 @@ import javax.annotation.Nullable;
  * @author Philip Helger
  */
 @IsSPIImplementation
-public final class ThirdPartyModuleProvider_ph_pdf_layout implements IThirdPartyModuleProviderSPI {
-    public static final IThirdPartyModule PDFBOX = new ThirdPartyModule("Apache PDFBox",
-            "Apache",
-            ELicense.APACHE2,
-            new Version(2, 0, 26),
-            "http://pdfbox.apache.org/");
-    public static final IThirdPartyModule JBIG_IMAGEIO = new ThirdPartyModule("Apache PDFBox ImageIO",
-            "Apache",
-            ELicense.APACHE2,
-            new Version(3, 0, 4),
-            "http://pdfbox.apache.org/");
+public final class ThirdPartyModuleProvider_ph_pdf_layout implements IThirdPartyModuleProviderSPI
+{
+  public static final IThirdPartyModule PDFBOX = new ThirdPartyModule ("Apache PDFBox",
+                                                                       "Apache",
+                                                                       ELicense.APACHE2,
+                                                                       new Version (2, 0, 27),
+                                                                       "http://pdfbox.apache.org/");
+  public static final IThirdPartyModule JBIG_IMAGEIO = new ThirdPartyModule ("Apache PDFBox ImageIO",
+                                                                             "Apache",
+                                                                             ELicense.APACHE2,
+                                                                             new Version (3, 0, 4),
+                                                                             "http://pdfbox.apache.org/");
 
   @Nullable
   public IThirdPartyModule [] getAllThirdPartyModules ()

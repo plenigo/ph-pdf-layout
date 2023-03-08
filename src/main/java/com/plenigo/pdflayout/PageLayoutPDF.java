@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2022 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,9 +23,12 @@ import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.datetime.PDTConfig;
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.io.file.FileHelper;
+import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
+import com.helger.commons.io.stream.NonBlockingByteArrayOutputStream;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.StringHelper;
+import com.helger.commons.vendor.VendorInfo;
 import com.plenigo.pdflayout.base.IPLVisitable;
 import com.plenigo.pdflayout.base.IPLVisitor;
 import com.plenigo.pdflayout.base.PLPageSet;
@@ -56,16 +59,12 @@ import javax.annotation.WillClose;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.awt.color.ColorSpace;
 import java.awt.color.ICC_Profile;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 
 /**
  * Main class for creating layouted PDFs. This class contains the meta data as
@@ -76,7 +75,14 @@ import java.util.Iterator;
  */
 @NotThreadSafe
 public class PageLayoutPDF implements IPLVisitable {
+    /**
+     * By default certain parts of the created PDFs are compressed, to safe space.
+     */
     public static final boolean DEFAULT_COMPRESS_PDF = true;
+    /**
+     * By default no PDF/A compliant PDF is created.
+     */
+    public static final boolean DEFAULT_CREATE_PDF_A = false;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PageLayoutPDF.class);
 
@@ -87,11 +93,13 @@ public class PageLayoutPDF implements IPLVisitable {
     private String m_sDocumentKeywords;
     private String m_sDocumentSubject;
     private boolean m_bCompressPDF = DEFAULT_COMPRESS_PDF;
+    private boolean m_bCreatePDF_A = DEFAULT_CREATE_PDF_A;
     private final ICommonsList<PLPageSet> m_aPageSets = new CommonsArrayList<>();
     private IPDDocumentCustomizer m_aDocumentCustomizer;
 
     /**
      * Constructor. Initializes Author, CreationDate and Creator from class
+     * {@link VendorInfo}.
      */
     public PageLayoutPDF() {
         System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
@@ -117,6 +125,29 @@ public class PageLayoutPDF implements IPLVisitable {
     @Nonnull
     public final PageLayoutPDF setCompressPDF(final boolean bCompressPDF) {
         m_bCompressPDF = bCompressPDF;
+        return this;
+    }
+
+    /**
+     * @return if PDF/A conformant PDF should be created or not.
+     *
+     * @since 6.0.3
+     */
+    public final boolean isCreatePDF_A() {
+        return m_bCreatePDF_A;
+    }
+
+    /**
+     * @param bCreatePDF_A <code>true</code> to enable creation of PDF/A, <code>false</code> to
+     *                     disable it.
+     *
+     * @return this for chaining
+     *
+     * @since 6.0.3
+     */
+    @Nonnull
+    public final PageLayoutPDF setCreatePDF_A(final boolean bCreatePDF_A) {
+        m_bCreatePDF_A = bCreatePDF_A;
         return this;
     }
 
@@ -244,185 +275,291 @@ public class PageLayoutPDF implements IPLVisitable {
     public PageLayoutPDF renderTo(@Nonnull @WillClose final OutputStream aOS) throws PDFCreationException {
         ValueEnforcer.notNull(aOS, "OutputStream");
 
-        ByteArrayOutputStream pdfOutputStream = new ByteArrayOutputStream();
+        try (final NonBlockingByteArrayOutputStream aTmpOS = new NonBlockingByteArrayOutputStream()) {
+            // create a new document
+            // Use a buffered OS - approx 30% faster!
+            try (final PDDocument aDoc = new PDDocument();
+                 final OutputStream aBufferedOS = StreamHelper.getBuffered(m_bCreatePDF_A ? aTmpOS : aOS)) {
+                // Small consistency check to avoid creating empty, invalid PDFs
+                int nTotalElements = 0;
+                for (final PLPageSet aPageSet : m_aPageSets)
+                    nTotalElements += aPageSet.getElementCount();
+                if (nTotalElements == 0)
+                    throw new PDFCreationException("All page sets are empty!");
 
-        // create a new document
-        // Use a buffered OS - approx 30% faster!
-        try (final PDDocument aDoc = new PDDocument(); final OutputStream aBufferedOS = StreamHelper.getBuffered(pdfOutputStream)) {
-            // Small consistency check to avoid creating empty, invalid PDFs
-            int nTotalElements = 0;
-            for (final PLPageSet aPageSet : m_aPageSets)
-                nTotalElements += aPageSet.getElementCount();
-            if (nTotalElements == 0)
-                throw new PDFCreationException("All page sets are empty!");
+                // Set document properties
+                {
+                    final PDDocumentInformation aProperties = new PDDocumentInformation();
+                    if (StringHelper.hasText(m_sDocumentAuthor))
+                        aProperties.setAuthor(m_sDocumentAuthor);
+                    if (m_aDocumentCreationDate != null)
+                        aProperties.setCreationDate(GregorianCalendar.from(m_aDocumentCreationDate.atZone(PDTConfig.getDefaultZoneId())));
+                    if (StringHelper.hasText(m_sDocumentCreator))
+                        aProperties.setCreator(m_sDocumentCreator);
+                    if (StringHelper.hasText(m_sDocumentTitle))
+                        aProperties.setTitle(m_sDocumentTitle);
+                    if (StringHelper.hasText(m_sDocumentKeywords))
+                        aProperties.setKeywords(m_sDocumentKeywords);
+                    if (StringHelper.hasText(m_sDocumentSubject))
+                        aProperties.setSubject(m_sDocumentSubject);
+                    aProperties.setProducer(PLConfig.PROJECT_NAME +
+                            " " +
+                            PLConfig.PROJECT_VERSION +
+                            " - " +
+                            PLConfig.PROJECT_URL);
 
-            // Set document properties
-            {
-                final PDDocumentInformation aProperties = new PDDocumentInformation();
-                if (StringHelper.hasText(m_sDocumentAuthor))
-                    aProperties.setAuthor(m_sDocumentAuthor);
-                if (m_aDocumentCreationDate != null)
-                    aProperties.setCreationDate(GregorianCalendar.from(m_aDocumentCreationDate.atZone(PDTConfig.getDefaultZoneId())));
-                if (StringHelper.hasText(m_sDocumentCreator))
-                    aProperties.setCreator(m_sDocumentCreator);
-                if (StringHelper.hasText(m_sDocumentTitle))
-                    aProperties.setTitle(m_sDocumentTitle);
-                if (StringHelper.hasText(m_sDocumentKeywords))
-                    aProperties.setKeywords(m_sDocumentKeywords);
-                if (StringHelper.hasText(m_sDocumentSubject))
-                    aProperties.setSubject(m_sDocumentSubject);
-                aProperties.setProducer(PLConfig.PROJECT_NAME + " " + PLConfig.PROJECT_VERSION);
-
-                // add the created properties
-                aDoc.setDocumentInformation(aProperties);
-            }
-
-            // Prepare all page sets
-            final PreparationContextGlobal aGlobalPrepareCtx = new PreparationContextGlobal(aDoc);
-            final PLPageSetPrepareResult[] aPRs = new PLPageSetPrepareResult[m_aPageSets.size()];
-            int nPageSetIndex = 0;
-            int nTotalPageCount = 0;
-            for (final PLPageSet aPageSet : m_aPageSets) {
-                final PLPageSetPrepareResult aPR = aPageSet.prepareAllPages(aGlobalPrepareCtx);
-                aPRs[nPageSetIndex] = aPR;
-                nTotalPageCount += aPR.getPageCount();
-                nPageSetIndex++;
-            }
-
-            // Start applying all page sets - real rendering
-            nPageSetIndex = 0;
-            final int nPageSetCount = m_aPageSets.size();
-            int nTotalPageIndex = 0;
-            for (final PLPageSet aPageSet : m_aPageSets) {
-                final PLPageSetPrepareResult aPR = aPRs[nPageSetIndex];
-                aPageSet.renderAllPages(aPR, aDoc, m_bCompressPDF, nPageSetIndex, nPageSetCount, nTotalPageIndex, nTotalPageCount);
-                // Inc afterwards
-                nTotalPageIndex += aPR.getPageCount();
-                nPageSetIndex++;
-            }
-
-            // Customize the whole document (optional)
-            if (m_aDocumentCustomizer != null)
-                m_aDocumentCustomizer.customizeDocument(aDoc);
-
-            // save document to output stream
-            aDoc.save(aBufferedOS);
-
-            if (LOGGER.isDebugEnabled())
-                LOGGER.debug("PDF successfully created");
-        } catch (final IOException ex) {
-            throw new PDFCreationException("IO Error", ex);
-        } catch (final Exception ex) {
-            throw new PDFCreationException("Internal error", ex);
-        }
-
-        // Add metadata (needed by PDF/A)
-        InputStream pdfInputStream = new ByteArrayInputStream(pdfOutputStream.toByteArray());
-        try (final PDDocument aDoc = PDDocument.load(pdfInputStream); final OutputStream aBufferedOS = StreamHelper.getBuffered(aOS)) {
-
-            Calendar creationDate = Calendar.getInstance();
-            if (m_aDocumentCreationDate != null) {
-                creationDate = GregorianCalendar.from(m_aDocumentCreationDate.atZone(PDTConfig.getDefaultZoneId()));
-            }
-            XMPMetadata xmpMetadata = XMPMetadata.createXMPMetadata();
-            String producer = PLConfig.PROJECT_NAME + " " + PLConfig.PROJECT_VERSION;
-            AdobePDFSchema pdfSchema = xmpMetadata.createAndAddAdobePDFSchema();
-            pdfSchema.setProducer(producer);
-
-            XMPBasicSchema xmpBasicSchema = xmpMetadata.createAndAddXMPBasicSchema();
-            xmpBasicSchema.setCreatorTool(producer);
-            xmpBasicSchema.setCreateDate(creationDate);
-            xmpBasicSchema.setModifyDate(creationDate);
-
-            PDDocumentCatalog catalogue = aDoc.getDocumentCatalog();
-
-            PDMarkInfo markInfo = new PDMarkInfo();
-            PDStructureTreeRoot treeRoot = new PDStructureTreeRoot();
-            catalogue.setMarkInfo(markInfo);
-            catalogue.setStructureTreeRoot(treeRoot);
-            catalogue.getMarkInfo().setMarked(true);
-
-            PDDocumentInformation info = aDoc.getDocumentInformation();
-            info.setCreationDate(creationDate);
-            info.setModificationDate(creationDate);
-            if (StringHelper.hasText(m_sDocumentAuthor)) {
-                info.setAuthor(m_sDocumentAuthor);
-            }
-            info.setProducer(producer);
-            if (StringHelper.hasText(m_sDocumentCreator)) {
-                info.setCreator(m_sDocumentCreator);
-            }
-            if (StringHelper.hasText(m_sDocumentTitle)) {
-                info.setTitle(m_sDocumentTitle);
-            }
-            if (StringHelper.hasText(m_sDocumentSubject)) {
-                info.setSubject(m_sDocumentSubject);
-            }
-
-            try {
-                DublinCoreSchema dublinCoreSchema = xmpMetadata.createAndAddDublinCoreSchema();
-                if (StringHelper.hasText(m_sDocumentTitle)) {
-                    dublinCoreSchema.setTitle(m_sDocumentTitle);
+                    // add the created properties
+                    aDoc.setDocumentInformation(aProperties);
                 }
-                if (StringHelper.hasText(m_sDocumentCreator)) {
-                    dublinCoreSchema.addCreator(m_sDocumentCreator);
-                }
-                if (StringHelper.hasText(m_sDocumentKeywords)) {
-                    dublinCoreSchema.addDescription("", m_sDocumentKeywords);
-                }
-                if (StringHelper.hasText(m_sDocumentSubject)) {
-                    dublinCoreSchema.addSubject(m_sDocumentSubject);
-                }
-                dublinCoreSchema.addDate(creationDate);
 
-                PDFAIdentificationSchema identificationSchema = xmpMetadata.createAndAddPFAIdentificationSchema();
-                identificationSchema.setPart(3);
-                identificationSchema.setConformance("A");
+                // Prepare all page sets
+                final PreparationContextGlobal aGlobalPrepareCtx = new PreparationContextGlobal(aDoc);
+                final PLPageSetPrepareResult[] aPRs = new PLPageSetPrepareResult[m_aPageSets.size()];
+                int nPageSetIndex = 0;
+                int nTotalPageCount = 0;
+                for (final PLPageSet aPageSet : m_aPageSets) {
+                    final PLPageSetPrepareResult aPR = aPageSet.prepareAllPages(aGlobalPrepareCtx);
+                    aPRs[nPageSetIndex] = aPR;
+                    nTotalPageCount += aPR.getPageCount();
+                    nPageSetIndex++;
+                }
 
-                XmpSerializer serializer = new XmpSerializer();
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                serializer.serialize(xmpMetadata, baos, true);
+                // Start applying all page sets - real rendering
+                nPageSetIndex = 0;
+                final int nPageSetCount = m_aPageSets.size();
+                int nTotalPageIndex = 0;
+                for (final PLPageSet aPageSet : m_aPageSets) {
+                    final PLPageSetPrepareResult aPR = aPRs[nPageSetIndex];
+                    aPageSet.renderAllPages(aPR,
+                            aDoc,
+                            m_bCompressPDF,
+                            nPageSetIndex,
+                            nPageSetCount,
+                            nTotalPageIndex,
+                            nTotalPageCount);
+                    // Inc afterwards
+                    nTotalPageIndex += aPR.getPageCount();
+                    nPageSetIndex++;
+                }
 
-                PDMetadata metadata = new PDMetadata(aDoc);
-                metadata.importXMPMetadata(baos.toByteArray());
-                catalogue.setMetadata(metadata);
-            } catch (BadFieldValueException e) {
-                throw new IllegalArgumentException("", e);
+                // Customize the whole document (optional)
+                if (m_aDocumentCustomizer != null)
+                    m_aDocumentCustomizer.customizeDocument(aDoc);
+
+                // save document to output stream
+                aDoc.save(aBufferedOS);
+
+                if (LOGGER.isDebugEnabled())
+                    LOGGER.debug("PDF successfully created");
+            } catch (final IOException ex) {
+                throw new PDFCreationException("IO Error", ex);
+            } catch (final Exception ex) {
+                throw new PDFCreationException("Internal error", ex);
             }
 
-            // Set color profile (needed by PDF/A)
-            ICC_Profile rgbProfile = ICC_Profile.getInstance(ColorSpace.CS_sRGB);
-            byte[] sRGB_bytes = rgbProfile.getData();
+            if (m_bCreatePDF_A) {
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Start adding PDF/A information");
+                    try (final NonBlockingByteArrayInputStream pdfInputStream = aTmpOS.getAsInputStream();
+                         final PDDocument aDoc = PDDocument.load(pdfInputStream);
+                         final OutputStream aBufferedOS = StreamHelper.getBuffered(aOS)) {
 
-            InputStream colorProfile = new ByteArrayInputStream(sRGB_bytes);
-            PDOutputIntent intent = new PDOutputIntent(aDoc, colorProfile);
-            intent.setInfo("sRGB IEC61966-2.1");
-            intent.setOutputCondition("sRGB IEC61966-2.1");
-            intent.setOutputConditionIdentifier("sRGB IEC61966-2.1");
-            intent.setRegistryName("http://www.color.org");
+                        final Calendar aCreationDate = m_aDocumentCreationDate == null ? PDTFactory.createCalendar()
+                                : GregorianCalendar.from(m_aDocumentCreationDate.atZone(PDTConfig.getDefaultZoneId()));
+                        final String sProducer = PLConfig.PROJECT_NAME + " " + PLConfig.PROJECT_VERSION;
 
-            catalogue.addOutputIntent(intent);
-            catalogue.setLanguage("de-DE");
+                        final XMPMetadata xmpMetadata = XMPMetadata.createXMPMetadata();
+                        final AdobePDFSchema pdfSchema = xmpMetadata.createAndAddAdobePDFSchema();
+                        pdfSchema.setProducer(sProducer);
 
-            Iterator<PDPage> iterator = aDoc.getPages().iterator();
-            while (iterator.hasNext()) {
-                PDPage page = iterator.next();
-                PDViewerPreferences pdViewer = new PDViewerPreferences(page.getCOSObject());
-                pdViewer.setDisplayDocTitle(true);
+                        final XMPBasicSchema xmpBasicSchema = xmpMetadata.createAndAddXMPBasicSchema();
+                        xmpBasicSchema.setCreatorTool(sProducer);
+                        xmpBasicSchema.setCreateDate(aCreationDate);
+                        xmpBasicSchema.setModifyDate(aCreationDate);
 
-                catalogue.setViewerPreferences(pdViewer);
+                        final PDDocumentCatalog aDocCatalogue = aDoc.getDocumentCatalog();
+
+                        final PDMarkInfo markInfo = new PDMarkInfo();
+                        final PDStructureTreeRoot treeRoot = new PDStructureTreeRoot();
+                        aDocCatalogue.setMarkInfo(markInfo);
+                        aDocCatalogue.setStructureTreeRoot(treeRoot);
+                        aDocCatalogue.getMarkInfo().setMarked(true);
+
+                        final PDDocumentInformation aDocInfo = aDoc.getDocumentInformation();
+                        aDocInfo.setCreationDate(aCreationDate);
+                        aDocInfo.setModificationDate(aCreationDate);
+                        if (StringHelper.hasText(m_sDocumentAuthor))
+                            aDocInfo.setAuthor(m_sDocumentAuthor);
+                        aDocInfo.setProducer(sProducer);
+                        if (StringHelper.hasText(m_sDocumentCreator))
+                            aDocInfo.setCreator(m_sDocumentCreator);
+                        if (StringHelper.hasText(m_sDocumentTitle))
+                            aDocInfo.setTitle(m_sDocumentTitle);
+                        if (StringHelper.hasText(m_sDocumentSubject))
+                            aDocInfo.setSubject(m_sDocumentSubject);
+
+                        try {
+                            final DublinCoreSchema dublinCoreSchema = xmpMetadata.createAndAddDublinCoreSchema();
+                            if (StringHelper.hasText(m_sDocumentTitle))
+                                dublinCoreSchema.setTitle(m_sDocumentTitle);
+                            if (StringHelper.hasText(m_sDocumentCreator))
+                                dublinCoreSchema.addCreator(m_sDocumentCreator);
+                            if (StringHelper.hasText(m_sDocumentKeywords))
+                                dublinCoreSchema.addDescription("", m_sDocumentKeywords);
+                            if (StringHelper.hasText(m_sDocumentSubject))
+                                dublinCoreSchema.addSubject(m_sDocumentSubject);
+                            dublinCoreSchema.addDate(aCreationDate);
+
+                            final PDFAIdentificationSchema aIdentificationSchema = xmpMetadata.createAndAddPFAIdentificationSchema();
+                            aIdentificationSchema.setPart(Integer.valueOf(3));
+                            aIdentificationSchema.setConformance("A");
+
+                            try (final NonBlockingByteArrayOutputStream aXmpOS = new NonBlockingByteArrayOutputStream()) {
+                                final XmpSerializer aSerializer = new XmpSerializer();
+                                aSerializer.serialize(xmpMetadata, aXmpOS, true);
+
+                                final PDMetadata aMetadata = new PDMetadata(aDoc);
+                                aMetadata.importXMPMetadata(aXmpOS.toByteArray());
+                                aDocCatalogue.setMetadata(aMetadata);
+                            }
+                        } catch (final BadFieldValueException ex) {
+                            throw new IllegalArgumentException("Failed to set PDF Metadata", ex);
+                        }
+
+                        // Set color profile (needed by PDF/A)
+                        final ICC_Profile rgbProfile = ICC_Profile.getInstance(ColorSpace.CS_sRGB);
+                        final byte[] aRGBBytes = rgbProfile.getData();
+
+                        try (final NonBlockingByteArrayInputStream colorProfile = new NonBlockingByteArrayInputStream(aRGBBytes)) {
+                            final PDOutputIntent intent = new PDOutputIntent(aDoc, colorProfile);
+                            intent.setInfo("sRGB IEC61966-2.1");
+                            intent.setOutputCondition("sRGB IEC61966-2.1");
+                            intent.setOutputConditionIdentifier("sRGB IEC61966-2.1");
+                            intent.setRegistryName("http://www.color.org");
+
+                            aDocCatalogue.addOutputIntent(intent);
+                            aDocCatalogue.setLanguage("de-DE");
+                        }
+
+                        for (final PDPage aPage : aDoc.getPages()) {
+                            final PDViewerPreferences aViewerPrefs = new PDViewerPreferences(aPage.getCOSObject());
+                            aViewerPrefs.setDisplayDocTitle(true);
+                            aDocCatalogue.setViewerPreferences(aViewerPrefs);
+                        }
+
+                        // save document to final output stream
+                        aDoc.save(aBufferedOS);
+
+                        if (LOGGER.isDebugEnabled())
+                            LOGGER.debug("PDF with PDF/A successfully created");
+                    } catch (final IOException ex) {
+                        throw new PDFCreationException("IO Error", ex);
+                    } catch (final Exception ex) {
+                        throw new PDFCreationException("Internal error", ex);
+                    }
+                } else {
+                    try (final NonBlockingByteArrayInputStream pdfInputStream = aTmpOS.getAsInputStream();
+                         final PDDocument aDoc = PDDocument.load(pdfInputStream);
+                         final OutputStream aBufferedOS = StreamHelper.getBuffered(aOS)) {
+
+                        final Calendar aCreationDate = m_aDocumentCreationDate == null ? PDTFactory.createCalendar()
+                                : GregorianCalendar.from(m_aDocumentCreationDate.atZone(PDTConfig.getDefaultZoneId()));
+                        final String sProducer = PLConfig.PROJECT_NAME + " " + PLConfig.PROJECT_VERSION;
+
+                        final XMPMetadata xmpMetadata = XMPMetadata.createXMPMetadata();
+                        final AdobePDFSchema pdfSchema = xmpMetadata.createAndAddAdobePDFSchema();
+                        pdfSchema.setProducer(sProducer);
+
+                        final XMPBasicSchema xmpBasicSchema = xmpMetadata.createAndAddXMPBasicSchema();
+                        xmpBasicSchema.setCreatorTool(sProducer);
+                        xmpBasicSchema.setCreateDate(aCreationDate);
+                        xmpBasicSchema.setModifyDate(aCreationDate);
+
+                        final PDDocumentCatalog aDocCatalogue = aDoc.getDocumentCatalog();
+
+                        final PDMarkInfo markInfo = new PDMarkInfo();
+                        final PDStructureTreeRoot treeRoot = new PDStructureTreeRoot();
+                        aDocCatalogue.setMarkInfo(markInfo);
+                        aDocCatalogue.setStructureTreeRoot(treeRoot);
+                        aDocCatalogue.getMarkInfo().setMarked(true);
+
+                        final PDDocumentInformation aDocInfo = aDoc.getDocumentInformation();
+                        aDocInfo.setCreationDate(aCreationDate);
+                        aDocInfo.setModificationDate(aCreationDate);
+                        if (StringHelper.hasText(m_sDocumentAuthor))
+                            aDocInfo.setAuthor(m_sDocumentAuthor);
+                        aDocInfo.setProducer(sProducer);
+                        if (StringHelper.hasText(m_sDocumentCreator))
+                            aDocInfo.setCreator(m_sDocumentCreator);
+                        if (StringHelper.hasText(m_sDocumentTitle))
+                            aDocInfo.setTitle(m_sDocumentTitle);
+                        if (StringHelper.hasText(m_sDocumentSubject))
+                            aDocInfo.setSubject(m_sDocumentSubject);
+
+                        try {
+                            final DublinCoreSchema dublinCoreSchema = xmpMetadata.createAndAddDublinCoreSchema();
+                            if (StringHelper.hasText(m_sDocumentTitle))
+                                dublinCoreSchema.setTitle(m_sDocumentTitle);
+                            if (StringHelper.hasText(m_sDocumentCreator))
+                                dublinCoreSchema.addCreator(m_sDocumentCreator);
+                            if (StringHelper.hasText(m_sDocumentKeywords))
+                                dublinCoreSchema.addDescription("", m_sDocumentKeywords);
+                            if (StringHelper.hasText(m_sDocumentSubject))
+                                dublinCoreSchema.addSubject(m_sDocumentSubject);
+                            dublinCoreSchema.addDate(aCreationDate);
+
+                            final PDFAIdentificationSchema aIdentificationSchema = xmpMetadata.createAndAddPFAIdentificationSchema();
+                            aIdentificationSchema.setPart(Integer.valueOf(3));
+                            aIdentificationSchema.setConformance("A");
+
+                            try (final NonBlockingByteArrayOutputStream aXmpOS = new NonBlockingByteArrayOutputStream()) {
+                                final XmpSerializer aSerializer = new XmpSerializer();
+                                aSerializer.serialize(xmpMetadata, aXmpOS, true);
+
+                                final PDMetadata aMetadata = new PDMetadata(aDoc);
+                                aMetadata.importXMPMetadata(aXmpOS.toByteArray());
+                                aDocCatalogue.setMetadata(aMetadata);
+                            }
+                        } catch (final BadFieldValueException ex) {
+                            throw new IllegalArgumentException("Failed to set PDF Metadata", ex);
+                        }
+
+                        // Set color profile (needed by PDF/A)
+                        final ICC_Profile rgbProfile = ICC_Profile.getInstance(ColorSpace.CS_sRGB);
+                        final byte[] aRGBBytes = rgbProfile.getData();
+
+                        try (final NonBlockingByteArrayInputStream colorProfile = new NonBlockingByteArrayInputStream(aRGBBytes)) {
+                            final PDOutputIntent intent = new PDOutputIntent(aDoc, colorProfile);
+                            intent.setInfo("sRGB IEC61966-2.1");
+                            intent.setOutputCondition("sRGB IEC61966-2.1");
+                            intent.setOutputConditionIdentifier("sRGB IEC61966-2.1");
+                            intent.setRegistryName("http://www.color.org");
+
+                            aDocCatalogue.addOutputIntent(intent);
+                            aDocCatalogue.setLanguage("de-DE");
+                        }
+
+                        for (final PDPage aPage : aDoc.getPages()) {
+                            final PDViewerPreferences aViewerPrefs = new PDViewerPreferences(aPage.getCOSObject());
+                            aViewerPrefs.setDisplayDocTitle(true);
+                            aDocCatalogue.setViewerPreferences(aViewerPrefs);
+                        }
+
+                        // save document to final output stream
+                        aDoc.save(aBufferedOS);
+
+                        if (LOGGER.isDebugEnabled())
+                            LOGGER.debug("PDF with PDF/A successfully created");
+                    } catch (final IOException ex) {
+                        throw new PDFCreationException("IO Error", ex);
+                    } catch (final Exception ex) {
+                        throw new PDFCreationException("Internal error", ex);
+                    }
+                }
+
+                // Add metadata (needed by PDF/A)
             }
-
-            // save document to output stream
-            aDoc.save(aBufferedOS);
-
-            if (LOGGER.isDebugEnabled())
-                LOGGER.debug("PDF with PDF/A successfully created");
-        } catch (final IOException ex) {
-            throw new PDFCreationException("IO Error", ex);
-        } catch (final Exception ex) {
-            throw new PDFCreationException("Internal error", ex);
-        }
+        } // close aTmpOS
 
         return this;
     }

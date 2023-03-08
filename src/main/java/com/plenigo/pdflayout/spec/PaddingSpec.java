@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2022 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,7 +33,14 @@ import javax.annotation.concurrent.Immutable;
 public class PaddingSpec extends AbstractRectSpec
 {
   public static final float DEFAULT_FLOAT = 0f;
-  public static final PaddingSpec PADDING0 = new PaddingSpec (DEFAULT_FLOAT, DEFAULT_FLOAT, DEFAULT_FLOAT, DEFAULT_FLOAT);
+
+  /**
+   * A constant representing no padding.
+   */
+  public static final PaddingSpec PADDING0 = new PaddingSpec (DEFAULT_FLOAT,
+                                                              DEFAULT_FLOAT,
+                                                              DEFAULT_FLOAT,
+                                                              DEFAULT_FLOAT);
 
   /**
    * Pseudo copy constructor.

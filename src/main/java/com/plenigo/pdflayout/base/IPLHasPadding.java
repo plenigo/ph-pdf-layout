@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2022 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,8 +28,13 @@ import javax.annotation.Nonnull;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> extends IPLHasOutline, IGenericImplTrait <IMPLTYPE>
+public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> extends
+                               IPLHasOutline,
+                               IGenericImplTrait <IMPLTYPE>
 {
+  /**
+   * The default padding is a 0 padding, meaning no padding at all.
+   */
   PaddingSpec DEFAULT_PADDING = PaddingSpec.PADDING0;
 
   /**
@@ -74,7 +79,10 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
    * @return this
    */
   @Nonnull
-  default IMPLTYPE setPadding (final float fPaddingTop, final float fPaddingRight, final float fPaddingBottom, final float fPaddingLeft)
+  default IMPLTYPE setPadding (final float fPaddingTop,
+                               final float fPaddingRight,
+                               final float fPaddingBottom,
+                               final float fPaddingLeft)
   {
     return setPadding (new PaddingSpec (fPaddingTop, fPaddingRight, fPaddingBottom, fPaddingLeft));
   }

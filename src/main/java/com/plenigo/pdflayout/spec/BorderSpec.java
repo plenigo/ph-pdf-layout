@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2022 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,7 +36,9 @@ import java.io.Serializable;
 @MustImplementEqualsAndHashcode
 public class BorderSpec implements Serializable
 {
-  /** Represents no border at all! */
+  /**
+   * Represents no border at all.
+   */
   public static final BorderSpec BORDER0 = new BorderSpec (null, null, null, null);
 
   private final BorderStyleSpec m_aTop;
@@ -117,7 +119,9 @@ public class BorderSpec implements Serializable
    */
   public boolean areAllBordersEqual ()
   {
-    return EqualsHelper.equals (m_aLeft, m_aTop) && EqualsHelper.equals (m_aLeft, m_aRight) && EqualsHelper.equals (m_aLeft, m_aBottom);
+    return EqualsHelper.equals (m_aLeft, m_aTop) &&
+           EqualsHelper.equals (m_aLeft, m_aRight) &&
+           EqualsHelper.equals (m_aLeft, m_aBottom);
   }
 
   /**
@@ -257,7 +261,11 @@ public class BorderSpec implements Serializable
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_aTop).append (m_aRight).append (m_aBottom).append (m_aLeft).getHashCode ();
+    return new HashCodeGenerator (this).append (m_aTop)
+                                       .append (m_aRight)
+                                       .append (m_aBottom)
+                                       .append (m_aLeft)
+                                       .getHashCode ();
   }
 
   @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2022 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,8 +31,13 @@ import java.awt.*;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends IPLHasOutline, IGenericImplTrait <IMPLTYPE>
+public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
+                              IPLHasOutline,
+                              IGenericImplTrait <IMPLTYPE>
 {
+  /**
+   * The default border is a 0 border, meaning no border at all.
+   */
   BorderSpec DEFAULT_BORDER = BorderSpec.BORDER0;
 
   /**

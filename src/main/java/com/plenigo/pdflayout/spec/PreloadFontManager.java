@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2022 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,13 @@
  * limitations under the License.
  */
 package com.plenigo.pdflayout.spec;
+
+import java.util.function.Predicate;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.ReturnsMutableCopy;
@@ -37,9 +44,11 @@ import java.util.function.Predicate;
  * @author Philip Helger
  */
 @ThreadSafe
-public class PreloadFontManager implements IPreloadFontResolver {
-    private final SimpleReadWriteLock m_aRWLock = new SimpleReadWriteLock();
-    private final ICommonsMap<String, PreloadFont> m_aMap = new CommonsHashMap<>();
+public class PreloadFontManager implements IPreloadFontResolver
+{
+  private final SimpleReadWriteLock m_aRWLock = new SimpleReadWriteLock ();
+  @GuardedBy ("m_aRWLock")
+  private final ICommonsMap <String, PreloadFont> m_aMap = new CommonsHashMap <> ();
 
     /**
      * Default constructor which registers the standard 14 fonts.
@@ -48,116 +57,104 @@ public class PreloadFontManager implements IPreloadFontResolver {
         this(true);
     }
 
-  /**
-   * Constructor.
-   *
-   * @param bRegisterStandardFonts
-   *        <code>true</code> to register the standard 14 fonts,
-   *        <code>false</code> to not do it.
-   */
-  public PreloadFontManager (final boolean bRegisterStandardFonts)
-  {
-    if (bRegisterStandardFonts)
-    {
-      // Register all default fonts
-      addPreloadFont (PreloadFont.REGULAR);
-      addPreloadFont (PreloadFont.REGULAR_BOLD);
-      addPreloadFont (PreloadFont.REGULAR_ITALIC);
-      addPreloadFont (PreloadFont.REGULAR_BOLD_ITALIC);
-      addPreloadFont (PreloadFont.MONOSPACE);
-      addPreloadFont (PreloadFont.MONOSPACE_BOLD);
-      addPreloadFont (PreloadFont.MONOSPACE_ITALIC);
-      addPreloadFont (PreloadFont.MONOSPACE_BOLD_ITALIC);
-      addPreloadFont (PreloadFont.TIMES);
-      addPreloadFont (PreloadFont.TIMES_BOLD);
-      addPreloadFont (PreloadFont.TIMES_ITALIC);
-      addPreloadFont (PreloadFont.TIMES_BOLD_ITALIC);
-      addPreloadFont (PreloadFont.SYMBOL);
-      addPreloadFont (PreloadFont.ZAPF_DINGBATS);
+    /**
+     * Constructor.
+     *
+     * @param bRegisterStandardFonts <code>true</code> to register the standard 14 fonts,
+     *                               <code>false</code> to not do it.
+     */
+    public PreloadFontManager(final boolean bRegisterStandardFonts) {
+        if (bRegisterStandardFonts) {
+            // Register all default fonts
+            addPreloadFont(PreloadFont.REGULAR);
+            addPreloadFont(PreloadFont.REGULAR_BOLD);
+            addPreloadFont(PreloadFont.REGULAR_ITALIC);
+            addPreloadFont(PreloadFont.REGULAR_BOLD_ITALIC);
+            addPreloadFont(PreloadFont.MONOSPACE);
+            addPreloadFont(PreloadFont.MONOSPACE_BOLD);
+            addPreloadFont(PreloadFont.MONOSPACE_ITALIC);
+            addPreloadFont(PreloadFont.MONOSPACE_BOLD_ITALIC);
+            addPreloadFont(PreloadFont.TIMES);
+            addPreloadFont(PreloadFont.TIMES_BOLD);
+            addPreloadFont(PreloadFont.TIMES_ITALIC);
+            addPreloadFont(PreloadFont.TIMES_BOLD_ITALIC);
+            addPreloadFont(PreloadFont.SYMBOL);
+            addPreloadFont(PreloadFont.ZAPF_DINGBATS);
+        }
     }
-  }
 
-  /**
-   * Add a pre-created {@link PreloadFont}.
-   *
-   * @param aPreloadFont
-   *        The font to be added. May not be <code>null</code>.
-   */
-  public void addPreloadFont (@Nonnull final PreloadFont aPreloadFont)
-  {
-    ValueEnforcer.notNull (aPreloadFont, "PreloadFont");
-    final String sKey = aPreloadFont.getID ();
+    /**
+     * Add a pre-created {@link PreloadFont}.
+     *
+     * @param aPreloadFont The font to be added. May not be <code>null</code>.
+     */
+    public void addPreloadFont(@Nonnull final PreloadFont aPreloadFont) {
+        ValueEnforcer.notNull(aPreloadFont, "PreloadFont");
+        final String sKey = aPreloadFont.getID();
 
-    m_aRWLock.writeLocked ( () -> {
-      if (m_aMap.containsKey (sKey))
-        throw new IllegalArgumentException ("The PreloadFont  " + aPreloadFont + " is already contained!");
-      m_aMap.put (sKey, aPreloadFont);
-    });
-  }
-
-  /**
-   * Create and add a new embedding {@link PreloadFont} if it is not yet
-   * contained.
-   *
-   * @param aFontResProvider
-   *        The font resource provider to be added for embedding. May not be
-   *        <code>null</code>.
-   * @return The created {@link PreloadFont}. Never <code>null</code>.
-   */
-  @Nonnull
-  public PreloadFont getOrAddEmbeddingPreloadFont (@Nonnull final IHasFontResource aFontResProvider)
-  {
-    ValueEnforcer.notNull (aFontResProvider, "FontResProvider");
-    return getOrAddEmbeddingPreloadFont (aFontResProvider.getFontResource ());
-  }
-
-  /**
-   * Create and add a new embedding {@link PreloadFont} if it is not yet
-   * contained.
-   *
-   * @param aFontRes
-   *        The font resource to be added for embedding. May not be
-   *        <code>null</code>.
-   * @return The created {@link PreloadFont}. Never <code>null</code>.
-   */
-  @Nonnull
-  public PreloadFont getOrAddEmbeddingPreloadFont (@Nonnull final IFontResource aFontRes)
-  {
-    ValueEnforcer.notNull (aFontRes, "FontRes");
-    PreloadFont aPreloadFont = getPreloadFontOfID (aFontRes);
-    if (aPreloadFont == null)
-    {
-      aPreloadFont = PreloadFont.createEmbedding (aFontRes);
-      addPreloadFont (aPreloadFont);
+        m_aRWLock.writeLocked(() -> {
+            if (m_aMap.containsKey(sKey))
+                throw new IllegalArgumentException("The PreloadFont  " + aPreloadFont + " is already contained!");
+            m_aMap.put(sKey, aPreloadFont);
+        });
     }
-    return aPreloadFont;
-  }
 
-  @Nullable
-  public PreloadFont getPreloadFontOfID (@Nullable final String sID)
-  {
-    if (sID == null)
-      return null;
-    return m_aRWLock.readLockedGet ( () -> m_aMap.get (sID));
-  }
+    /**
+     * Create and add a new embedding {@link PreloadFont} if it is not yet
+     * contained.
+     *
+     * @param aFontResProvider The font resource provider to be added for embedding. May not be
+     *                         <code>null</code>.
+     *
+     * @return The created {@link PreloadFont}. Never <code>null</code>.
+     */
+    @Nonnull
+    public PreloadFont getOrAddEmbeddingPreloadFont(@Nonnull final IHasFontResource aFontResProvider) {
+        ValueEnforcer.notNull(aFontResProvider, "FontResProvider");
+        return getOrAddEmbeddingPreloadFont(aFontResProvider.getFontResource());
+    }
 
-  @Nonnull
-  @ReturnsMutableCopy
-  public ICommonsList <PreloadFont> getAllPreloadFonts ()
-  {
-    return m_aRWLock.readLockedGet (m_aMap::copyOfValues);
-  }
+    /**
+     * Create and add a new embedding {@link PreloadFont} if it is not yet
+     * contained.
+     *
+     * @param aFontRes The font resource to be added for embedding. May not be
+     *                 <code>null</code>.
+     *
+     * @return The created {@link PreloadFont}. Never <code>null</code>.
+     */
+    @Nonnull
+    public PreloadFont getOrAddEmbeddingPreloadFont(@Nonnull final IFontResource aFontRes) {
+        ValueEnforcer.notNull(aFontRes, "FontRes");
+        PreloadFont aPreloadFont = getPreloadFontOfID(aFontRes);
+        if (aPreloadFont == null) {
+            aPreloadFont = PreloadFont.createEmbedding(aFontRes);
+            addPreloadFont(aPreloadFont);
+        }
+        return aPreloadFont;
+    }
 
-  @Nonnull
-  @ReturnsMutableCopy
-  public ICommonsList <PreloadFont> getAllPreloadFonts (@Nullable final Predicate <? super PreloadFont> aFilter)
-  {
-    return m_aRWLock.readLockedGet ( () -> m_aMap.copyOfValues (aFilter));
-  }
+    @Nullable
+    public PreloadFont getPreloadFontOfID(@Nullable final String sID) {
+        if (sID == null)
+            return null;
+        return m_aRWLock.readLockedGet(() -> m_aMap.get(sID));
+    }
 
-  @Override
-  public String toString ()
-  {
-    return new ToStringGenerator (this).append ("Map", m_aMap).getToString ();
-  }
+    @Nonnull
+    @ReturnsMutableCopy
+    public ICommonsList<PreloadFont> getAllPreloadFonts() {
+        return m_aRWLock.readLockedGet(m_aMap::copyOfValues);
+    }
+
+    @Nonnull
+    @ReturnsMutableCopy
+    public ICommonsList<PreloadFont> getAllPreloadFonts(@Nullable final Predicate<? super PreloadFont> aFilter) {
+        return m_aRWLock.readLockedGet(() -> m_aMap.copyOfValues(aFilter));
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringGenerator(this).append("Map", m_aMap).getToString();
+    }
 }

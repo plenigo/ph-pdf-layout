@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2022 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,6 +33,10 @@ import javax.annotation.concurrent.Immutable;
 public class MarginSpec extends AbstractRectSpec
 {
   public static final float DEFAULT_FLOAT = 0f;
+
+  /**
+   * A constant representing no margin.
+   */
   public static final MarginSpec MARGIN0 = new MarginSpec (DEFAULT_FLOAT, DEFAULT_FLOAT, DEFAULT_FLOAT, DEFAULT_FLOAT);
 
   /**
