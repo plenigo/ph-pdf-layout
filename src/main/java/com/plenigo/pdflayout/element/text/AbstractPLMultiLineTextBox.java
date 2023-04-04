@@ -291,6 +291,9 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
             }
         }
 
+        // clean the text list
+        m_aTextList.removeAll();
+
         if (multiLineTextBox != null) {
             onPrepareMultiLineTextBox(aCtx, multiLineTextBox, fMaxFontHeight);
 
