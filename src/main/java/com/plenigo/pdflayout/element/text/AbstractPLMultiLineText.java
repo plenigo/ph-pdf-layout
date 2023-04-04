@@ -18,8 +18,6 @@ package com.plenigo.pdflayout.element.text;
 
 import com.helger.commons.CGlobal;
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.collection.impl.ICommonsMap;
@@ -27,11 +25,9 @@ import com.helger.commons.state.EChange;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.plenigo.pdflayout.base.AbstractPLInlineElement;
+import com.plenigo.pdflayout.base.AbstractPLRenderableObject;
 import com.plenigo.pdflayout.base.EPLPlaceholder;
 import com.plenigo.pdflayout.base.IPLHasHorizontalAlignment;
-import com.plenigo.pdflayout.base.IPLSplittableObject;
-import com.plenigo.pdflayout.base.PLElementWithSize;
-import com.plenigo.pdflayout.base.PLSplitResult;
 import com.plenigo.pdflayout.debug.PLDebugLog;
 import com.plenigo.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.plenigo.pdflayout.render.PLRenderHelper;
@@ -50,37 +46,32 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.io.IOException;
-import java.util.List;
 
 /**
- * Render text
+ * Render text to multi lines.
  *
  * @param <IMPLTYPE> Implementation type
- *
- * @author Philip Helger
  */
-public abstract class AbstractPLText<IMPLTYPE extends AbstractPLText<IMPLTYPE>> extends AbstractPLInlineElement<IMPLTYPE> implements
-        IPLHasHorizontalAlignment<IMPLTYPE>,
-        IPLSplittableObject<IMPLTYPE, IMPLTYPE> {
+public abstract class AbstractPLMultiLineText<IMPLTYPE extends AbstractPLMultiLineText<IMPLTYPE>> extends AbstractPLRenderableObject<IMPLTYPE> implements
+        IPLHasHorizontalAlignment<IMPLTYPE> {
     public static final float DEFAULT_LINE_SPACING = 1f;
     public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;
-    public static final boolean DEFAULT_REPLACE_PLACEHOLDERS = false;
 
     private String m_sOriginalText;
     private String m_sTextWithPlaceholdersReplaced;
+    private String m_sURI;
     private final FontSpec m_aFontSpec;
     private float m_fLineSpacing = DEFAULT_LINE_SPACING;
+    private float m_availableRenderWidth;
 
     private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
     private int m_nMaxRows = DEFAULT_MAX_ROWS;
-    private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
-    private boolean m_bReplacePlaceholder = DEFAULT_REPLACE_PLACEHOLDERS;
 
     // prepare result
     private transient LoadedFont m_aLoadedFont;
     protected float m_fTextHeight;
     protected float m_fDescent;
-    private float m_fCustomAscentFirstLine = 0f;
+    private float m_fMaxAvailableWidth = 0f;
     protected int m_nPreparedLineCountUnmodified = CGlobal.ILLEGAL_UINT;
     protected ICommonsList<TextAndWidthSpec> m_aPreparedLinesUnmodified;
     protected ICommonsList<TextAndWidthSpec> m_aPreparedLines;
@@ -99,7 +90,7 @@ public abstract class AbstractPLText<IMPLTYPE extends AbstractPLText<IMPLTYPE>> 
         return sCleaned;
     }
 
-    public AbstractPLText(@Nullable final String sText, @Nonnull final FontSpec aFontSpec) {
+    public AbstractPLMultiLineText(@Nullable final String sText, @Nonnull final FontSpec aFontSpec) {
         _setText(sText);
         m_aFontSpec = ValueEnforcer.notNull(aFontSpec, "FontSpec");
     }
@@ -119,11 +110,8 @@ public abstract class AbstractPLText<IMPLTYPE extends AbstractPLText<IMPLTYPE>> 
     @OverridingMethodsMustInvokeSuper
     public IMPLTYPE setBasicDataFrom(@Nonnull final IMPLTYPE aSource) {
         super.setBasicDataFrom(aSource);
-        setLineSpacing(aSource.getLineSpacing());
         setHorzAlign(aSource.getHorzAlign());
         setMaxRows(aSource.getMaxRows());
-        setVertSplittable(aSource.isVertSplittable());
-        setReplacePlaceholder(aSource.isReplacePlaceholder());
         return thisAsT();
     }
 
@@ -153,36 +141,41 @@ public abstract class AbstractPLText<IMPLTYPE extends AbstractPLText<IMPLTYPE>> 
     }
 
     /**
+     * @return The URI to link to. May be <code>null</code>.
+     */
+    @Nullable
+    public final String getURI() {
+        return m_sURI;
+    }
+
+    /**
+     * Set the URI to link to.
+     *
+     * @param sURI The URI to link to. May be <code>null</code>.
+     *
+     * @return this for chaining.
+     */
+    @Nonnull
+    public final IMPLTYPE setURI(@Nullable final String sURI) {
+        m_sURI = sURI;
+        return thisAsT();
+    }
+
+    /**
+     * @return <code>true</code> if the contained URI has at least one character,
+     * <code>false</code> if it is empty.
+     */
+    public final boolean hasURI() {
+        return m_sURI != null && m_sURI.length() > 0;
+    }
+
+    /**
      * @return The font specification to be used as provided in the constructor.
      * Never <code>null</code>.
      */
     @Nonnull
     public final FontSpec getFontSpec() {
         return m_aFontSpec;
-    }
-
-    /**
-     * @return The line height factor. Defaults to {@link #DEFAULT_LINE_SPACING}
-     * which means 100%.
-     */
-    public final float getLineSpacing() {
-        return m_fLineSpacing;
-    }
-
-    /**
-     * Set the line spacing to use. The line spacing is the distance between 2
-     * consecutive lines. The line spacing is not considered if there is a single
-     * line of text.
-     *
-     * @param fLineSpacing A value of 1 means 100%, 1.05 means 105% etc. Must be &gt; 0.
-     *
-     * @return this for chaining
-     */
-    @Nonnull
-    public final IMPLTYPE setLineSpacing(@Nonnegative final float fLineSpacing) {
-        ValueEnforcer.isGE0(fLineSpacing, "LineSpacing");
-        m_fLineSpacing = fLineSpacing;
-        return thisAsT();
     }
 
     @Nonnull
@@ -219,66 +212,6 @@ public abstract class AbstractPLText<IMPLTYPE extends AbstractPLText<IMPLTYPE>> 
         return thisAsT();
     }
 
-    @Override
-    public final boolean isVertSplittable() {
-        return m_bVertSplittable;
-    }
-
-    @Nonnull
-    public final IMPLTYPE setVertSplittable(final boolean bVertSplittable) {
-        m_bVertSplittable = bVertSplittable;
-        return thisAsT();
-    }
-
-    /**
-     * @return <code>true</code> if placeholders should be replaced,
-     * <code>false</code> otherwise. The default value is
-     * {@link #DEFAULT_REPLACE_PLACEHOLDERS} so
-     * {@value #DEFAULT_REPLACE_PLACEHOLDERS}.
-     */
-    public final boolean isReplacePlaceholder() {
-        return m_bReplacePlaceholder;
-    }
-
-    /**
-     * Change whether placeholders should be replaced or not. Enabling this slows
-     * down the execution of rendering. Enable this only if absolutely necessary.
-     *
-     * @param bReplacePlaceholder <code>true</code> if placeholders should be replaced,
-     *                            <code>false</code> otherwise.
-     *
-     * @return this for chaining
-     */
-    @Nonnull
-    public final IMPLTYPE setReplacePlaceholder(final boolean bReplacePlaceholder) {
-        m_bReplacePlaceholder = bReplacePlaceholder;
-        return thisAsT();
-    }
-
-    /**
-     * @return A custom ascent to the first line. Defaults to 0.
-     *
-     * @since 5.1.0
-     */
-    public final float getCustomAscentFirstLine() {
-        return m_fCustomAscentFirstLine;
-    }
-
-    /**
-     * Set a custom ascent to the first line
-     *
-     * @param fCustomAscentFirstLine The value to use. 0 means no change.
-     *
-     * @return this for chaining
-     *
-     * @since 5.1.0
-     */
-    @Nonnull
-    public final IMPLTYPE setCustomAscentFirstLine(final float fCustomAscentFirstLine) {
-        m_fCustomAscentFirstLine = fCustomAscentFirstLine;
-        return thisAsT();
-    }
-
     final void internalSetPreparedLines(@Nonnull final ICommonsList<TextAndWidthSpec> aLines) {
         final int nLineCount = aLines.size();
         m_nPreparedLineCountUnmodified = nLineCount;
@@ -300,15 +233,17 @@ public abstract class AbstractPLText<IMPLTYPE extends AbstractPLText<IMPLTYPE>> 
         }
     }
 
-    final void internalSetPreparedFontData(@Nonnull final LoadedFont aLoadedFont, final float fTextHeight, final float fDescent) {
-        ValueEnforcer.notNull(aLoadedFont, "LoadedFont");
-        m_aLoadedFont = aLoadedFont;
-        m_fTextHeight = fTextHeight;
-        m_fDescent = fDescent;
-    }
-
     // Call only once here - used read-only!
     private static final ICommonsMap<String, String> ESTIMATION_REPLACEMENTS = EPLPlaceholder.getEstimationReplacements();
+
+    /**
+     * Prepare max available width.
+     *
+     * @param fMaxAvailableWidth the max available width
+     */
+    protected void prepareMaxAvailableWidth(float fMaxAvailableWidth) {
+        this.m_fMaxAvailableWidth = fMaxAvailableWidth;
+    }
 
     /**
      * This method can only be called after loadedFont member was set!
@@ -326,6 +261,12 @@ public abstract class AbstractPLText<IMPLTYPE extends AbstractPLText<IMPLTYPE>> 
         m_fTextHeight = m_aLoadedFont.getTextHeight(fFontSize);
         m_fDescent = m_aLoadedFont.getDescent(fFontSize);
 
+        if (m_fMaxAvailableWidth == 0) {
+            m_fMaxAvailableWidth = fAvailableWidth;
+        }
+        if (m_availableRenderWidth == 0) {
+            m_availableRenderWidth = fAvailableWidth;
+        }
         if (hasNoText()) {
             // Nothing to do - empty
             // But keep the height distance!
@@ -340,12 +281,12 @@ public abstract class AbstractPLText<IMPLTYPE extends AbstractPLText<IMPLTYPE>> 
             // Use the approximations from the placeholders
             sTextToFit = StringHelper.replaceMultiple(m_sOriginalText, ESTIMATION_REPLACEMENTS);
         }
-        internalSetPreparedLines(m_aLoadedFont.getFitToWidth(sTextToFit, fFontSize, fAvailableWidth));
+        internalSetPreparedLines(m_aLoadedFont.getFitToWidth(sTextToFit, fFontSize, fAvailableWidth, m_fMaxAvailableWidth));
 
         // Determine max width of all prepared lines
         float fMaxWidth = Float.MIN_VALUE;
-        for (final TextAndWidthSpec aTWS : m_aPreparedLines)
-            fMaxWidth = Math.max(fMaxWidth, aTWS.getWidth());
+        if (m_aPreparedLines.getLast() != null)
+            fMaxWidth = Math.max(fMaxWidth, m_aPreparedLines.getLast().getWidth());
 
         // Determine height by number of lines
         // No line spacing for the last line
@@ -372,31 +313,6 @@ public abstract class AbstractPLText<IMPLTYPE extends AbstractPLText<IMPLTYPE>> 
         m_aPreparedLines = null;
     }
 
-    private void _setDisplayTextAfterPrepare(@Nonnull final String sNewTextWithPlaceholdersReplaced,
-            final float fAvailableWidth) throws IOException {
-        internalMarkAsNotPrepared();
-        m_sTextWithPlaceholdersReplaced = sNewTextWithPlaceholdersReplaced;
-        final SizeSpec aOnPrepareResult = _prepareText(fAvailableWidth, true);
-        internalMarkAsPrepared(aOnPrepareResult);
-    }
-
-    /**
-     * @return The total number of prepared lines, not taking the maxRows into
-     * consideration. Always &ge; 0.
-     */
-    @Nonnegative
-    public int getPreparedLineCountUnmodified() {
-        internalCheckAlreadyPrepared();
-        return m_nPreparedLineCountUnmodified;
-    }
-
-    @Nonnull
-    @ReturnsMutableCopy
-    public ICommonsList<TextAndWidthSpec> getAllPreparedLinesUnmodified() {
-        internalCheckAlreadyPrepared();
-        return new CommonsArrayList<>(m_aPreparedLinesUnmodified);
-    }
-
     protected final float getDisplayHeightOfLineCount(@Nonnegative final int nLineCount, final boolean bLineSpacingAlsoOnLastLine) {
         if (nLineCount == 0)
             return 0f;
@@ -410,116 +326,14 @@ public abstract class AbstractPLText<IMPLTYPE extends AbstractPLText<IMPLTYPE>> 
         return (nLineCount - 1) * m_fTextHeight * m_fLineSpacing + 1 * m_fTextHeight;
     }
 
-    @Nonnull
-    private PLElementWithSize _splitGetCopy(final float fElementWidth,
-            @Nonnull @Nonempty final List<TextAndWidthSpec> aLines,
-            final boolean bSplittableCopy,
-            @Nonnull final String sIDSuffix) {
-        ValueEnforcer.notEmpty(aLines, "Lines");
-
-        // Create a copy to be independent!
-        final ICommonsList<TextAndWidthSpec> aLineCopy = new CommonsArrayList<>(aLines);
-
-        // Excluding padding/margin
-        final SizeSpec aSize = new SizeSpec(fElementWidth, getDisplayHeightOfLineCount(aLineCopy.size(), true));
-
-        final String sTextContent = StringHelper.getImplodedMapped('\n', aLineCopy, TextAndWidthSpec::getText);
-        final AbstractPLText<?> aNewText = internalCreateNewVertSplitObject(thisAsT()).setID(getID() + sIDSuffix);
-        aNewText._setText(sTextContent);
-        // Set this explicitly after setBasicDataFrom!
-        aNewText.setVertSplittable(bSplittableCopy);
-
-        // Set min width/max width from source
-        // Don't use the height, because on vertically split elements, the height is
-        // dynamic
-        aNewText.setMinWidth(getMinWidth());
-        aNewText.setMaxWidth(getMaxWidth());
-
-        aNewText.internalMarkAsPrepared(aSize);
-        aNewText.internalSetPreparedLines(aLineCopy);
-        aNewText.internalSetPreparedFontData(m_aLoadedFont, m_fTextHeight, m_fDescent);
-
-        return new PLElementWithSize(aNewText, aSize);
-    }
-
-    @Nullable
-    public PLSplitResult splitElementVert(final float fElementWidth, final float fAvailableHeight) {
-        if (fAvailableHeight <= 0)
-            return null;
-
-        // Get the lines in the correct order from top to bottom
-        final ICommonsList<TextAndWidthSpec> aLines = m_aPreparedLines;
-
-        int nLineCount = (int) ((fAvailableHeight + (m_fLineSpacing - 1f) * m_fTextHeight) / (m_fTextHeight * m_fLineSpacing));
-        if (nLineCount <= 0) {
-            // Splitting makes no sense because the resulting text 1 would be empty
-            if (PLDebugLog.isDebugSplit())
-                PLDebugLog.debugSplit(this,
-                        "Failed to split because the result would be " +
-                                nLineCount +
-                                " lines for available height " +
-                                fAvailableHeight +
-                                " and line height " +
-                                m_fTextHeight * m_fLineSpacing);
-            return null;
-        }
-
-        if (nLineCount >= aLines.size()) {
-            // Splitting makes no sense because the resulting text 2 would be empty
-            if (PLDebugLog.isDebugSplit())
-                PLDebugLog.debugSplit(this,
-                        "Failed to split because the result of " +
-                                nLineCount +
-                                " lines fits into the available height " +
-                                fAvailableHeight +
-                                " and line height " +
-                                m_fTextHeight * m_fLineSpacing +
-                                " (=" +
-                                getDisplayHeightOfLineCount(nLineCount, true) +
-                                ")");
-            return null;
-        }
-
-        // Calc estimated height
-        final float fExpectedHeight = getDisplayHeightOfLineCount(nLineCount, true);
-        if (fExpectedHeight > fAvailableHeight) {
-            // Show one line less
-            --nLineCount;
-            if (nLineCount <= 0) {
-                // Splitting makes no sense
-                if (PLDebugLog.isDebugSplit())
-                    PLDebugLog.debugSplit(this,
-                            "Failed to split because the result would be " +
-                                    nLineCount +
-                                    " lines for available height " +
-                                    fAvailableHeight +
-                                    " and expected height " +
-                                    fExpectedHeight);
-                return null;
-            }
-        }
-
-        // First elements does not need to be splittable anymore
-        final PLElementWithSize aText1 = _splitGetCopy(fElementWidth, aLines.subList(0, nLineCount), false, "-1");
-        // Second element may need additional splitting
-        final PLElementWithSize aText2 = _splitGetCopy(fElementWidth, aLines.subList(nLineCount, aLines.size()), true, "-2");
-
-        return new PLSplitResult(aText1, aText2);
-    }
-
     @Override
     @Nonnull
     public EChange beforeRender(@Nonnull final PagePreRenderContext aCtx) throws IOException {
-        if (m_bReplacePlaceholder) {
-            final String sOrigText = m_sOriginalText;
-            final String sDisplayText = StringHelper.replaceMultiple(sOrigText, aCtx.getAllPlaceholders());
-            if (!sOrigText.equals(sDisplayText)) {
-                // Something changed
-                _setDisplayTextAfterPrepare(sDisplayText, getPrepareAvailableSize().getWidth());
-                return EChange.CHANGED;
-            }
-        }
         return EChange.UNCHANGED;
+    }
+
+    protected ICommonsList<TextAndWidthSpec> getPreperedLines() {
+        return m_aPreparedLines;
     }
 
     @Override
@@ -528,9 +342,6 @@ public abstract class AbstractPLText<IMPLTYPE extends AbstractPLText<IMPLTYPE>> 
             // Nothing to do - empty text
             return;
         }
-
-        // Fill and border
-        PLRenderHelper.fillAndRenderBorder(thisAsT(), aCtx, 0f, 0f);
 
         final float fRenderLeft = aCtx.getStartLeft() + getOutlineLeft();
         final float fRenderTop = aCtx.getStartTop() - getOutlineTop();
@@ -567,7 +378,9 @@ public abstract class AbstractPLText<IMPLTYPE extends AbstractPLText<IMPLTYPE>> 
             final float fIndentX = getIndentX(fPreparedWidth, fTextWidth);
             if (nIndex == 0) {
                 // Initial move - only partial line height!
-                aContentStream.moveTextPositionByAmount(fRenderLeft + fIndentX, fRenderTop - fTextHeight - m_fDescent + m_fCustomAscentFirstLine);
+                aContentStream.moveTextPositionByAmount(fRenderLeft + fIndentX, fRenderTop - fTextHeight - m_fDescent);
+            } else if (nIndex == 1) {
+                aContentStream.moveTextPositionByAmount(fRenderLeft * -1, 0);
             } else if (fIndentX != 0) {
                 // Indent subsequent line
                 aContentStream.moveTextPositionByAmount(fIndentX, 0);
@@ -617,8 +430,6 @@ public abstract class AbstractPLText<IMPLTYPE extends AbstractPLText<IMPLTYPE>> 
                 .append("LineSpacing", m_fLineSpacing)
                 .append("HorzAlign", m_eHorzAlign)
                 .append("MaxRows", m_nMaxRows)
-                .append("VertSplittable", m_bVertSplittable)
-                .append("ReplacePlaceholder", m_bReplacePlaceholder)
                 .getToString();
     }
 }
