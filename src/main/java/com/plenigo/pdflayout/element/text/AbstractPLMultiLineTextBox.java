@@ -254,8 +254,7 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
                     width = element.getWidth();
                     hasNext = iterator.hasNext();
                 }
-
-
+                
                 FontHeightSpec textFontHeight = getFontHeight(aCtx, aText.getFontSpec());
                 IPLRenderableObject <?> aElement;
 
