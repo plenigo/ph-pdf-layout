@@ -83,6 +83,24 @@ public final class PLMultiLineTextBoxTest {
         aPageLayout.renderTo(new File("pdf/text/multi-line-style.pdf"));
     }
 
+    @Test
+    public void testMultiTextLinesWithEmptyLine() throws PDFCreationException {
+        final FontSpec r10 = new FontSpec(PreloadFont.REGULAR, 10);
+
+        final PLMultiLineTextBox aMLBox = new PLMultiLineTextBox();
+        aMLBox.addMultiLineText(new PLMultiLineText("The text can be very Big", r10));
+        aMLBox.addMultiLineText(new PLMultiLineText("", r10));
+        aMLBox.addMultiLineText(new PLMultiLineText(" an can have empty text.", r10));
+
+        final PLPageSet aPS1 = new PLPageSet(PDRectangle.A4);
+        aPS1.addElement(aMLBox);
+
+        final PageLayoutPDF aPageLayout = new PageLayoutPDF();
+        aPageLayout.addPageSet(aPS1);
+
+        aPageLayout.renderTo(new File("pdf/text/multi-line-style-empty-line.pdf"));
+    }
+
     private PLMultiLineTextBox getPLMultiLineTextBox() {
         final FontSpec r10 = new FontSpec(PreloadFont.REGULAR, 10);
         final FontSpec r10b = new FontSpec(PreloadFont.REGULAR_BOLD, 10);

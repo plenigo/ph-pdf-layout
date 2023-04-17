@@ -236,25 +236,42 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
             aText.prepareMaxAvailableWidth(aCtx.getAvailableWidth());
             aText.prepare(new PreparationContext(aCtx.getGlobalContext(), fRestWidth, fElementHeight));
             ICommonsList<TextAndWidthSpec> textLines = aText.getPreperedLines();
-            Iterator<TextAndWidthSpec> it = textLines.iterator();
-            while (it.hasNext()) {
-                TextAndWidthSpec element = it.next();
+            boolean hasNext = false;
+            Iterator<TextAndWidthSpec> iterator = null;
+            if (textLines != null) {
+                iterator = textLines.iterator();
+            }
+            do {
+                String content = "";
+                float width = 0;
+
+                if (iterator != null) {
+                    if (!iterator.hasNext()) {
+                        break;
+                    }
+                    TextAndWidthSpec element = iterator.next();
+                    content = element.getText();
+                    width = element.getWidth();
+                    hasNext = iterator.hasNext();
+                }
+
+
                 FontHeightSpec textFontHeight = getFontHeight(aCtx, aText.getFontSpec());
                 IPLRenderableObject <?> aElement;
 
-                // check if the text has a uri
+                // check if the text has an uri
                 if (aText.hasURI()) {
                     Color linkColor = new Color(0, 102, 204);
-                    PLText text = new PLText(element.getText(), aText.getFontSpec().getCloneWithDifferentColor(linkColor)).setMaxRows(1);
+                    PLText text = new PLText(content, aText.getFontSpec().getCloneWithDifferentColor(linkColor)).setMaxRows(1);
                     aElement = new PLExternalLink(text)
                             .setURI(aText.getURI())
                             .setBorderBottom(new BorderStyleSpec(linkColor, 0.5f))
                             .setPaddingBottom(textFontHeight.getDescent() + 0.5f);
                 } else {
-                    aElement = new PLText(element.getText(), aText.getFontSpec()).setMaxRows(1);
+                    aElement = new PLText(content, aText.getFontSpec()).setMaxRows(1);
                 }
                 if (multiLineTextBox != null) {
-                    fRestWidth = fRestWidth - element.getWidth();
+                    fRestWidth = fRestWidth - width;
                     if (fRestWidth <= 0) {
                         onPrepareMultiLineTextBox(aCtx, multiLineTextBox, fMaxFontHeight);
 
@@ -263,11 +280,11 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
                         fMaxFontHeight = new FontHeightSpec(0, 0);
                         multiLineTextBox = null;
 
-                        if (element.getWidth() < fElementWidth) {
+                        if (width < fElementWidth) {
                             multiLineTextBox = new PLHBox();
                             multiLineTextBox.addColumn(aElement, WidthSpec.auto());
                             fMaxFontHeight = textFontHeight;
-                            fRestWidth = fElementWidth - element.getWidth();
+                            fRestWidth = fElementWidth - width;
                         } else {
                             m_aRows.add(new PLVBoxRow(aElement, HeightSpec.auto()));
                             fRestWidth = fElementWidth;
@@ -279,16 +296,16 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
                         multiLineTextBox.addColumn(aElement, WidthSpec.auto());
                     }
 
-                } else if (it.hasNext()) {
+                } else if (hasNext) {
                     m_aRows.add(new PLVBoxRow(aElement, HeightSpec.auto()));
                     fRestWidth = fElementWidth;
-                } else if (element.getWidth() < fElementWidth) {
+                } else if (width < fElementWidth) {
                     multiLineTextBox = new PLHBox();
                     multiLineTextBox.addColumn(aElement, WidthSpec.auto());
                     fMaxFontHeight = textFontHeight;
-                    fRestWidth = fElementWidth - element.getWidth();
+                    fRestWidth = fElementWidth - width;
                 }
-            }
+            } while (hasNext);
         }
 
         // clean the text list
