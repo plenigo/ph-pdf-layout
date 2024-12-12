@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * Horizontal box - groups several columns without having layout information
  * itself.
  *
- * @author Philip Helger
+ * @author plenigo
  */
 public class PLMultiLineTextBox extends AbstractPLMultiLineTextBox<PLMultiLineTextBox>
 {

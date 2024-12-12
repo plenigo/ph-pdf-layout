@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,29 +16,30 @@
  */
 package com.plenigo.pdflayout.element.table;
 
+import javax.annotation.Nonnull;
+
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.lang.ICloneable;
 import com.helger.commons.string.ToStringGenerator;
-
-import javax.annotation.Nonnull;
 
 /**
  * Cell range.
  *
  * @author Philip Helger
  */
-public class PLCellRange implements IPLCellRange, ICloneable<PLCellRange> {
-    private int m_nFirstRow;
-    private int m_nLastRow;
-    private int m_nFirstCol;
-    private int m_nLastCol;
+public class PLCellRange implements IPLCellRange, ICloneable <PLCellRange>
+{
+  private int m_nFirstRow;
+  private int m_nLastRow;
+  private int m_nFirstCol;
+  private int m_nLastCol;
 
-    /**
-     * Default constructor
-     *
-     * @param nFirstRow
-     *        First row index, inclusive.
+  /**
+   * Default constructor
+   *
+   * @param nFirstRow
+   *        First row index, inclusive.
    * @param nLastRow
    *        Last row index, inclusive.
    * @param nFirstCol

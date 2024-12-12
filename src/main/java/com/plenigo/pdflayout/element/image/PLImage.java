@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,20 +16,22 @@
  */
 package com.plenigo.pdflayout.element.image;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.string.ToStringGenerator;
-import com.plenigo.pdflayout.render.PagePreRenderContext;
-import org.apache.pdfbox.pdmodel.graphics.image.CCITTFactory;
-import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
-import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
+
+import org.apache.pdfbox.pdmodel.graphics.image.CCITTFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+
+import com.helger.commons.ValueEnforcer;
+import com.helger.commons.string.ToStringGenerator;
+import com.plenigo.pdflayout.render.PagePreRenderContext;
 
 /**
  * Represent a static image based on {@link BufferedImage}. This image type is

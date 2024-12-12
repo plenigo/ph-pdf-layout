@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,39 +16,32 @@
  */
 package com.plenigo.pdflayout.spec;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.id.IHasID;
 import com.helger.commons.lang.EnumHelper;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Defines the type of width unit of measure used.
  *
  * @author Philip Helger
  */
-public enum EValueUOMType implements IHasID<String> {
-    /**
-     * Absolute value provided
-     */
-    ABSOLUTE("abs"),
-    /**
-     * Percentage value provided
-     */
-    PERCENTAGE("perc"),
-    /**
-     * '*' value provided
-     */
-    STAR("star"),
-    /**
-     * Automatic scaling
-     */
-    AUTO("auto");
+public enum EValueUOMType implements IHasID <String>
+{
+  /** Absolute value provided */
+  ABSOLUTE ("abs"),
+  /** Percentage value provided */
+  PERCENTAGE ("perc"),
+  /** '*' value provided */
+  STAR ("star"),
+  /** Automatic scaling */
+  AUTO ("auto");
 
-    private final String m_sID;
+  private final String m_sID;
 
-    EValueUOMType(@Nonnull @Nonempty final String sID)
+  EValueUOMType (@Nonnull @Nonempty final String sID)
   {
     m_sID = sID;
   }

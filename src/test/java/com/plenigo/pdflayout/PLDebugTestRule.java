@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,29 +16,33 @@
  */
 package com.plenigo.pdflayout;
 
-import com.plenigo.pdflayout.debug.PLDebugLog;
 import org.junit.rules.ExternalResource;
 
-public class PLDebugTestRule extends ExternalResource {
-    /**
-     * When this rule is used, global debug is enabled.
-     */
-    public static final boolean ENABLE_DEBUG = true;
+import com.plenigo.pdflayout.debug.PLDebugLog;
+import com.plenigo.pdflayout.debug.PLDebugLog.IPLDebugOutput;
 
-    private static final PLDebugLog.IPLDebugOutput NO_OP = new PLDebugLog.IPLDebugOutput() {
-        public boolean isEnabled() {
-            return true;
-        }
+public class PLDebugTestRule extends ExternalResource
+{
+  /** When this rule is used, global debug is enabled. */
+  public static final boolean ENABLE_DEBUG = true;
 
-        public void log(final String sMsg) {
-            // Ignore
-        }
-    };
+  private static final IPLDebugOutput NO_OP = new IPLDebugOutput ()
+  {
+    public boolean isEnabled ()
+    {
+      return true;
+    }
 
-    private final boolean m_bDebug;
-    private boolean m_bOldDebug;
+    public void log (final String sMsg)
+    {
+      // Ignore
+    }
+  };
 
-    public PLDebugTestRule()
+  private final boolean m_bDebug;
+  private boolean m_bOldDebug;
+
+  public PLDebugTestRule ()
   {
     this (ENABLE_DEBUG);
   }

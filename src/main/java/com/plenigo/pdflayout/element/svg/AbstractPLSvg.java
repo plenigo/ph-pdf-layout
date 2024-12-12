@@ -22,6 +22,8 @@ import java.io.IOException;
  * Base class for a static svg images.
  *
  * @param <IMPLTYPE> Implementation type
+ *
+ * @author plenigo
  */
 public abstract class AbstractPLSvg<IMPLTYPE extends AbstractPLSvg<IMPLTYPE>> extends AbstractPLInlineElement<IMPLTYPE> {
 

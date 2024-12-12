@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,18 +16,19 @@
  */
 package com.plenigo.pdflayout.element.table;
 
-import com.helger.commons.ValueEnforcer;
-import com.plenigo.pdflayout.base.IPLRenderableObject;
-import com.plenigo.pdflayout.element.box.AbstractPLBox;
-import com.plenigo.pdflayout.element.special.PLSpacerX;
-import com.plenigo.pdflayout.render.PageRenderContext;
+import java.io.IOException;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import javax.annotation.concurrent.NotThreadSafe;
-import java.io.IOException;
+
+import com.helger.commons.ValueEnforcer;
+import com.plenigo.pdflayout.base.IPLRenderableObject;
+import com.plenigo.pdflayout.element.box.AbstractPLBox;
+import com.plenigo.pdflayout.element.special.PLSpacerX;
+import com.plenigo.pdflayout.render.PageRenderContext;
 
 /**
  * This class represents a single table cell within a table row.
@@ -35,22 +36,25 @@ import java.io.IOException;
  * @author Philip Helger
  */
 @NotThreadSafe
-public class PLTableCell extends AbstractPLBox<PLTableCell> {
-    public static final int DEFAULT_COL_SPAN = 1;
+public class PLTableCell extends AbstractPLBox <PLTableCell>
+{
+  public static final int DEFAULT_COL_SPAN = 1;
 
-    private int m_nColSpan;
+  private int m_nColSpan;
 
-    public PLTableCell(@Nullable final IPLRenderableObject<?> aElement) {
-        this(aElement, DEFAULT_COL_SPAN);
-    }
+  public PLTableCell (@Nullable final IPLRenderableObject <?> aElement)
+  {
+    this (aElement, DEFAULT_COL_SPAN);
+  }
 
-    public PLTableCell(@Nullable final IPLRenderableObject<?> aElement, @Nonnegative final int nColSpan) {
-        super(aElement);
-        _setColSpan(nColSpan);
-        setVertSplittable(true);
-    }
+  public PLTableCell (@Nullable final IPLRenderableObject <?> aElement, @Nonnegative final int nColSpan)
+  {
+    super (aElement);
+    _setColSpan (nColSpan);
+    setVertSplittable (true);
+  }
 
-    @Override
+  @Override
   @Nonnull
   @OverridingMethodsMustInvokeSuper
   public PLTableCell setBasicDataFrom (@Nonnull final PLTableCell aSource)
@@ -98,5 +102,37 @@ public class PLTableCell extends AbstractPLBox<PLTableCell> {
   public static PLTableCell createEmptyCell ()
   {
     return new PLTableCell (new PLSpacerX ());
+  }
+
+  /**
+   * Utility method to create an empty cell with a colspan.
+   *
+   * @param nColSpan
+   *        The column span to use. Must be &gt; 0.
+   * @return The new empty table cell.
+   * @since 7.0.1
+   */
+  @Nonnull
+  public static PLTableCell createEmptyCell (@Nonnegative final int nColSpan)
+  {
+    return new PLTableCell (new PLSpacerX (), nColSpan);
+  }
+
+  /**
+   * Utility method to create an array of empty cells.
+   *
+   * @param nCellCount
+   *        The number of cells to create. Must be &ge; 0.
+   * @return The new empty table cell.
+   * @since 7.0.1
+   */
+  @Nonnull
+  public static PLTableCell [] createEmptyCells (@Nonnegative final int nCellCount)
+  {
+    ValueEnforcer.isGE0 (nCellCount, "CellCount");
+    final PLTableCell [] ret = new PLTableCell [nCellCount];
+    for (int i = 0; i < nCellCount; ++i)
+      ret[i] = createEmptyCell ();
+    return ret;
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,14 +16,14 @@
  */
 package com.plenigo.pdflayout.config.xml;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.plenigo.pdflayout.spec.EValueUOMType;
+import com.plenigo.pdflayout.spec.HeightSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
-import com.plenigo.pdflayout.spec.EValueUOMType;
-import com.plenigo.pdflayout.spec.HeightSpec;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Micro type converter for class {@link HeightSpec}.

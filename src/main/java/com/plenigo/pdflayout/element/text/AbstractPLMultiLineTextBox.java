@@ -33,7 +33,6 @@
 package com.plenigo.pdflayout.element.text;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.ArrayHelper;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
@@ -44,6 +43,7 @@ import com.plenigo.pdflayout.base.AbstractPLRenderableObject;
 import com.plenigo.pdflayout.base.IPLRenderableObject;
 import com.plenigo.pdflayout.base.IPLSplittableObject;
 import com.plenigo.pdflayout.base.IPLVisitor;
+import com.plenigo.pdflayout.base.PLColor;
 import com.plenigo.pdflayout.base.PLElementWithSize;
 import com.plenigo.pdflayout.base.PLSplitResult;
 import com.plenigo.pdflayout.debug.PLDebugLog;
@@ -68,18 +68,15 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
-import java.awt.*;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.function.Consumer;
-import java.util.function.ObjIntConsumer;
 
 /**
  * Vertical box - groups several rows.
  *
  * @param <IMPLTYPE> Implementation type
  *
- * @author Philip Helger
+ * @author plenigo
  */
 public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMultiLineTextBox<IMPLTYPE>> extends AbstractPLRenderableObject<IMPLTYPE> implements
         IPLSplittableObject<IMPLTYPE, IMPLTYPE> {
@@ -254,13 +251,13 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
                     width = element.getWidth();
                     hasNext = iterator.hasNext();
                 }
-                
+
                 FontHeightSpec textFontHeight = getFontHeight(aCtx, aText.getFontSpec());
-                IPLRenderableObject <?> aElement;
+                IPLRenderableObject<?> aElement;
 
                 // check if the text has an uri
                 if (aText.hasURI()) {
-                    Color linkColor = new Color(0, 102, 204);
+                    PLColor linkColor = new PLColor(0, 102, 204);
                     PLText text = new PLText(content, aText.getFontSpec().getCloneWithDifferentColor(linkColor)).setMaxRows(1);
                     aElement = new PLExternalLink(text)
                             .setURI(aText.getURI())
@@ -833,8 +830,8 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
      */
     @Nonnull
     private PLVBoxRow addAndReturnRow(@Nonnegative final int nIndex,
-            @Nonnull final IPLRenderableObject<?> aElement,
-            @Nonnull final HeightSpec aHeight) {
+                                      @Nonnull final IPLRenderableObject<?> aElement,
+                                      @Nonnull final HeightSpec aHeight) {
         ValueEnforcer.isGE0(nIndex, "Index");
         internalCheckNotPrepared();
         return _addAndReturnRow(nIndex, aElement, aHeight);
@@ -842,8 +839,8 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
 
     @Nonnull
     private PLVBoxRow _addAndReturnRow(@CheckForSigned final int nIndex,
-            @Nonnull final IPLRenderableObject<?> aElement,
-            @Nonnull final HeightSpec aHeight) {
+                                       @Nonnull final IPLRenderableObject<?> aElement,
+                                       @Nonnull final HeightSpec aHeight) {
         final PLVBoxRow aItem = new PLVBoxRow(aElement, aHeight);
         if (nIndex < 0 || nIndex >= m_aRows.size())
             m_aRows.add(aItem);

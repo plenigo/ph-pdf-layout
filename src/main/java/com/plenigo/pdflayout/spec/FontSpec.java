@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,18 +16,19 @@
  */
 package com.plenigo.pdflayout.spec;
 
+import java.io.Serializable;
+
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
-
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-import java.awt.*;
-import java.io.Serializable;
+import com.plenigo.pdflayout.base.PLColor;
 
 /**
  * Defines a text font specification containing the font, the font size and the
@@ -40,11 +41,11 @@ import java.io.Serializable;
 public class FontSpec implements Serializable
 {
   /** The default font color: black */
-  public static final Color DEFAULT_COLOR = Color.BLACK;
+  public static final PLColor DEFAULT_COLOR = PLColor.BLACK;
 
   private final PreloadFont m_aPreloadFont;
   private final float m_fFontSize;
-  private final Color m_aColor;
+  private final PLColor m_aColor;
 
   /**
    * Constructor with a {@link PreloadFont} and a font size, using the default
@@ -69,10 +70,11 @@ public class FontSpec implements Serializable
    *        Font size to use. Must be &gt; 0.
    * @param aColor
    *        The color to use. May not be <code>null</code>.
+   * @since 7.2.0
    */
   public FontSpec (@Nonnull final PreloadFont aPreloadFont,
                    @Nonnegative final float fFontSize,
-                   @Nonnull final Color aColor)
+                   @Nonnull final PLColor aColor)
   {
     ValueEnforcer.notNull (aPreloadFont, "Font");
     ValueEnforcer.isFalse (Float.isNaN (fFontSize), "FontSize may not be NaN");
@@ -115,7 +117,7 @@ public class FontSpec implements Serializable
    * @return The text color to use.
    */
   @Nonnull
-  public final Color getColor ()
+  public final PLColor getColor ()
   {
     return m_aColor;
   }
@@ -159,9 +161,10 @@ public class FontSpec implements Serializable
    * @param aNewColor
    *        The new color to use. May not be <code>null</code>.
    * @return this if the colors are equal - a new object otherwise.
+   * @since 7.2.0
    */
   @Nonnull
-  public FontSpec getCloneWithDifferentColor (@Nonnull final Color aNewColor)
+  public FontSpec getCloneWithDifferentColor (@Nonnull final PLColor aNewColor)
   {
     ValueEnforcer.notNull (aNewColor, "NewColor");
     if (aNewColor.equals (m_aColor))
@@ -191,7 +194,7 @@ public class FontSpec implements Serializable
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("PreloadFont", m_aPreloadFont)
+    return new ToStringGenerator (null).append ("PreloadFont", m_aPreloadFont)
                                        .append ("FontSize", m_fFontSize)
                                        .append ("Color", m_aColor)
                                        .getToString ();

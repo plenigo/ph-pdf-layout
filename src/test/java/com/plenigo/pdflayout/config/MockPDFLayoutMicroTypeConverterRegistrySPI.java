@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,12 +16,12 @@
  */
 package com.plenigo.pdflayout.config;
 
+import javax.annotation.Nonnull;
+
 import com.helger.commons.annotation.IsSPIImplementation;
+import com.plenigo.pdflayout.spec.PreloadFontManager;
 import com.helger.xml.microdom.convert.IMicroTypeConverterRegistrarSPI;
 import com.helger.xml.microdom.convert.IMicroTypeConverterRegistry;
-import com.plenigo.pdflayout.spec.PreloadFontManager;
-
-import javax.annotation.Nonnull;
 
 /**
  * Mock SPI implementation

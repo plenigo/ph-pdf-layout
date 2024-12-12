@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,26 +16,28 @@
  */
 package com.plenigo.pdflayout;
 
+import static org.junit.Assert.assertEquals;
+
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Test class for class {@link PLConvert}.
  *
  * @author Philip Helger
  */
-public final class PLConvertTest {
-    private static final float DELTA = 0.001f;
+public final class PLConvertTest
+{
+  private static final float DELTA = 0.001f;
 
-    @Test
-    public void testBasic() {
-        assertEquals(PDRectangle.A4.getWidth(), PLConvert.mm2units(210), DELTA);
-        assertEquals(PDRectangle.A4.getWidth(), PLConvert.cm2units(21), DELTA);
+  @Test
+  public void testBasic ()
+  {
+    assertEquals (PDRectangle.A4.getWidth (), PLConvert.mm2units (210), DELTA);
+    assertEquals (PDRectangle.A4.getWidth (), PLConvert.cm2units (21), DELTA);
 
-        assertEquals(210f, PLConvert.units2mm(PDRectangle.A4.getWidth()), DELTA);
-        assertEquals(297f, PLConvert.units2mm(PDRectangle.A4.getHeight()), DELTA);
+    assertEquals (210f, PLConvert.units2mm (PDRectangle.A4.getWidth ()), DELTA);
+    assertEquals (297f, PLConvert.units2mm (PDRectangle.A4.getHeight ()), DELTA);
     assertEquals (21.0f, PLConvert.units2cm (PDRectangle.A4.getWidth ()), DELTA);
     assertEquals (29.7f, PLConvert.units2cm (PDRectangle.A4.getHeight ()), DELTA);
   }

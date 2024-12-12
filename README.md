@@ -1,7 +1,7 @@
 # ph-pdf-layout
 
-[![javadoc](https://javadoc.io/badge2/com.helger/ph-pdf-layout4/javadoc.svg)](https://javadoc.io/doc/com.helger/ph-pdf-layout4)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.helger/ph-pdf-layout4/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.helger/ph-pdf-layout4) 
+[![javadoc](https://javadoc.io/badge2/com.helger/ph-pdf-layout/javadoc.svg)](https://javadoc.io/doc/com.helger/ph-pdf-layout)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.helger/ph-pdf-layout/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.helger/ph-pdf-layout) 
 
 Java library for creating fluid page layouts with Apache PDFBox.
 
@@ -54,8 +54,29 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
-* v7.0.1 - work in progress
-    * Updated to PDFBox 2.0.27
+* v7.3.4 - 2024-05-30
+    * Fixed an issue with `BLOCK` horizontal alignment in case of a page break. See [issue #36](https://github.com/phax/ph-pdf-layout/issues/36)
+* v7.3.3 - 2024-05-29
+    * Updated to PDFBox 3.0.2
+    * Added new horizontal alignment type `BLOCK` as a mixture of `LEFT` and `JUSTIFY`. See [issue #36](https://github.com/phax/ph-pdf-layout/issues/36) - thx @istvangaal
+* v7.3.2 - 2024-03-27
+    * Updated to ph-commons 11.1.5
+    * Created Java 21 compatibility
+    * Extracted a parent POM and prepared a submodule structure
+    * Using https://github.com/red6/pdfcompare to test created PDFs against the stored ones. See [issue #35](https://github.com/phax/ph-pdf-layout/issues/35) - thx @Lolf1010
+* v7.3.1 - 2024-01-24
+    * Updated to PDFBox 3.0.1
+    * Added support for clipping content of block elements via `.setClipContent(boolean)`. See [issue #34](https://github.com/phax/ph-pdf-layout/issues/34) - thx @terrason
+* v7.3.0 - 2023-10-30
+    * Completely removed usage of `java.awt.Color`. Backwards incompatible change. This finalizes [issue #32](https://github.com/phax/ph-pdf-layout/issues/32).
+* v7.2.0 - 2023-10-30
+    * Added new class `PLColor` and deprecated all methods using `java.awt.Color`. Backwards incompatible change. See [issue #32](https://github.com/phax/ph-pdf-layout/issues/32) - thx @AndroidDeveloperLB
+* v7.1.0 - 2023-08-20
+    * Updated to PDFBox 3.0.0
+* v7.0.1 - 2023-07-31
+    * Updated to PDFBox 2.0.29
+    * Updated to ph-commons 11.1.0
+    * Improved API to create an empty cell. See [issue #29](https://github.com/phax/ph-pdf-layout/issues/29) - thx @fheldt
 * v7.0.0 - 2022-09-14
     * Using Java 11 as the baseline
     * Updated to ph-commons 11
@@ -183,5 +204,4 @@ Note: version 4.0.0 has troubles building with JDK 1.8.0_92 - updating to 1.8.0_
 ---
 
 My personal [Coding Styleguide](https://github.com/phax/meta/blob/master/CodingStyleguide.md) |
-On Twitter: <a href="https://twitter.com/philiphelger">@philiphelger</a> |
-Kindly supported by [YourKit Java Profiler](https://www.yourkit.com)
+It is appreciated if you star the GitHub project if you like it.

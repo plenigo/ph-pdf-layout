@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,17 +16,18 @@
  */
 package com.plenigo.pdflayout.spec;
 
+import java.io.Serializable;
+
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
-
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-import java.awt.*;
-import java.io.Serializable;
+import com.plenigo.pdflayout.base.PLColor;
 
 /**
  * This class contains the styling of a single border part. Currently only the
@@ -39,7 +40,7 @@ import java.io.Serializable;
 public class BorderStyleSpec implements Serializable
 {
   /** The default border color: black */
-  public static final Color DEFAULT_COLOR = Color.BLACK;
+  public static final PLColor DEFAULT_COLOR = PLColor.BLACK;
 
   /** The default border style: solid */
   public static final LineDashPatternSpec DEFAULT_LINE_DASH_PATTERN = LineDashPatternSpec.SOLID;
@@ -52,7 +53,7 @@ public class BorderStyleSpec implements Serializable
 
   public static final BorderStyleSpec EMPTY = new BorderStyleSpec ();
 
-  private final Color m_aColor;
+  private final PLColor m_aColor;
   private final LineDashPatternSpec m_aLineDashPattern;
   private final float m_fLineWidth;
 
@@ -61,7 +62,7 @@ public class BorderStyleSpec implements Serializable
     this (DEFAULT_COLOR, DEFAULT_LINE_DASH_PATTERN, DEFAULT_LINE_WIDTH);
   }
 
-  public BorderStyleSpec (@Nonnull final Color aColor)
+  public BorderStyleSpec (@Nonnull final PLColor aColor)
   {
     this (aColor, DEFAULT_LINE_DASH_PATTERN, DEFAULT_LINE_WIDTH);
   }
@@ -76,17 +77,17 @@ public class BorderStyleSpec implements Serializable
     this (DEFAULT_COLOR, DEFAULT_LINE_DASH_PATTERN, fLineWidth);
   }
 
-  public BorderStyleSpec (@Nonnull final Color aColor, final float fLineWidth)
+  public BorderStyleSpec (@Nonnull final PLColor aColor, final float fLineWidth)
   {
     this (aColor, DEFAULT_LINE_DASH_PATTERN, fLineWidth);
   }
 
-  public BorderStyleSpec (@Nonnull final Color aColor, @Nonnull final LineDashPatternSpec aLineDashPattern)
+  public BorderStyleSpec (@Nonnull final PLColor aColor, @Nonnull final LineDashPatternSpec aLineDashPattern)
   {
     this (aColor, aLineDashPattern, DEFAULT_LINE_WIDTH);
   }
 
-  public BorderStyleSpec (@Nonnull final Color aColor,
+  public BorderStyleSpec (@Nonnull final PLColor aColor,
                           @Nonnull final LineDashPatternSpec aLineDashPattern,
                           @Nonnegative final float fLineWidth)
   {
@@ -104,7 +105,7 @@ public class BorderStyleSpec implements Serializable
    * @return The border color to use. Never <code>null</code>.
    */
   @Nonnull
-  public final Color getColor ()
+  public final PLColor getColor ()
   {
     return m_aColor;
   }
@@ -136,7 +137,7 @@ public class BorderStyleSpec implements Serializable
   }
 
   @Nonnull
-  public BorderStyleSpec getCloneWithColor (@Nonnull final Color aNewColor)
+  public BorderStyleSpec getCloneWithColor (@Nonnull final PLColor aNewColor)
   {
     ValueEnforcer.notNull (aNewColor, "NewColor");
     if (aNewColor.equals (m_aColor))
@@ -179,13 +180,16 @@ public class BorderStyleSpec implements Serializable
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_aColor).append (m_aLineDashPattern).append (m_fLineWidth).getHashCode ();
+    return new HashCodeGenerator (this).append (m_aColor)
+                                       .append (m_aLineDashPattern)
+                                       .append (m_fLineWidth)
+                                       .getHashCode ();
   }
 
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("Color", m_aColor)
+    return new ToStringGenerator (null).append ("Color", m_aColor)
                                        .append ("LineDashPattern", m_aLineDashPattern)
                                        .append ("LineWidth", m_fLineWidth)
                                        .getToString ();

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,28 +16,31 @@
  */
 package com.plenigo.pdflayout.base;
 
+import java.io.IOException;
+
+import javax.annotation.Nonnull;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.functional.IThrowingFunction;
 import com.helger.commons.state.EChange;
-
-import javax.annotation.Nonnull;
-import java.io.IOException;
 
 /**
  * Visitor callback
  *
  * @author Philip Helger
  */
-public interface IPLVisitor {
-    /**
-     * Call on page set start
-     *
-     * @param aPageSet The current page set. Never <code>null</code>.
-     *
-     * @throws IOException on PDFBox error
-     */
-    default void onPageSetStart(@Nonnull final PLPageSet aPageSet) throws IOException {
-    }
+public interface IPLVisitor
+{
+  /**
+   * Call on page set start
+   *
+   * @param aPageSet
+   *        The current page set. Never <code>null</code>.
+   * @throws IOException
+   *         on PDFBox error
+   */
+  default void onPageSetStart (@Nonnull final PLPageSet aPageSet) throws IOException
+  {}
 
   /**
    * Call for each element in the current page set. This method is also called

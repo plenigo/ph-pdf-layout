@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,14 +16,14 @@
  */
 package com.plenigo.pdflayout.config.xml;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.plenigo.pdflayout.spec.TextAndWidthSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
 import com.helger.xml.microdom.util.MicroHelper;
-import com.plenigo.pdflayout.spec.TextAndWidthSpec;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Micro type converter for class {@link TextAndWidthSpec}.
@@ -34,6 +34,7 @@ public final class TextAndWidthSpecMicroTypeConverter implements IMicroTypeConve
 {
   private static final String ELEMENT_TEXT = "text";
   private static final String ATTR_WIDTH = "width";
+  private static final String ATTR_DISPLAY_AS_NEWLINE = "newline";
 
   @Nonnull
   public IMicroElement convertToMicroElement (@Nonnull final TextAndWidthSpec aValue,
@@ -42,8 +43,9 @@ public final class TextAndWidthSpecMicroTypeConverter implements IMicroTypeConve
   {
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
-    aElement.setAttribute (ATTR_WIDTH, aValue.getWidth ());
     aElement.appendElement (sNamespaceURI, ELEMENT_TEXT).appendText (aValue.getText ());
+    aElement.setAttribute (ATTR_WIDTH, aValue.getWidth ());
+    aElement.setAttribute (ATTR_DISPLAY_AS_NEWLINE, aValue.isDisplayAsNewline ());
     return aElement;
   }
 
@@ -52,7 +54,8 @@ public final class TextAndWidthSpecMicroTypeConverter implements IMicroTypeConve
   {
     final String sText = MicroHelper.getChildTextContent (aElement, ELEMENT_TEXT);
     final float fWidth = aElement.getAttributeValueAsFloat (ATTR_WIDTH, Float.NaN);
+    final boolean bDisplayAsNewline = aElement.getAttributeValueAsBool (ATTR_DISPLAY_AS_NEWLINE, false);
 
-    return new TextAndWidthSpec (sText, fWidth);
+    return new TextAndWidthSpec (sText, fWidth, bDisplayAsNewline);
   }
 }

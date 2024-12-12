@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,12 +16,13 @@
  */
 package com.plenigo.pdflayout;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
+import java.io.IOException;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 /**
  * Callback interface for PDF customization

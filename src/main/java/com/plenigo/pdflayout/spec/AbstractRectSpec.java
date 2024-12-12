@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,15 +16,16 @@
  */
 package com.plenigo.pdflayout.spec;
 
+import java.io.Serializable;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-import java.io.Serializable;
 
 /**
  * Defines a rectangular object.
@@ -33,16 +34,18 @@ import java.io.Serializable;
  */
 @Immutable
 @MustImplementEqualsAndHashcode
-public abstract class AbstractRectSpec implements Serializable {
-    protected final float m_fTop;
-    protected final float m_fRight;
-    protected final float m_fBottom;
-    protected final float m_fLeft;
-    // Helper vars only
-    private final float m_fXSum;
-    private final float m_fYSum;
+public abstract class AbstractRectSpec implements Serializable
+{
+  protected final float m_fTop;
+  protected final float m_fRight;
+  protected final float m_fBottom;
+  protected final float m_fLeft;
+  // Helper vars only
+  private final float m_fXSum;
+  private final float m_fYSum;
 
-    public AbstractRectSpec(@Nonnull final AbstractRectSpec aOther) {
+  public AbstractRectSpec (@Nonnull final AbstractRectSpec aOther)
+  {
     this (aOther.m_fTop, aOther.m_fRight, aOther.m_fBottom, aOther.m_fLeft);
   }
 
@@ -130,13 +133,17 @@ public abstract class AbstractRectSpec implements Serializable {
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_fTop).append (m_fRight).append (m_fBottom).append (m_fLeft).getHashCode ();
+    return new HashCodeGenerator (this).append (m_fTop)
+                                       .append (m_fRight)
+                                       .append (m_fBottom)
+                                       .append (m_fLeft)
+                                       .getHashCode ();
   }
 
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("Top", m_fTop)
+    return new ToStringGenerator (null).append ("Top", m_fTop)
                                        .append ("Right", m_fRight)
                                        .append ("Bottom", m_fBottom)
                                        .append ("Left", m_fLeft)

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,15 +16,18 @@
  */
 package com.plenigo.pdflayout.supplementary.issues;
 
-import com.helger.commons.io.file.FileSystemRecursiveIterator;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
+import com.helger.commons.io.file.FileSystemRecursiveIterator;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public final class MainIssue3204
 {
@@ -38,7 +41,7 @@ public final class MainIssue3204
       if (f.isFile () && f.getName ().endsWith (".pdf"))
       {
         LOGGER.info (f.getAbsolutePath ());
-        try (PDDocument aDoc = PDDocument.load (f))
+        try (PDDocument aDoc = Loader.loadPDF (f))
         {
           new PDFRenderer (aDoc).renderImageWithDPI (0, 195);
           n++;

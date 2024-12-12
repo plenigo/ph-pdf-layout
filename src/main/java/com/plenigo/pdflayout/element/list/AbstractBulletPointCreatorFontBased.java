@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,12 +16,12 @@
  */
 package com.plenigo.pdflayout.element.list;
 
+import javax.annotation.Nonnull;
+
 import com.helger.commons.ValueEnforcer;
 import com.plenigo.pdflayout.base.IPLHasPadding;
 import com.plenigo.pdflayout.spec.FontSpec;
 import com.plenigo.pdflayout.spec.PaddingSpec;
-
-import javax.annotation.Nonnull;
 
 /**
  * An abstract implementation of {@link IBulletPointCreator} that uses a Font
@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class AbstractBulletPointCreatorFontBased <IMPLTYPE extends AbstractBulletPointCreatorFontBased <IMPLTYPE>> implements
                                                           IBulletPointCreator,
-        IPLHasPadding<IMPLTYPE>
+                                                          IPLHasPadding <IMPLTYPE>
 {
   private final FontSpec m_aFontSpec;
   private PaddingSpec m_aPadding = PaddingSpec.PADDING0;

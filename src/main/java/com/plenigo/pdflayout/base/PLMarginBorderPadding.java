@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,14 +16,14 @@
  */
 package com.plenigo.pdflayout.base;
 
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
 import com.plenigo.pdflayout.spec.BorderSpec;
 import com.plenigo.pdflayout.spec.MarginSpec;
 import com.plenigo.pdflayout.spec.PaddingSpec;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * Represents a single page layout as element. It consists of a page size, a

@@ -17,6 +17,7 @@
 package com.plenigo.pdflayout.element.text;
 
 import com.plenigo.pdflayout.PDFCreationException;
+import com.plenigo.pdflayout.PDFTestComparer;
 import com.plenigo.pdflayout.PLDebugTestRule;
 import com.plenigo.pdflayout.PageLayoutPDF;
 import com.plenigo.pdflayout.base.PLPageSet;
@@ -34,6 +35,8 @@ import java.io.File;
 
 /**
  * Test class for {@link PLMultiLineTextBox}
+ *
+ * @author plenigo
  */
 public final class PLMultiLineTextBoxTest {
     @Rule
@@ -80,7 +83,7 @@ public final class PLMultiLineTextBoxTest {
         final PageLayoutPDF aPageLayout = new PageLayoutPDF();
         aPageLayout.addPageSet(aPS1);
 
-        aPageLayout.renderTo(new File("pdf/text/multi-line-style.pdf"));
+        PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/text/multi-line-style.pdf"));
     }
 
     @Test
@@ -97,8 +100,7 @@ public final class PLMultiLineTextBoxTest {
 
         final PageLayoutPDF aPageLayout = new PageLayoutPDF();
         aPageLayout.addPageSet(aPS1);
-
-        aPageLayout.renderTo(new File("pdf/text/multi-line-style-empty-line.pdf"));
+        PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/text/multi-line-style-empty-line.pdf"));
     }
 
     private PLMultiLineTextBox getPLMultiLineTextBox() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,11 +16,11 @@
  */
 package com.plenigo.pdflayout.element.table;
 
+import javax.annotation.Nonnull;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.id.IHasID;
 import com.plenigo.pdflayout.spec.BorderStyleSpec;
-
-import javax.annotation.Nonnull;
 
 /**
  * Custom {@link PLTable} grid specification.

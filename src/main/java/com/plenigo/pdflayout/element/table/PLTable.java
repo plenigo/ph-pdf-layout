@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,21 @@
  * limitations under the License.
  */
 package com.plenigo.pdflayout.element.table;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.ObjIntConsumer;
+
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+
+import com.plenigo.pdflayout.element.vbox.PLVBox;
+import com.plenigo.pdflayout.element.vbox.PLVBoxRow;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.DevelopersNote;
@@ -32,8 +47,6 @@ import com.plenigo.pdflayout.base.PLElementWithSize;
 import com.plenigo.pdflayout.base.PLSplitResult;
 import com.plenigo.pdflayout.debug.PLDebugLog;
 import com.plenigo.pdflayout.element.special.PLSpacerX;
-import com.plenigo.pdflayout.element.vbox.PLVBox;
-import com.plenigo.pdflayout.element.vbox.PLVBoxRow;
 import com.plenigo.pdflayout.render.PageRenderContext;
 import com.plenigo.pdflayout.render.PreparationContext;
 import com.plenigo.pdflayout.spec.EValueUOMType;
@@ -41,34 +54,24 @@ import com.plenigo.pdflayout.spec.HeightSpec;
 import com.plenigo.pdflayout.spec.MarginSpec;
 import com.plenigo.pdflayout.spec.SizeSpec;
 import com.plenigo.pdflayout.spec.WidthSpec;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-import java.io.IOException;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.ObjIntConsumer;
 
 /**
  * A special table with a repeating header
  *
  * @author Philip Helger
  */
-public class PLTable extends AbstractPLRenderableObject<PLTable> implements IPLSplittableObject<PLTable, PLTable>, IPLHasMargin<PLTable> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PLTable.class);
+public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPLSplittableObject <PLTable, PLTable>, IPLHasMargin <PLTable>
+{
+  private static final Logger LOGGER = LoggerFactory.getLogger (PLTable.class);
 
-    // All column widths
-    private final ICommonsList<WidthSpec> m_aWidths;
-    // With type to use - may be null
-    private final EValueUOMType m_eCommonWidthType;
-    // VBox with all the PLTableRow elements
-    private PLVBox m_aRows = new PLVBox().setVertSplittable(true).setFullWidth(true);
-    // Margin around the table
-    private MarginSpec m_aMargin = DEFAULT_MARGIN;
+  // All column widths
+  private final ICommonsList <WidthSpec> m_aWidths;
+  // With type to use - may be null
+  private final EValueUOMType m_eCommonWidthType;
+  // VBox with all the PLTableRow elements
+  private PLVBox m_aRows = new PLVBox ().setVertSplittable (true).setFullWidth (true);
+  // Margin around the table
+  private MarginSpec m_aMargin = DEFAULT_MARGIN;
 
   /**
    * Don't use that constructor. Use {@link #PLTable(Iterable)} or
@@ -473,18 +476,18 @@ public class PLTable extends AbstractPLRenderableObject<PLTable> implements IPLS
 
     final PLTable aTable1 = new PLTable (m_aWidths);
     aTable1.setID (getID () + "-1");
-      aTable1.setBasicDataFrom(this);
-      aTable1.internalMarkAsPrepared(ret.getFirstElement().getSize());
-      aTable1.m_aRows = (PLVBox) ret.getFirstElement().getElement();
+    aTable1.setBasicDataFrom (this);
+    aTable1.internalMarkAsPrepared (ret.getFirstElement ().getSize ());
+    aTable1.m_aRows = (PLVBox) ret.getFirstElement ().getElement ();
 
-      final PLTable aTable2 = new PLTable(m_aWidths);
-      aTable2.setID(getID() + "-2");
-      aTable2.setBasicDataFrom(this);
-      aTable2.internalMarkAsPrepared(ret.getSecondElement().getSize());
-      aTable2.m_aRows = (PLVBox) ret.getSecondElement().getElement();
+    final PLTable aTable2 = new PLTable (m_aWidths);
+    aTable2.setID (getID () + "-2");
+    aTable2.setBasicDataFrom (this);
+    aTable2.internalMarkAsPrepared (ret.getSecondElement ().getSize ());
+    aTable2.m_aRows = (PLVBox) ret.getSecondElement ().getElement ();
 
-      return new PLSplitResult(new PLElementWithSize(aTable1, ret.getFirstElement().getSize()),
-              new PLElementWithSize(aTable2, ret.getSecondElement().getSize()));
+    return new PLSplitResult (new PLElementWithSize (aTable1, ret.getFirstElement ().getSize ()),
+                              new PLElementWithSize (aTable2, ret.getSecondElement ().getSize ()));
   }
 
   @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,11 +16,11 @@
  */
 package com.plenigo.pdflayout;
 
-import com.helger.commons.CGlobal;
-import com.helger.commons.annotation.PresentForCodeCoverage;
-
 import javax.annotation.Nonnegative;
 import javax.annotation.concurrent.Immutable;
+
+import com.helger.commons.CGlobal;
+import com.helger.commons.annotation.PresentForCodeCoverage;
 
 /**
  * Conversion utility methods for this project.
@@ -28,14 +28,13 @@ import javax.annotation.concurrent.Immutable;
  * @author Philip Helger
  */
 @Immutable
-public final class PLConvert {
-    /**
-     * Default user space unit DPI: 72
-     */
+public final class PLConvert
+{
+  /** Default user space unit DPI: 72 */
   public static final int DEFAULT_USER_SPACE_UNIT_DPI = 72;
 
   @PresentForCodeCoverage
-  private static final PLConvert s_aInstance = new PLConvert ();
+  private static final PLConvert INSTANCE = new PLConvert ();
 
   private PLConvert ()
   {}

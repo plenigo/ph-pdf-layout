@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,27 +16,28 @@
  */
 package com.plenigo.pdflayout.element.table;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.math.MathHelper;
-
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+
+import com.helger.commons.ValueEnforcer;
+import com.helger.commons.math.MathHelper;
 
 /**
  * Read-only version of the cell range.
  *
  * @author Philip Helger
  */
-public interface IPLCellRange {
-    /**
-     * @return row number for the upper left hand corner
-     */
-    int getFirstRow();
+public interface IPLCellRange
+{
+  /**
+   * @return row number for the upper left hand corner
+   */
+  int getFirstRow ();
 
-    /**
-     * @return row number for the lower right hand corner
-     */
-    int getLastRow();
+  /**
+   * @return row number for the lower right hand corner
+   */
+  int getLastRow ();
 
   /**
    * @return column number for the upper left hand corner

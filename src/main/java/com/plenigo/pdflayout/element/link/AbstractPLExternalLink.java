@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,55 +16,59 @@
  */
 package com.plenigo.pdflayout.element.link;
 
-import com.helger.commons.string.StringHelper;
-import com.plenigo.pdflayout.base.IPLRenderableObject;
-import com.plenigo.pdflayout.debug.PLDebugLog;
-import com.plenigo.pdflayout.element.box.AbstractPLInlineBox;
-import com.plenigo.pdflayout.link.ELinkBorderStyle;
-import com.plenigo.pdflayout.render.PageRenderContext;
-import com.plenigo.pdflayout.spec.LineDashPatternSpec;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
-import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
-import org.apache.pdfbox.pdmodel.interactive.action.PDActionURI;
-import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
-import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
+import java.io.IOException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
-import java.awt.*;
-import java.io.IOException;
+
+import com.plenigo.pdflayout.element.box.AbstractPLInlineBox;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.interactive.action.PDActionURI;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
+
+import com.helger.commons.string.StringHelper;
+import com.plenigo.pdflayout.base.IPLRenderableObject;
+import com.plenigo.pdflayout.base.PLColor;
+import com.plenigo.pdflayout.debug.PLDebugLog;
+import com.plenigo.pdflayout.link.ELinkBorderStyle;
+import com.plenigo.pdflayout.render.PageRenderContext;
+import com.plenigo.pdflayout.spec.LineDashPatternSpec;
 
 /**
  * An external link that references to an external URI. Use
  * {@link #setURI(String)} to define the link target.
  *
- * @param <IMPLTYPE> Implementation type
- *
  * @author Philip Helger
+ * @param <IMPLTYPE>
+ *        Implementation type
  * @since 6.0.1
  */
-public abstract class AbstractPLExternalLink<IMPLTYPE extends AbstractPLExternalLink<IMPLTYPE>> extends AbstractPLInlineBox<IMPLTYPE> {
-    private String m_sURI;
-    // These are parameterized in preparation for eventual future actions. Until
-    // then, always use the existing "border" functionality
-    private final ELinkBorderStyle m_eLinkBorderStyle = ELinkBorderStyle.SOLID;
-    private final LineDashPatternSpec m_aLinkDashPattern = null;
-    private final float m_fLinkBorderWidth = 0;
-    private final Color m_aLinkColor = null;
+public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExternalLink <IMPLTYPE>> extends
+        AbstractPLInlineBox<IMPLTYPE>
+{
+  private String m_sURI;
+  // These are parameterized in preparation for eventual future actions. Until
+  // then, always use the existing "border" functionality
+  private final ELinkBorderStyle m_eLinkBorderStyle = ELinkBorderStyle.SOLID;
+  private final LineDashPatternSpec m_aLinkDashPattern = null;
+  private final float m_fLinkBorderWidth = 0;
+  private final PLColor m_aLinkColor = null;
 
-    public AbstractPLExternalLink(@Nullable final IPLRenderableObject<?> aElement) {
-        super(aElement);
-    }
+  public AbstractPLExternalLink (@Nullable final IPLRenderableObject <?> aElement)
+  {
+    super (aElement);
+  }
 
-    @Override
-    @Nonnull
-    @OverridingMethodsMustInvokeSuper
-    public IMPLTYPE setBasicDataFrom(@Nonnull final IMPLTYPE aSource) {
-        super.setBasicDataFrom(aSource);
-        setURI(aSource.getURI());
-        return thisAsT();
+  @Override
+  @Nonnull
+  @OverridingMethodsMustInvokeSuper
+  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
+  {
+    super.setBasicDataFrom (aSource);
+    setURI (aSource.getURI ());
+    return thisAsT ();
   }
 
   /**
@@ -115,10 +119,7 @@ public abstract class AbstractPLExternalLink<IMPLTYPE extends AbstractPLExternal
         if (m_aLinkColor != null)
         {
           // Border color
-          final float [] components = new float [] { m_aLinkColor.getRed () / 255f,
-                                                     m_aLinkColor.getGreen () / 255f,
-                                                     m_aLinkColor.getBlue () / 255f };
-          aLink.setColor (new PDColor (components, PDDeviceRGB.INSTANCE));
+          aLink.setColor (m_aLinkColor.getAsPDColor ());
         }
 
         // Destination URI

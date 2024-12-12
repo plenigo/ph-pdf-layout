@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,38 +16,42 @@
  */
 package com.plenigo.pdflayout.element.special;
 
+import java.io.IOException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+
 import com.helger.commons.string.ToStringGenerator;
 import com.plenigo.pdflayout.base.AbstractPLRenderableObject;
 import com.plenigo.pdflayout.render.PageRenderContext;
 import com.plenigo.pdflayout.render.PreparationContext;
 import com.plenigo.pdflayout.spec.SizeSpec;
 
-import javax.annotation.Nonnull;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-import java.io.IOException;
-
 /**
  * A horizontal spacer
  *
  * @author Philip Helger
  */
-public class PLSpacerX extends AbstractPLRenderableObject<PLSpacerX> {
-    private float m_fWidth = -1;
+public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX>
+{
+  private float m_fWidth = -1;
 
-    public PLSpacerX() {
-    }
+  public PLSpacerX ()
+  {}
 
-    public PLSpacerX(final float fWidth) {
-        setWidth(fWidth);
-    }
+  public PLSpacerX (final float fWidth)
+  {
+    setWidth (fWidth);
+  }
 
-    @Override
-    @Nonnull
-    @OverridingMethodsMustInvokeSuper
-    public PLSpacerX setBasicDataFrom(@Nonnull final PLSpacerX aSource) {
-        super.setBasicDataFrom(aSource);
-        setWidth(aSource.m_fWidth);
-        return this;
+  @Override
+  @Nonnull
+  @OverridingMethodsMustInvokeSuper
+  public PLSpacerX setBasicDataFrom (@Nonnull final PLSpacerX aSource)
+  {
+    super.setBasicDataFrom (aSource);
+    setWidth (aSource.m_fWidth);
+    return this;
   }
 
   public final float getWidth ()

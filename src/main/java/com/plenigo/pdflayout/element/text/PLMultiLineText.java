@@ -23,6 +23,8 @@ import javax.annotation.Nullable;
 
 /**
  * Render text to multi lines.
+ *
+ * @author plenigo
  */
 public class PLMultiLineText extends AbstractPLMultiLineText<PLMultiLineText> {
     public PLMultiLineText(@Nullable final String sText, @Nonnull final FontSpec aFontSpec) {

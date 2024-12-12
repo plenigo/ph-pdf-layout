@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,13 +16,13 @@
  */
 package com.plenigo.pdflayout.element.hbox;
 
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
 import com.plenigo.pdflayout.base.IPLRenderableObject;
 import com.plenigo.pdflayout.spec.WidthSpec;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * This class represents a single column within an {@link PLHBox}. This is a
@@ -33,8 +33,8 @@ import javax.annotation.concurrent.NotThreadSafe;
 @NotThreadSafe
 public final class PLHBoxColumn
 {
-    private IPLRenderableObject<?> m_aElement;
-    private WidthSpec m_aWidth;
+  private IPLRenderableObject <?> m_aElement;
+  private WidthSpec m_aWidth;
 
   public PLHBoxColumn (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final WidthSpec aWidth)
   {

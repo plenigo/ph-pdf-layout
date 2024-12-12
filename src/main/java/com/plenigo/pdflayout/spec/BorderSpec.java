@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,15 +16,16 @@
  */
 package com.plenigo.pdflayout.spec;
 
-import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
-import com.helger.commons.equals.EqualsHelper;
-import com.helger.commons.hashcode.HashCodeGenerator;
-import com.helger.commons.string.ToStringGenerator;
+import java.io.Serializable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
-import java.io.Serializable;
+
+import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
+import com.helger.commons.string.ToStringGenerator;
 
 /**
  * This class represents a border around a single element. Each side can be
@@ -271,10 +272,10 @@ public class BorderSpec implements Serializable
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).appendIfNotNull ("left", m_aLeft)
-                                       .appendIfNotNull ("top", m_aTop)
-                                       .appendIfNotNull ("right", m_aRight)
-                                       .appendIfNotNull ("bottom", m_aBottom)
+    return new ToStringGenerator (null).appendIfNotNull ("Left", m_aLeft)
+                                       .appendIfNotNull ("Top", m_aTop)
+                                       .appendIfNotNull ("Right", m_aRight)
+                                       .appendIfNotNull ("Bottom", m_aBottom)
                                        .getToString ();
   }
 

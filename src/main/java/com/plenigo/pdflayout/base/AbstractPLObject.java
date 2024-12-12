@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,17 +16,18 @@
  */
 package com.plenigo.pdflayout.base;
 
+import javax.annotation.Nonnull;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.id.factory.GlobalIDFactory;
 import com.helger.commons.lang.ClassHelper;
 import com.helger.commons.string.ToStringGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nonnull;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 /**
  * Abstract PL object
@@ -87,8 +88,7 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
     // or "displayed", so we're using this as a usage indicator
     if (m_sDebugID != null)
     {
-      if (LOGGER.isWarnEnabled ())
-        LOGGER.warn ("Overwriting ID '" + m_sElementID + "' with ID '" + sID + "'");
+      LOGGER.warn ("Overwriting ID '" + m_sElementID + "' with ID '" + sID + "'");
       // Clear cached value
       m_sDebugID = null;
     }

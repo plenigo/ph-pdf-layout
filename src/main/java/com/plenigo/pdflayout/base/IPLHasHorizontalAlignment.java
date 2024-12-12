@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,10 +16,10 @@
  */
 package com.plenigo.pdflayout.base;
 
-import com.plenigo.pdflayout.spec.EHorzAlignment;
-
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+
+import com.plenigo.pdflayout.spec.EHorzAlignment;
 
 /**
  * Base interface for objects with a horizontal alignment
@@ -28,7 +28,8 @@ import javax.annotation.Nonnull;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAlignment <IMPLTYPE>> extends IPLRenderableObject <IMPLTYPE>
+public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAlignment <IMPLTYPE>> extends
+                                           IPLRenderableObject <IMPLTYPE>
 {
   EHorzAlignment DEFAULT_HORZ_ALIGNMENT = EHorzAlignment.DEFAULT;
 
@@ -74,6 +75,7 @@ public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAli
       case RIGHT:
         return Math.max (fAvailableWidth - fElementWidth, 0f);
       case JUSTIFY:
+      case BLOCK:
         return 0f;
       default:
         throw new IllegalStateException ("Unsupported horizontal alignment " + getHorzAlign ());

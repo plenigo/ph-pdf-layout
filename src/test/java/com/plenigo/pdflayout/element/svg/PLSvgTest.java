@@ -18,8 +18,10 @@ package com.plenigo.pdflayout.element.svg;
 
 import com.helger.commons.io.resource.ClassPathResource;
 import com.plenigo.pdflayout.PDFCreationException;
+import com.plenigo.pdflayout.PDFTestComparer;
 import com.plenigo.pdflayout.PLDebugTestRule;
 import com.plenigo.pdflayout.PageLayoutPDF;
+import com.plenigo.pdflayout.base.PLColor;
 import com.plenigo.pdflayout.base.PLPageSet;
 import com.plenigo.pdflayout.element.hbox.PLHBox;
 import com.plenigo.pdflayout.element.image.PLImage;
@@ -36,14 +38,13 @@ import org.junit.Test;
 import org.junit.rules.TestRule;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
 /**
  * Test class for {@link PLImage} and {@link PLStreamImage}
  *
- * @author Philip Helger
+ * @author plenigo
  */
 public final class PLSvgTest {
     @Rule
@@ -55,18 +56,18 @@ public final class PLSvgTest {
 
         final PLPageSet aPS1 = new PLPageSet(PDRectangle.A4).setMargin(30);
 
-        aPS1.addElement(new PLText("First line - left image below", r10).setHorzAlign(EHorzAlignment.CENTER).setBorder(Color.RED));
+        aPS1.addElement(new PLText("First line - left image below", r10).setHorzAlign(EHorzAlignment.CENTER).setBorder(PLColor.RED));
         aPS1.addElement(new PLSvg(ClassPathResource.getInputStream("images/testsvg1.svg").readAllBytes(), 140, 40));
         aPS1.addElement(new PLSvg(ClassPathResource.getInputStream("images/plenigo.svg").readAllBytes(), 140, 40));
         aPS1.addElement(new PLImage(ImageIO.read(ClassPathResource.getInputStream("images/test1.jpg")), 140, 40));
 
-        aPS1.addElement(new PLText("Second line - left image below double size", r10).setHorzAlign(EHorzAlignment.CENTER).setBorder(Color.RED));
+        aPS1.addElement(new PLText("Second line - left image below double size", r10).setHorzAlign(EHorzAlignment.CENTER).setBorder(PLColor.RED));
         aPS1.addElement(new PLSvg(ClassPathResource.getInputStream("images/testsvg1.svg").readAllBytes(), 40, 140));
         aPS1.addElement(new PLSvg(ClassPathResource.getInputStream("images/plenigo.svg").readAllBytes(), 40, 140));
         aPS1.addElement(new PLImage(ImageIO.read(ClassPathResource.getInputStream("images/test1.jpg")), 40, 140));
 
         aPS1.addElement(new PLText("Third line - table with 5 columns below", r10).setHorzAlign(EHorzAlignment.CENTER)
-                .setBorder(new BorderStyleSpec(Color.BLUE)));
+                .setBorder(new BorderStyleSpec(PLColor.BLUE)));
 
         final PLHBox aHBox = new PLHBox();
         aHBox.addColumn(new PLSvg(ClassPathResource.getInputStream("images/testsvg1.svg").readAllBytes(), 140, 40), WidthSpec.abs(140));
@@ -92,10 +93,10 @@ public final class PLSvgTest {
         aHBox4.addColumn(new PLImage(ImageIO.read(ClassPathResource.getInputStream("images/test1.jpg")), 150, 150), WidthSpec.abs(150));
         aPS1.addElement(aHBox4);
 
-        aPS1.addElement(new PLText("Last line", r10).setHorzAlign(EHorzAlignment.CENTER).setBorder(Color.GREEN));
+        aPS1.addElement(new PLText("Last line", r10).setHorzAlign(EHorzAlignment.CENTER).setBorder(PLColor.GREEN));
 
         final PageLayoutPDF aPageLayout = new PageLayoutPDF();
         aPageLayout.addPageSet(aPS1);
-        aPageLayout.renderTo(new File("pdf/plsvg/basic.pdf"));
+        PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plsvg/basic.pdf"));
     }
 }

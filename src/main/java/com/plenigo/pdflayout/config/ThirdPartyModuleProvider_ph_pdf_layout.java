@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,14 +16,14 @@
  */
 package com.plenigo.pdflayout.config;
 
+import javax.annotation.Nullable;
+
 import com.helger.commons.annotation.IsSPIImplementation;
 import com.helger.commons.thirdparty.ELicense;
 import com.helger.commons.thirdparty.IThirdPartyModule;
 import com.helger.commons.thirdparty.IThirdPartyModuleProviderSPI;
 import com.helger.commons.thirdparty.ThirdPartyModule;
 import com.helger.commons.version.Version;
-
-import javax.annotation.Nullable;
 
 /**
  * Implement this SPI interface if your JAR file contains external third party
@@ -37,7 +37,7 @@ public final class ThirdPartyModuleProvider_ph_pdf_layout implements IThirdParty
   public static final IThirdPartyModule PDFBOX = new ThirdPartyModule ("Apache PDFBox",
                                                                        "Apache",
                                                                        ELicense.APACHE2,
-                                                                       new Version (2, 0, 27),
+                                                                       new Version (3, 0, 2),
                                                                        "http://pdfbox.apache.org/");
   public static final IThirdPartyModule JBIG_IMAGEIO = new ThirdPartyModule ("Apache PDFBox ImageIO",
                                                                              "Apache",

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,12 @@
  */
 package com.plenigo.pdflayout.element.box;
 
+import java.io.IOException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.plenigo.pdflayout.base.AbstractPLElement;
@@ -31,40 +37,38 @@ import com.plenigo.pdflayout.render.PageRenderContext;
 import com.plenigo.pdflayout.render.PreparationContext;
 import com.plenigo.pdflayout.spec.SizeSpec;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-import java.io.IOException;
-
 /**
  * A box is a simple element that encapsulates another element and has a
  * padding, border and margin itself as well as it can align the contained
  * element.
  *
- * @param <IMPLTYPE> Implementation type
- *
  * @author Philip Helger
+ * @param <IMPLTYPE>
+ *        Implementation type
  * @since 6.0.1
  */
-public abstract class AbstractPLInlineBox<IMPLTYPE extends AbstractPLInlineBox<IMPLTYPE>> extends AbstractPLElement<IMPLTYPE> implements
-        IPLSplittableObject<IMPLTYPE, IMPLTYPE> {
-    private IPLRenderableObject<?> m_aElement;
-    private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
+public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE> implements
+                                          IPLSplittableObject <IMPLTYPE, IMPLTYPE>
+{
+  private IPLRenderableObject <?> m_aElement;
+  private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
 
-    // Status vars
-    private SizeSpec m_aElementPreparedSize;
+  // Status vars
+  private SizeSpec m_aElementPreparedSize;
 
-    public AbstractPLInlineBox(@Nullable final IPLRenderableObject<?> aElement) {
-        setElement(aElement);
-    }
+  public AbstractPLInlineBox (@Nullable final IPLRenderableObject <?> aElement)
+  {
+    setElement (aElement);
+  }
 
-    @Override
-    @Nonnull
-    @OverridingMethodsMustInvokeSuper
-    public IMPLTYPE setBasicDataFrom(@Nonnull final IMPLTYPE aSource) {
-        super.setBasicDataFrom(aSource);
-        setVertSplittable(aSource.isVertSplittable());
-        return thisAsT();
+  @Override
+  @Nonnull
+  @OverridingMethodsMustInvokeSuper
+  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
+  {
+    super.setBasicDataFrom (aSource);
+    setVertSplittable (aSource.isVertSplittable ());
+    return thisAsT ();
   }
 
   /**
@@ -169,10 +173,11 @@ public abstract class AbstractPLInlineBox<IMPLTYPE extends AbstractPLInlineBox<I
   }
 
   @Override
-  protected void onMarkAsNotPrepared () {
-      internalSetElementPreparedSize(null);
-      if (m_aElement instanceof AbstractPLRenderableObject<?>)
-          ((AbstractPLRenderableObject<?>) m_aElement).internalMarkAsNotPrepared();
+  protected void onMarkAsNotPrepared ()
+  {
+    internalSetElementPreparedSize (null);
+    if (m_aElement instanceof AbstractPLRenderableObject <?>)
+      ((AbstractPLRenderableObject <?>) m_aElement).internalMarkAsNotPrepared ();
   }
 
   @Nullable
@@ -264,18 +269,18 @@ public abstract class AbstractPLInlineBox<IMPLTYPE extends AbstractPLInlineBox<I
                                    " & " +
                                    aSplitResult.getSecondElement ().getHeight () +
                                    "+" +
-                                     aBox2Element.getOutlineYSum() +
-                                     ")");
+                                   aBox2Element.getOutlineYSum () +
+                                   ")");
 
-      // Excluding padding/margin
-      aBox1.internalMarkAsPrepared(new SizeSpec(fAvailableWidth, fBox1UsedHeight));
-      aBox1.internalSetElementPreparedSize(aBox1ElementPreparedSize);
+    // Excluding padding/margin
+    aBox1.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fBox1UsedHeight));
+    aBox1.internalSetElementPreparedSize (aBox1ElementPreparedSize);
 
-      aBox2.internalMarkAsPrepared(new SizeSpec(fAvailableWidth, fBox2UsedHeight));
-      aBox2.internalSetElementPreparedSize(aBox2ElementPreparedSize);
+    aBox2.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fBox2UsedHeight));
+    aBox2.internalSetElementPreparedSize (aBox2ElementPreparedSize);
 
-      return new PLSplitResult(new PLElementWithSize(aBox1, new SizeSpec(fAvailableWidth, fBox1UsedHeight)),
-              new PLElementWithSize(aBox2, new SizeSpec(fAvailableWidth, fBox2UsedHeight)));
+    return new PLSplitResult (new PLElementWithSize (aBox1, new SizeSpec (fAvailableWidth, fBox1UsedHeight)),
+                              new PLElementWithSize (aBox2, new SizeSpec (fAvailableWidth, fBox2UsedHeight)));
   }
 
   @Override
