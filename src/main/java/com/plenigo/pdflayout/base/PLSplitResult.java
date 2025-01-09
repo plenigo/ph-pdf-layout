@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,11 +16,11 @@
  */
 package com.plenigo.pdflayout.base;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.string.ToStringGenerator;
-
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+
+import com.helger.commons.ValueEnforcer;
+import com.helger.commons.string.ToStringGenerator;
 
 /**
  * This class represents the result of splitting as defined in
@@ -29,16 +29,18 @@ import javax.annotation.concurrent.Immutable;
  * @author Philip Helger
  */
 @Immutable
-public class PLSplitResult {
-    private final PLElementWithSize m_aFirstElement;
-    private final PLElementWithSize m_aSecondElement;
+public class PLSplitResult
+{
+  private final PLElementWithSize m_aFirstElement;
+  private final PLElementWithSize m_aSecondElement;
 
-    public PLSplitResult(@Nonnull final PLElementWithSize aFirstElement, @Nonnull final PLElementWithSize aSecondElement) {
-        ValueEnforcer.notNull(aFirstElement, "FirstElement");
-        ValueEnforcer.notNull(aSecondElement, "SecondElement");
-        m_aFirstElement = aFirstElement;
-        m_aSecondElement = aSecondElement;
-    }
+  public PLSplitResult (@Nonnull final PLElementWithSize aFirstElement, @Nonnull final PLElementWithSize aSecondElement)
+  {
+    ValueEnforcer.notNull (aFirstElement, "FirstElement");
+    ValueEnforcer.notNull (aSecondElement, "SecondElement");
+    m_aFirstElement = aFirstElement;
+    m_aSecondElement = aSecondElement;
+  }
 
   @Nonnull
   public PLElementWithSize getFirstElement ()

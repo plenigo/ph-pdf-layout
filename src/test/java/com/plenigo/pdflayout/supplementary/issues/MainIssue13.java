@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,39 +16,40 @@
  */
 package com.plenigo.pdflayout.supplementary.issues;
 
+import java.io.File;
+
+import com.plenigo.pdflayout.base.PLColor;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
-import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.apache.pdfbox.pdmodel.interactive.action.PDActionURI;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
 
-import java.awt.*;
-import java.io.File;
+public class MainIssue13
+{
+  public static void main (final String [] args) throws Exception
+  {
+    try (final PDDocument doc = new PDDocument ())
+    {
+      final PDPage page = new PDPage (new PDRectangle (250, 150));
+      doc.addPage (page);
 
-public class MainIssue13 {
-    public static void main(final String[] args) throws Exception {
-        try (final PDDocument doc = new PDDocument()) {
-            final PDPage page = new PDPage(new PDRectangle(250, 150));
-            doc.addPage(page);
+      try (final PDPageContentStream contentStream = new PDPageContentStream (doc, page))
+      {
+        final PDAnnotationLink txtLink = new PDAnnotationLink ();
 
-            try (final PDPageContentStream contentStream = new PDPageContentStream(doc, page)) {
-                final PDAnnotationLink txtLink = new PDAnnotationLink();
-
-                // border style
-                final PDBorderStyleDictionary linkBorder = new PDBorderStyleDictionary();
-                linkBorder.setStyle(PDBorderStyleDictionary.STYLE_UNDERLINE);
-                linkBorder.setWidth(10);
-                txtLink.setBorderStyle(linkBorder);
+        // border style
+        final PDBorderStyleDictionary linkBorder = new PDBorderStyleDictionary ();
+        linkBorder.setStyle (PDBorderStyleDictionary.STYLE_UNDERLINE);
+        linkBorder.setWidth (10);
+        txtLink.setBorderStyle (linkBorder);
 
         // Border color
-        final Color color = Color.GREEN;
-        final float [] components = new float [] { color.getRed () / 255f, color.getGreen () / 255f, color.getBlue () / 255f };
-        txtLink.setColor (new PDColor (components, PDDeviceRGB.INSTANCE));
+        txtLink.setColor (PLColor.GREEN.getAsPDColor ());
 
         // Destination URI
         final PDActionURI action = new PDActionURI ();
@@ -67,7 +68,7 @@ public class MainIssue13 {
         // Main page content
         contentStream.beginText ();
         contentStream.newLineAtOffset (12, 12);
-        contentStream.setFont (PDType1Font.COURIER_BOLD, 10);
+        contentStream.setFont (new PDType1Font (Standard14Fonts.FontName.COURIER_BOLD), 10);
         contentStream.showText ("This is linked to the outside world");
         contentStream.endText ();
       }

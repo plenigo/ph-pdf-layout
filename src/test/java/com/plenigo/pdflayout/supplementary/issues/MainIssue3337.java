@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,9 +16,12 @@
  */
 package com.plenigo.pdflayout.supplementary.issues;
 
-import com.helger.font.open_sans.EFontResourceOpenSans;
+import java.io.File;
+import java.io.IOException;
+
 import org.apache.fontbox.ttf.TTFParser;
 import org.apache.fontbox.ttf.TrueTypeFont;
+import org.apache.pdfbox.io.RandomAccessReadBuffer;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -27,8 +30,7 @@ import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
+import com.helger.font.open_sans.EFontResourceOpenSans;
 
 public final class MainIssue3337
 {
@@ -36,7 +38,8 @@ public final class MainIssue3337
 
   public static void main (final String [] args) throws IOException
   {
-    final TrueTypeFont aTTF = new TTFParser ().parse (EFontResourceOpenSans.OPEN_SANS_NORMAL.getFontResource ().getInputStream ());
+    final TrueTypeFont aTTF = new TTFParser ().parse (new RandomAccessReadBuffer (EFontResourceOpenSans.OPEN_SANS_NORMAL.getFontResource ()
+                                                                                                                        .getInputStream ()));
 
     for (int i = 0; i < 2; ++i)
     {

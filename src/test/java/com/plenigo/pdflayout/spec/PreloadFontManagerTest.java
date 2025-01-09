@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,19 +16,20 @@
  */
 package com.plenigo.pdflayout.spec;
 
-import com.helger.commons.mock.CommonsTestHelper;
-import com.helger.font.api.IFontResource;
-import com.helger.font.lato2.EFontResourceLato2;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+
+import java.io.IOException;
+
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import com.helger.commons.mock.CommonsTestHelper;
+import com.helger.font.api.IFontResource;
+import com.helger.font.lato2.EFontResourceLato2;
 
 /**
  * Test class for class {@link PreloadFontManager}.

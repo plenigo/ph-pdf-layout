@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,18 +16,18 @@
  */
 package com.plenigo.pdflayout.config.xml;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.helger.commons.ValueEnforcer;
+import com.plenigo.pdflayout.base.PLColor;
+import com.plenigo.pdflayout.spec.FontSpec;
+import com.plenigo.pdflayout.spec.IPreloadFontResolver;
+import com.plenigo.pdflayout.spec.PreloadFont;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
 import com.helger.xml.microdom.convert.MicroTypeConverter;
-import com.plenigo.pdflayout.spec.FontSpec;
-import com.plenigo.pdflayout.spec.IPreloadFontResolver;
-import com.plenigo.pdflayout.spec.PreloadFont;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.awt.*;
 
 /**
  * Micro type converter for class {@link FontSpec}.
@@ -58,7 +58,7 @@ public final class FontSpecMicroTypeConverter implements IMicroTypeConverter <Fo
     aElement.setAttribute (ATTR_PRELOAD_FONT_ID, aValue.getPreloadFontID ());
     aElement.setAttribute (ATTR_FONT_SIZE, aValue.getFontSize ());
 
-    final Color aColor = aValue.getColor ();
+    final PLColor aColor = aValue.getColor ();
     if (aColor != FontSpec.DEFAULT_COLOR)
       aElement.appendChild (MicroTypeConverter.convertToMicroElement (aColor, sNamespaceURI, ELEMENT_COLOR));
     return aElement;
@@ -74,9 +74,9 @@ public final class FontSpecMicroTypeConverter implements IMicroTypeConverter <Fo
 
     final float fFontSize = aElement.getAttributeValueAsFloat (ATTR_FONT_SIZE, Float.NaN);
 
-    final Color aColor = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_COLOR),
-                                                             Color.class,
-                                                             FontSpec.DEFAULT_COLOR);
+    final PLColor aColor = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_COLOR),
+                                                               PLColor.class,
+                                                               FontSpec.DEFAULT_COLOR);
     return new FontSpec (aPreloadFont, fFontSize, aColor);
   }
 }

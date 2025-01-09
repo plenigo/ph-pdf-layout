@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,9 @@
  */
 package com.plenigo.pdflayout.base;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
@@ -23,25 +26,23 @@ import com.helger.commons.annotation.ReturnsMutableObject;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-
 /**
  * Page set prepare result. Used only internally.
  *
  * @author Philip Helger
  */
-public final class PLPageSetPrepareResult {
-    private PLMarginBorderPadding m_aFirstPageMBP;
-    private float m_fFirstHeaderHeight = Float.NaN;
-    private float m_fHeaderHeight = Float.NaN;
-    private final ICommonsList<PLElementWithSize> m_aContentHeight = new CommonsArrayList<>();
-    private float m_fFirstFooterHeight = Float.NaN;
-    private float m_fFooterHeight = Float.NaN;
-    private final ICommonsList<ICommonsList<PLElementWithSize>> m_aPerPageElements = new CommonsArrayList<>();
+public final class PLPageSetPrepareResult
+{
+  private PLMarginBorderPadding m_aFirstPageMBP;
+  private float m_fFirstHeaderHeight = Float.NaN;
+  private float m_fHeaderHeight = Float.NaN;
+  private final ICommonsList <PLElementWithSize> m_aContentHeight = new CommonsArrayList <> ();
+  private float m_fFirstFooterHeight = Float.NaN;
+  private float m_fFooterHeight = Float.NaN;
+  private final ICommonsList <ICommonsList <PLElementWithSize>> m_aPerPageElements = new CommonsArrayList <> ();
 
-    PLPageSetPrepareResult() {
-    }
+  PLPageSetPrepareResult ()
+  {}
 
   @Nonnull
   PLMarginBorderPadding getFirstPageMBP ()

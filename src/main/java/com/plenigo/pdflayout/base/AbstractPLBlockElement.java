@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,13 +16,13 @@
  */
 package com.plenigo.pdflayout.base;
 
+import javax.annotation.Nonnull;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
 import com.plenigo.pdflayout.spec.EHorzAlignment;
 import com.plenigo.pdflayout.spec.EVertAlignment;
-
-import javax.annotation.Nonnull;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 /**
  * Abstract implementation of {@link IPLBlockElement}.
@@ -31,14 +31,15 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockElement <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
-                                             implements
+public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockElement <IMPLTYPE>> extends
+                                             AbstractPLElement <IMPLTYPE> implements
                                              IPLBlockElement <IMPLTYPE>
 {
   private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
   private EVertAlignment m_eVertAlign = DEFAULT_VERT_ALIGNMENT;
   // Always use the full width?
   private boolean m_bFullWidth = DEFAULT_FULL_WIDTH;
+  private boolean m_bClipContent = DEFAULT_CLIP_CONTENT;
 
   public AbstractPLBlockElement ()
   {}
@@ -92,6 +93,18 @@ public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockEl
     return thisAsT ();
   }
 
+  public final boolean isClipContent ()
+  {
+    return m_bClipContent;
+  }
+
+  @Nonnull
+  public final IMPLTYPE setClipContent (final boolean bClipContent)
+  {
+    m_bClipContent = bClipContent;
+    return thisAsT ();
+  }
+
   @Override
   public String toString ()
   {
@@ -99,6 +112,7 @@ public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockEl
                             .append ("HorzAlign", m_eHorzAlign)
                             .append ("VertAlign", m_eVertAlign)
                             .append ("FullWidth", m_bFullWidth)
+                            .append ("ClipContent", m_bClipContent)
                             .getToString ();
   }
 }

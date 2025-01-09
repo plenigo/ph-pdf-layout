@@ -33,7 +33,6 @@
 package com.plenigo.pdflayout.element.text;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.ArrayHelper;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
@@ -44,9 +43,11 @@ import com.plenigo.pdflayout.base.AbstractPLRenderableObject;
 import com.plenigo.pdflayout.base.IPLRenderableObject;
 import com.plenigo.pdflayout.base.IPLSplittableObject;
 import com.plenigo.pdflayout.base.IPLVisitor;
+import com.plenigo.pdflayout.base.PLColor;
 import com.plenigo.pdflayout.base.PLElementWithSize;
 import com.plenigo.pdflayout.base.PLSplitResult;
 import com.plenigo.pdflayout.debug.PLDebugLog;
+import com.plenigo.pdflayout.element.box.PLBox;
 import com.plenigo.pdflayout.element.hbox.PLHBox;
 import com.plenigo.pdflayout.element.hbox.PLHBoxColumn;
 import com.plenigo.pdflayout.element.link.PLExternalLink;
@@ -54,6 +55,7 @@ import com.plenigo.pdflayout.element.vbox.PLVBoxRow;
 import com.plenigo.pdflayout.render.PageRenderContext;
 import com.plenigo.pdflayout.render.PreparationContext;
 import com.plenigo.pdflayout.spec.BorderStyleSpec;
+import com.plenigo.pdflayout.spec.EHorzAlignment;
 import com.plenigo.pdflayout.spec.FontSpec;
 import com.plenigo.pdflayout.spec.HeightSpec;
 import com.plenigo.pdflayout.spec.LoadedFont;
@@ -68,18 +70,15 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
-import java.awt.*;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.function.Consumer;
-import java.util.function.ObjIntConsumer;
 
 /**
  * Vertical box - groups several rows.
  *
  * @param <IMPLTYPE> Implementation type
  *
- * @author Philip Helger
+ * @author plenigo
  */
 public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMultiLineTextBox<IMPLTYPE>> extends AbstractPLRenderableObject<IMPLTYPE> implements
         IPLSplittableObject<IMPLTYPE, IMPLTYPE> {
@@ -95,6 +94,7 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
     private int m_nHeaderRowCount = 0;
     // Always use the full width?
     private boolean m_bFullWidth = DEFAULT_FULL_WIDTH;
+    private EHorzAlignment m_eHorzAlign = EHorzAlignment.DEFAULT;
 
     // Status vars
     /**
@@ -107,6 +107,17 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
     private SizeSpec[] m_aPreparedElementSize;
 
     public AbstractPLMultiLineTextBox() {
+    }
+
+    @Nonnull
+    public final EHorzAlignment getHorzAlign() {
+        return m_eHorzAlign;
+    }
+
+    @Nonnull
+    public final IMPLTYPE setHorzAlign(@Nonnull final EHorzAlignment eHorzAlign) {
+        m_eHorzAlign = ValueEnforcer.notNull(eHorzAlign, "HorzAlign");
+        return thisAsT();
     }
 
     @Override
@@ -227,6 +238,7 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
         final float fElementHeight = aCtx.getAvailableHeight() - getOutlineYSum();
 
         float fRestWidth = fElementWidth;
+        float fLastRestWidth = fRestWidth;
         FontHeightSpec fMaxFontHeight = new FontHeightSpec(0, 0);
         PLHBox multiLineTextBox = null;
 
@@ -241,6 +253,7 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
             if (textLines != null) {
                 iterator = textLines.iterator();
             }
+            fLastRestWidth = fRestWidth;
             do {
                 String content = "";
                 float width = 0;
@@ -254,13 +267,16 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
                     width = element.getWidth();
                     hasNext = iterator.hasNext();
                 }
-                
+                WidthSpec widthSpec = WidthSpec.auto();
+                if (width > 0) {
+                    widthSpec = WidthSpec.abs(width);
+                }
                 FontHeightSpec textFontHeight = getFontHeight(aCtx, aText.getFontSpec());
-                IPLRenderableObject <?> aElement;
+                IPLRenderableObject<?> aElement;
 
                 // check if the text has an uri
                 if (aText.hasURI()) {
-                    Color linkColor = new Color(0, 102, 204);
+                    PLColor linkColor = new PLColor(0, 102, 204);
                     PLText text = new PLText(content, aText.getFontSpec().getCloneWithDifferentColor(linkColor)).setMaxRows(1);
                     aElement = new PLExternalLink(text)
                             .setURI(aText.getURI())
@@ -272,6 +288,9 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
                 if (multiLineTextBox != null) {
                     fRestWidth = fRestWidth - width;
                     if (fRestWidth <= 0) {
+                        if (fLastRestWidth > 0 && getHorzAlign() == EHorzAlignment.RIGHT) {
+                            multiLineTextBox.addColumn(0, new PLBox(), WidthSpec.abs(fLastRestWidth));
+                        }
                         onPrepareMultiLineTextBox(aCtx, multiLineTextBox, fMaxFontHeight);
 
                         m_aRows.add(new PLVBoxRow(multiLineTextBox, HeightSpec.auto()));
@@ -281,7 +300,7 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
 
                         if (width < fElementWidth) {
                             multiLineTextBox = new PLHBox();
-                            multiLineTextBox.addColumn(aElement, WidthSpec.auto());
+                            multiLineTextBox.addColumn(aElement, widthSpec);
                             fMaxFontHeight = textFontHeight;
                             fRestWidth = fElementWidth - width;
                         } else {
@@ -292,7 +311,7 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
                         if (fMaxFontHeight.getFullHeight() < textFontHeight.getFullHeight()) {
                             fMaxFontHeight = textFontHeight;
                         }
-                        multiLineTextBox.addColumn(aElement, WidthSpec.auto());
+                        multiLineTextBox.addColumn(aElement, widthSpec);
                     }
 
                 } else if (hasNext) {
@@ -300,10 +319,11 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
                     fRestWidth = fElementWidth;
                 } else if (width < fElementWidth) {
                     multiLineTextBox = new PLHBox();
-                    multiLineTextBox.addColumn(aElement, WidthSpec.auto());
+                    multiLineTextBox.addColumn(aElement, widthSpec);
                     fMaxFontHeight = textFontHeight;
                     fRestWidth = fElementWidth - width;
                 }
+                fLastRestWidth = fRestWidth;
             } while (hasNext);
         }
 
@@ -311,6 +331,9 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
         m_aTextList.removeAll();
 
         if (multiLineTextBox != null) {
+            if (fLastRestWidth > 0 && getHorzAlign() == EHorzAlignment.RIGHT) {
+                multiLineTextBox.addColumn(0, new PLBox(), WidthSpec.abs(fLastRestWidth));
+            }
             onPrepareMultiLineTextBox(aCtx, multiLineTextBox, fMaxFontHeight);
 
             m_aRows.add(new PLVBoxRow(multiLineTextBox, HeightSpec.auto()));
@@ -833,8 +856,8 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
      */
     @Nonnull
     private PLVBoxRow addAndReturnRow(@Nonnegative final int nIndex,
-            @Nonnull final IPLRenderableObject<?> aElement,
-            @Nonnull final HeightSpec aHeight) {
+                                      @Nonnull final IPLRenderableObject<?> aElement,
+                                      @Nonnull final HeightSpec aHeight) {
         ValueEnforcer.isGE0(nIndex, "Index");
         internalCheckNotPrepared();
         return _addAndReturnRow(nIndex, aElement, aHeight);
@@ -842,8 +865,8 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
 
     @Nonnull
     private PLVBoxRow _addAndReturnRow(@CheckForSigned final int nIndex,
-            @Nonnull final IPLRenderableObject<?> aElement,
-            @Nonnull final HeightSpec aHeight) {
+                                       @Nonnull final IPLRenderableObject<?> aElement,
+                                       @Nonnull final HeightSpec aHeight) {
         final PLVBoxRow aItem = new PLVBoxRow(aElement, aHeight);
         if (nIndex < 0 || nIndex >= m_aRows.size())
             m_aRows.add(aItem);

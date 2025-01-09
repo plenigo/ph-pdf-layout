@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,10 +16,10 @@
  */
 package com.plenigo.pdflayout.element.box;
 
-import com.plenigo.pdflayout.base.IPLRenderableObject;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.plenigo.pdflayout.base.IPLRenderableObject;
 
 /**
  * A box is a simple block element that encapsulates another element and has a
@@ -27,20 +27,24 @@ import javax.annotation.Nullable;
  *
  * @author Philip Helger
  */
-public class PLBox extends AbstractPLBox<PLBox> {
-    public PLBox() {
-        super(null);
-    }
+public class PLBox extends AbstractPLBox <PLBox>
+{
+  public PLBox ()
+  {
+    super (null);
+  }
 
-    public PLBox(@Nullable final IPLRenderableObject<?> aElement) {
-        super(aElement);
-    }
+  public PLBox (@Nullable final IPLRenderableObject <?> aElement)
+  {
+    super (aElement);
+  }
 
-    @Override
-    @Nonnull
-    public PLBox internalCreateNewVertSplitObject(@Nonnull final PLBox aBase) {
-        final PLBox ret = new PLBox();
-        ret.setBasicDataFrom(aBase);
-        return ret;
-    }
+  @Override
+  @Nonnull
+  public PLBox internalCreateNewVertSplitObject (@Nonnull final PLBox aBase)
+  {
+    final PLBox ret = new PLBox ();
+    ret.setBasicDataFrom (aBase);
+    return ret;
+  }
 }

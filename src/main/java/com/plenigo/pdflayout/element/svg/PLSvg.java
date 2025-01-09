@@ -18,6 +18,8 @@ import java.io.IOException;
 
 /**
  * Represent a static svg based on svg byte array.
+ *
+ * @author plenigo
  */
 public class PLSvg extends AbstractPLSvg<PLSvg> {
     private final byte[] m_aSvg;

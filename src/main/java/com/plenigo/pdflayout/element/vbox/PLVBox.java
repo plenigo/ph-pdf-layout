@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,35 +16,38 @@
  */
 package com.plenigo.pdflayout.element.vbox;
 
-import com.plenigo.pdflayout.base.IPLRenderableObject;
-import com.plenigo.pdflayout.spec.HeightSpec;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.plenigo.pdflayout.base.IPLRenderableObject;
+import com.plenigo.pdflayout.spec.HeightSpec;
 
 /**
  * Vertical box - groups several rows without having layout information itself.
  *
  * @author Philip Helger
  */
-public class PLVBox extends AbstractPLVBox<PLVBox> {
-    /**
-     * Default constructor for an empty VBox.
-     */
-    public PLVBox() {
-    }
+public class PLVBox extends AbstractPLVBox <PLVBox>
+{
+  /**
+   * Default constructor for an empty VBox.
+   */
+  public PLVBox ()
+  {}
 
-    /**
-     * Constructor with elements so that each element constitutes a new row with
-     * auto-height.
-     *
-     * @param aElements The elements for which rows should be created.
-     */
-    public PLVBox(@Nullable final IPLRenderableObject<?>... aElements) {
-        if (aElements != null)
-            for (final IPLRenderableObject<?> aElement : aElements)
-                addRow(aElement, HeightSpec.auto());
-    }
+  /**
+   * Constructor with elements so that each element constitutes a new row with
+   * auto-height.
+   *
+   * @param aElements
+   *        The elements for which rows should be created.
+   */
+  public PLVBox (@Nullable final IPLRenderableObject <?>... aElements)
+  {
+    if (aElements != null)
+      for (final IPLRenderableObject <?> aElement : aElements)
+        addRow (aElement, HeightSpec.auto ());
+  }
 
   /**
    * Constructor with elements so that each element constitutes a new row with

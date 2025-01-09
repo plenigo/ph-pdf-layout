@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,12 +16,12 @@
  */
 package com.plenigo.pdflayout.config.xml;
 
-import com.helger.xml.microdom.IMicroElement;
-import com.helger.xml.microdom.convert.IMicroTypeConverter;
+import javax.annotation.Nonnull;
+
 import com.plenigo.pdflayout.spec.AbstractRectSpec;
 import com.plenigo.pdflayout.spec.MarginSpec;
-
-import javax.annotation.Nonnull;
+import com.helger.xml.microdom.IMicroElement;
+import com.helger.xml.microdom.convert.IMicroTypeConverter;
 
 /**
  * Micro type converter for classes based on {@link AbstractRectSpec}.
@@ -53,6 +53,6 @@ public abstract class AbstractRectSpecMicroTypeConverter <T> implements IMicroTy
     final float fRight = aElement.getAttributeValueAsFloat (ATTR_RIGHT, Float.NaN);
     final float fBottom = aElement.getAttributeValueAsFloat (ATTR_BOTTOM, Float.NaN);
     final float fLeft = aElement.getAttributeValueAsFloat (ATTR_LEFT, Float.NaN);
-    return new MarginSpec (fTop, fRight, fBottom, fLeft);
+    return new MarginSpec(fTop, fRight, fBottom, fLeft);
   }
 }

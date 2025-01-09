@@ -24,13 +24,11 @@ import com.helger.commons.collection.impl.ICommonsMap;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
-import com.plenigo.pdflayout.base.AbstractPLInlineElement;
 import com.plenigo.pdflayout.base.AbstractPLRenderableObject;
 import com.plenigo.pdflayout.base.EPLPlaceholder;
 import com.plenigo.pdflayout.base.IPLHasHorizontalAlignment;
 import com.plenigo.pdflayout.debug.PLDebugLog;
 import com.plenigo.pdflayout.pdfbox.PDPageContentStreamWithCache;
-import com.plenigo.pdflayout.render.PLRenderHelper;
 import com.plenigo.pdflayout.render.PagePreRenderContext;
 import com.plenigo.pdflayout.render.PageRenderContext;
 import com.plenigo.pdflayout.render.PreparationContext;
@@ -51,6 +49,8 @@ import java.io.IOException;
  * Render text to multi lines.
  *
  * @param <IMPLTYPE> Implementation type
+ *
+ * @author plenigo
  */
 public abstract class AbstractPLMultiLineText<IMPLTYPE extends AbstractPLMultiLineText<IMPLTYPE>> extends AbstractPLRenderableObject<IMPLTYPE> implements
         IPLHasHorizontalAlignment<IMPLTYPE> {
@@ -285,8 +285,8 @@ public abstract class AbstractPLMultiLineText<IMPLTYPE extends AbstractPLMultiLi
 
         // Determine max width of all prepared lines
         float fMaxWidth = Float.MIN_VALUE;
-        if (m_aPreparedLines.getLast() != null)
-            fMaxWidth = Math.max(fMaxWidth, m_aPreparedLines.getLast().getWidth());
+        if (m_aPreparedLines.getLastOrNull() != null)
+            fMaxWidth = Math.max(fMaxWidth, m_aPreparedLines.getLastOrNull().getWidth());
 
         // Determine height by number of lines
         // No line spacing for the last line

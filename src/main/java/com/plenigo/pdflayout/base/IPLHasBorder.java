@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,13 +16,12 @@
  */
 package com.plenigo.pdflayout.base;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.helger.commons.traits.IGenericImplTrait;
 import com.plenigo.pdflayout.spec.BorderSpec;
 import com.plenigo.pdflayout.spec.BorderStyleSpec;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.awt.*;
 
 /**
  * Base interface for objects having a border
@@ -47,11 +46,12 @@ public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
    * @param aColor
    *        The color to use. May not be <code>null</code>.
    * @return this
+   * @since 7.2.0
    */
   @Nonnull
-  default IMPLTYPE setBorder (@Nonnull final Color aColor)
+  default IMPLTYPE setBorder (@Nonnull final PLColor aColor)
   {
-    return setBorder (new BorderStyleSpec (aColor));
+    return setBorder (new BorderStyleSpec(aColor));
   }
 
   /**

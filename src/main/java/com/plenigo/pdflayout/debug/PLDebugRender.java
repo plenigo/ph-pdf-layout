@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,17 +16,17 @@
  */
 package com.plenigo.pdflayout.debug;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.callback.IThrowingRunnable;
 import com.plenigo.pdflayout.base.IPLBlockElement;
 import com.plenigo.pdflayout.base.IPLInlineElement;
+import com.plenigo.pdflayout.base.PLColor;
 import com.plenigo.pdflayout.base.PLPageSet;
 import com.plenigo.pdflayout.spec.BorderStyleSpec;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.NotThreadSafe;
-import java.awt.*;
 
 /**
  * This class defines stuff for debug rendering.
@@ -39,18 +39,18 @@ public final class PLDebugRender
 {
   public static final boolean DEFAULT_DEBUG_RENDER = false;
 
-  public static final Color DEFAULT_COLOR_OUTLINE_PAGESET = new Color (0x80, 0x80, 0x80);
-  public static final Color DEFAULT_COLOR_OUTLINE_BLOCK_ELEMENT = new Color (0xa0, 0xa0, 0xa0);
-  public static final Color DEFAULT_COLOR_OUTLINE_INLINE_ELEMENT = new Color (0xc0, 0xc0, 0xc0);
+  public static final PLColor DEFAULT_COLOR_OUTLINE_PAGESET = new PLColor (0x80, 0x80, 0x80);
+  public static final PLColor DEFAULT_COLOR_OUTLINE_BLOCK_ELEMENT = new PLColor (0xa0, 0xa0, 0xa0);
+  public static final PLColor DEFAULT_COLOR_OUTLINE_INLINE_ELEMENT = new PLColor (0xc0, 0xc0, 0xc0);
 
   /** red */
-  public static final BorderStyleSpec DEFAULT_BORDER_PAGESET = new BorderStyleSpec (Color.RED);
+  public static final BorderStyleSpec DEFAULT_BORDER_PAGESET = new BorderStyleSpec (PLColor.RED);
 
   /** green */
-  public static final BorderStyleSpec DEFAULT_BORDER_BLOCK_ELEMENT = new BorderStyleSpec (Color.BLUE);
+  public static final BorderStyleSpec DEFAULT_BORDER_BLOCK_ELEMENT = new BorderStyleSpec (PLColor.BLUE);
 
   /** blue */
-  public static final BorderStyleSpec DEFAULT_BORDER_INLINE_ELEMENT = new BorderStyleSpec (Color.GREEN);
+  public static final BorderStyleSpec DEFAULT_BORDER_INLINE_ELEMENT = new BorderStyleSpec (PLColor.GREEN);
 
   /**
    * Provide the debug color for elements.
@@ -58,21 +58,21 @@ public final class PLDebugRender
    * @author Philip Helger
    */
   @FunctionalInterface
-  public static interface IDebugColorProvider
+  public interface IDebugColorProvider
   {
     @Nullable
-    Color getDebugColor (@Nonnull Object aObject);
+    PLColor getDebugColor (@Nonnull Object aObject);
 
     @Nonnull
     static IDebugColorProvider getDefaultOutlineProvider ()
     {
       return aObj -> {
-          if (aObj instanceof PLPageSet)
-              return DEFAULT_COLOR_OUTLINE_PAGESET;
-          if (aObj instanceof IPLBlockElement<?>)
-              return DEFAULT_COLOR_OUTLINE_BLOCK_ELEMENT;
-          if (aObj instanceof IPLInlineElement<?>)
-              return DEFAULT_COLOR_OUTLINE_INLINE_ELEMENT;
+        if (aObj instanceof PLPageSet)
+          return DEFAULT_COLOR_OUTLINE_PAGESET;
+        if (aObj instanceof IPLBlockElement <?>)
+          return DEFAULT_COLOR_OUTLINE_BLOCK_ELEMENT;
+        if (aObj instanceof IPLInlineElement <?>)
+          return DEFAULT_COLOR_OUTLINE_INLINE_ELEMENT;
         return null;
       };
     }
@@ -84,7 +84,7 @@ public final class PLDebugRender
    * @author Philip Helger
    */
   @FunctionalInterface
-  public static interface IDebugBorderProvider
+  public interface IDebugBorderProvider
   {
     @Nullable
     BorderStyleSpec getDebugBorder (@Nonnull Object aObject);
@@ -154,7 +154,7 @@ public final class PLDebugRender
   }
 
   @Nullable
-  public static Color getDebugOutlineColor (@Nonnull final Object aObject)
+  public static PLColor getDebugOutlineColor (@Nonnull final Object aObject)
   {
     return s_aDebugOutlineColorProvider.getDebugColor (aObject);
   }

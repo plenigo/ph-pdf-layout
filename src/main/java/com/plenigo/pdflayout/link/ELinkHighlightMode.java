@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,10 +16,11 @@
  */
 package com.plenigo.pdflayout.link;
 
-import com.helger.commons.annotation.Nonempty;
+import javax.annotation.Nonnull;
+
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
 
-import javax.annotation.Nonnull;
+import com.helger.commons.annotation.Nonempty;
 
 /**
  * Contains the highlight mode for links.

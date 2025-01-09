@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,12 +16,12 @@
  */
 package com.plenigo.pdflayout.element.image;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.id.IHasID;
 import com.helger.commons.lang.EnumHelper;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Image type to use for rendering in {@link PLImage}, {@link PLStreamImage}
@@ -30,16 +30,18 @@ import javax.annotation.Nullable;
  * @author Philip Helger
  * @since 5.0.1
  */
-public enum EPLImageType implements IHasID<String> {
-    CCITT("ccitt"),
-    JPEG("jpeg"),
-    LOSSLESS("lossless");
+public enum EPLImageType implements IHasID <String>
+{
+  CCITT ("ccitt"),
+  JPEG ("jpeg"),
+  LOSSLESS ("lossless");
 
-    private final String m_sID;
+  private final String m_sID;
 
-    EPLImageType(@Nonnull @Nonempty final String sID) {
-        m_sID = sID;
-    }
+  EPLImageType (@Nonnull @Nonempty final String sID)
+  {
+    m_sID = sID;
+  }
 
   @Nonnull
   @Nonempty

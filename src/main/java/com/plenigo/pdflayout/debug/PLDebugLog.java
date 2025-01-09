@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,15 +16,16 @@
  */
 package com.plenigo.pdflayout.debug;
 
-import com.helger.commons.ValueEnforcer;
-import com.plenigo.pdflayout.base.IPLHasMarginBorderPadding;
-import com.plenigo.pdflayout.base.IPLObject;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+
 import com.plenigo.pdflayout.spec.SizeSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
+import com.helger.commons.ValueEnforcer;
+import com.plenigo.pdflayout.base.IPLHasMarginBorderPadding;
+import com.plenigo.pdflayout.base.IPLObject;
 
 /**
  * This class allows for some debug logging on PDF creation.

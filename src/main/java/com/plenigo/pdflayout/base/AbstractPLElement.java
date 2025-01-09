@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,17 +16,16 @@
  */
 package com.plenigo.pdflayout.base;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
 import com.plenigo.pdflayout.spec.BorderSpec;
 import com.plenigo.pdflayout.spec.MarginSpec;
 import com.plenigo.pdflayout.spec.PaddingSpec;
 import com.plenigo.pdflayout.spec.SizeSpec;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-import java.awt.*;
 
 /**
  * Abstract renderable PL element having a minimum size, a maximum size, margin,
@@ -36,8 +35,8 @@ import java.awt.*;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>> extends AbstractPLRenderableObject <IMPLTYPE>
-                                        implements
+public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>> extends
+                                        AbstractPLRenderableObject <IMPLTYPE> implements
                                         IPLElement <IMPLTYPE>
 {
   private SizeSpec m_aMinSize = DEFAULT_MIN_SIZE;
@@ -45,7 +44,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   private MarginSpec m_aMargin = DEFAULT_MARGIN;
   private BorderSpec m_aBorder = DEFAULT_BORDER;
   private PaddingSpec m_aPadding = DEFAULT_PADDING;
-  private Color m_aFillColor = DEFAULT_FILL_COLOR;
+  private PLColor m_aFillColor = DEFAULT_FILL_COLOR;
 
   public AbstractPLElement ()
   {}
@@ -134,13 +133,13 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   }
 
   @Nullable
-  public final Color getFillColor ()
+  public final PLColor getFillColor ()
   {
     return m_aFillColor;
   }
 
   @Nonnull
-  public final IMPLTYPE setFillColor (@Nullable final Color aFillColor)
+  public final IMPLTYPE setFillColor (@Nullable final PLColor aFillColor)
   {
     m_aFillColor = aFillColor;
     return thisAsT ();

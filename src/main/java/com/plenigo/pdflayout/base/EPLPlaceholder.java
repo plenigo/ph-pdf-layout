@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,10 @@
  */
 package com.plenigo.pdflayout.base;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.ArrayHelper;
@@ -23,46 +27,31 @@ import com.helger.commons.collection.impl.CommonsHashMap;
 import com.helger.commons.collection.impl.ICommonsMap;
 import com.helger.commons.string.StringHelper;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-public enum EPLPlaceholder {
-    /**
-     * 0-based index of current pageset
-     */
-    PAGESET_INDEX("${pageset-index}", 1),
-    /**
-     * 1-based number of current pageset (same as pageset-index+1)
-     */
-    PAGESET_NUMBER("${pageset-number}", 1),
-    /**
-     * total number of pagesets
-     */
-    PAGESET_COUNT("${pageset-count}", 1),
-    /**
-     * 0-based index of page in current pageset
-     */
-    PAGESET_PAGE_INDEX("${pageset-page-index}", 2),
-    /**
-     * 1-based index of page in current pageset
-     */
-    PAGESET_PAGE_NUMBER("${pageset-page-number}", 2),
-    /**
-     * count of pages in current pageset
-     */
-    PAGESET_PAGE_COUNT("${pageset-page-count}", 2),
-    /**
-     * overall 0-based page index
-     */
-    TOTAL_PAGE_INDEX("${total-page-index}", 2),
-    /**
-     * overall 1-based page number
-     */
-    TOTAL_PAGE_NUMBER("${total-page-number}", 2),
-    /**
-     * total page count
-     */
+/**
+ * Contains a list of supported textual placeholders to be replaced when
+ * creating a PDF.
+ *
+ * @author Philip Helger
+ */
+public enum EPLPlaceholder
+{
+  /** 0-based index of current pageset */
+  PAGESET_INDEX ("${pageset-index}", 1),
+  /** 1-based number of current pageset (same as pageset-index+1) */
+  PAGESET_NUMBER ("${pageset-number}", 1),
+  /** total number of pagesets */
+  PAGESET_COUNT ("${pageset-count}", 1),
+  /** 0-based index of page in current pageset */
+  PAGESET_PAGE_INDEX ("${pageset-page-index}", 2),
+  /** 1-based index of page in current pageset */
+  PAGESET_PAGE_NUMBER ("${pageset-page-number}", 2),
+  /** count of pages in current pageset */
+  PAGESET_PAGE_COUNT ("${pageset-page-count}", 2),
+  /** overall 0-based page index */
+  TOTAL_PAGE_INDEX ("${total-page-index}", 2),
+  /** overall 1-based page number */
+  TOTAL_PAGE_NUMBER ("${total-page-number}", 2),
+  /** total page count */
   TOTAL_PAGE_COUNT ("${total-page-count}", 2);
 
   private final String m_sVariable;
@@ -73,6 +62,7 @@ public enum EPLPlaceholder {
   {
     m_sVariable = sVariable;
     m_nEstimatedCharCount = nEstimatedCharCount;
+    // X is a good match for width of numbers 0..9
     m_sEstimatedPrepareText = StringHelper.getRepeated ('X', nEstimatedCharCount);
   }
 

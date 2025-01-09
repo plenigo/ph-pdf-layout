@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@
 package com.plenigo.pdflayout.supplementary.issues;
 
 import com.helger.commons.io.file.FileSystemRecursiveIterator;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.slf4j.Logger;
@@ -26,24 +26,19 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 
-public final class MainIssue3204
-{
-  private static final Logger LOGGER = LoggerFactory.getLogger (MainIssue3204.class);
+public final class MainIssue3204 {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainIssue3204.class);
 
-  @SuppressFBWarnings ("DMI_HARDCODED_ABSOLUTE_FILENAME")
-  public static void main (final String [] args) throws IOException
-  {
-    int n = 0;
-    for (final File f : new FileSystemRecursiveIterator ("/"))
-      if (f.isFile () && f.getName ().endsWith (".pdf"))
-      {
-        LOGGER.info (f.getAbsolutePath ());
-        try (PDDocument aDoc = PDDocument.load (f))
-        {
-          new PDFRenderer (aDoc).renderImageWithDPI (0, 195);
-          n++;
-        }
-      }
-    LOGGER.info (n + " files found");
-  }
+    public static void main(final String[] args) throws IOException {
+        int n = 0;
+        for (final File f : new FileSystemRecursiveIterator("/"))
+            if (f.isFile() && f.getName().endsWith(".pdf")) {
+                LOGGER.info(f.getAbsolutePath());
+                try (PDDocument aDoc = Loader.loadPDF(f)) {
+                    new PDFRenderer(aDoc).renderImageWithDPI(0, 195);
+                    n++;
+                }
+            }
+        LOGGER.info(n + " files found");
+    }
 }

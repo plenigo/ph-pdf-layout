@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,41 +16,44 @@
  */
 package com.plenigo.pdflayout.spec;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.Since;
 import com.helger.commons.id.IHasID;
 import com.helger.commons.lang.EnumHelper;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Represents the possible horizontal alignments.
  *
  * @author Philip Helger
  */
-public enum EHorzAlignment implements IHasID<String> {
-    /**
-     * Align left
-     */
-    LEFT("left"),
+public enum EHorzAlignment implements IHasID <String>
+{
+  /** Align left */
+  LEFT ("left"),
 
-    /**
-     * Align center
-     */
-    CENTER("center"),
+  /** Align center */
+  CENTER ("center"),
 
-    /**
-     * Align right
-     */
-    RIGHT("right"),
+  /** Align right */
+  RIGHT ("right"),
 
-    /**
-     * Justify all text. This alignment has no effect for boxes, it only works on
-     * PLText!
+  /**
+   * Justify all text. This alignment has no effect for boxes, it only works on
+   * PLText!
    */
   @Since ("5.0.3")
-  JUSTIFY("justify");
+  JUSTIFY("justify"),
+
+  /**
+   * This is a special case for justifying text, but without justifying explicit
+   * newlines and not the last line. This alignment has no effect for boxes, it
+   * only works on PLText!
+   */
+  @Since ("7.3.3")
+  BLOCK("block");
 
   public static final EHorzAlignment DEFAULT = LEFT;
 

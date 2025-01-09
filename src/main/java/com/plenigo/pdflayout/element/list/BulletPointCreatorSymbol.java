@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,14 +16,14 @@
  */
 package com.plenigo.pdflayout.element.list;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+
 import com.plenigo.pdflayout.PLConvert;
 import com.plenigo.pdflayout.base.IPLRenderableObject;
 import com.plenigo.pdflayout.element.text.PLText;
 import com.plenigo.pdflayout.spec.FontSpec;
 import com.plenigo.pdflayout.spec.PreloadFont;
-
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
 
 /**
  * An implementation of {@link IBulletPointCreator} that always uses the Bullet
@@ -39,14 +39,15 @@ public class BulletPointCreatorSymbol extends BulletPointCreatorConstant
     super (Character.toString (cSymbol), new FontSpec (PreloadFont.SYMBOL, fFontSize));
   }
 
-    @Override
-    @Nonnull
-    public IPLRenderableObject<?> getBulletPointElement(@Nonnegative final int nBulletPointIndex) {
-        final PLText ret = (PLText) super.getBulletPointElement(nBulletPointIndex);
-        // Vertical align
-        ret.setCustomAscentFirstLine(PLConvert.getWidthForFontSize(450, getFontSpec().getFontSize()));
-        return ret;
-    }
+  @Override
+  @Nonnull
+  public IPLRenderableObject <?> getBulletPointElement (@Nonnegative final int nBulletPointIndex)
+  {
+    final PLText ret = (PLText) super.getBulletPointElement (nBulletPointIndex);
+    // Vertical align
+    ret.setCustomAscentFirstLine (PLConvert.getWidthForFontSize (450, getFontSpec ().getFontSize ()));
+    return ret;
+  }
 
   @Nonnull
   public static BulletPointCreatorSymbol createFilledDot (@Nonnegative final float fFontSize)

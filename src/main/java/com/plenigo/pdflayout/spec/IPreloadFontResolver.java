@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,27 +16,28 @@
  */
 package com.plenigo.pdflayout.spec;
 
+import javax.annotation.Nullable;
+
 import com.helger.font.api.IFontResource;
 import com.helger.font.api.IHasFontResource;
 
-import javax.annotation.Nullable;
-
 /**
  * Find {@link PreloadFont} objects by ID.
- *
+ * 
  * @author Philip Helger
  */
 @FunctionalInterface
-public interface IPreloadFontResolver {
-    /**
-     * Get the {@link PreloadFont} with the provided ID.
-     *
-     * @param sID The ID to be resolved. May be <code>null</code>.
-     *
-     * @return <code>null</code> if no such {@link PreloadFont} exists.
-     */
-    @Nullable
-    PreloadFont getPreloadFontOfID(@Nullable String sID);
+public interface IPreloadFontResolver
+{
+  /**
+   * Get the {@link PreloadFont} with the provided ID.
+   *
+   * @param sID
+   *        The ID to be resolved. May be <code>null</code>.
+   * @return <code>null</code> if no such {@link PreloadFont} exists.
+   */
+  @Nullable
+  PreloadFont getPreloadFontOfID (@Nullable String sID);
 
   /**
    * Get the {@link PreloadFont} from the provided font resource.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,12 @@
  */
 package com.plenigo.pdflayout.element.box;
 
+import java.io.IOException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.plenigo.pdflayout.base.AbstractPLBlockElement;
@@ -26,37 +32,37 @@ import com.plenigo.pdflayout.base.IPLVisitor;
 import com.plenigo.pdflayout.base.PLElementWithSize;
 import com.plenigo.pdflayout.base.PLSplitResult;
 import com.plenigo.pdflayout.debug.PLDebugLog;
+import com.plenigo.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.plenigo.pdflayout.render.PLRenderHelper;
 import com.plenigo.pdflayout.render.PageRenderContext;
 import com.plenigo.pdflayout.render.PreparationContext;
 import com.plenigo.pdflayout.spec.SizeSpec;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-import java.io.IOException;
 
 /**
  * A box is a simple element that encapsulates another element and has a
  * padding, border and margin itself as well as it can align the contained
  * element.
  *
- * @param <IMPLTYPE> Implementation type
- *
  * @author Philip Helger
+ * @param <IMPLTYPE>
+ *        Implementation type
  */
-public abstract class AbstractPLBox<IMPLTYPE extends AbstractPLBox<IMPLTYPE>> extends AbstractPLBlockElement<IMPLTYPE> implements
-        IPLSplittableObject<IMPLTYPE, IMPLTYPE> {
-    private IPLRenderableObject<?> m_aElement;
-    private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
+public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> extends
+                                    AbstractPLBlockElement <IMPLTYPE> implements
+                                    IPLSplittableObject <IMPLTYPE, IMPLTYPE>
+{
 
-    // Status vars
-    private SizeSpec m_aElementPreparedSize;
-    private SizeSpec m_aRenderOffset = SizeSpec.SIZE0;
+  private IPLRenderableObject <?> m_aElement;
+  private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
 
-    public AbstractPLBox(@Nullable final IPLRenderableObject<?> aElement) {
-        setElement(aElement);
-    }
+  // Status vars
+  private SizeSpec m_aElementPreparedSize;
+  private SizeSpec m_aRenderOffset = SizeSpec.SIZE0;
+
+  public AbstractPLBox (@Nullable final IPLRenderableObject <?> aElement)
+  {
+    setElement (aElement);
+  }
 
   @Override
   @Nonnull
@@ -180,7 +186,9 @@ public abstract class AbstractPLBox<IMPLTYPE extends AbstractPLBox<IMPLTYPE>> ex
     final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
     final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();
 
-    final PreparationContext aElementCtx = new PreparationContext (aCtx.getGlobalContext (), fElementWidth, fElementHeight);
+    final PreparationContext aElementCtx = new PreparationContext (aCtx.getGlobalContext (),
+                                                                   fElementWidth,
+                                                                   fElementHeight);
     internalSetElementPreparedSize (m_aElement.prepare (aElementCtx));
 
     // Add the outer stuff of the contained element as this elements prepared
@@ -190,10 +198,11 @@ public abstract class AbstractPLBox<IMPLTYPE extends AbstractPLBox<IMPLTYPE>> ex
   }
 
   @Override
-  protected void onMarkAsNotPrepared () {
-      internalSetElementPreparedSize(null);
-      if (m_aElement instanceof AbstractPLRenderableObject<?>)
-          ((AbstractPLRenderableObject<?>) m_aElement).internalMarkAsNotPrepared();
+  protected void onMarkAsNotPrepared ()
+  {
+    internalSetElementPreparedSize (null);
+    if (m_aElement instanceof AbstractPLRenderableObject <?>)
+      ((AbstractPLRenderableObject <?>) m_aElement).internalMarkAsNotPrepared ();
   }
 
   @Nullable
@@ -214,8 +223,10 @@ public abstract class AbstractPLBox<IMPLTYPE extends AbstractPLBox<IMPLTYPE>> ex
     final IPLRenderableObject <?> aElement = getElement ();
 
     // Create resulting VBoxes - the first one is not splittable again!
-    final AbstractPLBox <?> aBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1").setVertSplittable (false);
-    final AbstractPLBox <?> aBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2").setVertSplittable (true);
+    final AbstractPLBox <?> aBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1")
+                                                                                 .setVertSplittable (false);
+    final AbstractPLBox <?> aBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2")
+                                                                                 .setVertSplittable (true);
 
     // Set min width/max width from source
     // Don't use the height, because on vertically split elements, the height is
@@ -285,18 +296,18 @@ public abstract class AbstractPLBox<IMPLTYPE extends AbstractPLBox<IMPLTYPE>> ex
                                    " & " +
                                    aSplitResult.getSecondElement ().getHeight () +
                                    "+" +
-                                     aBox2Element.getOutlineYSum() +
-                                     ")");
+                                   aBox2Element.getOutlineYSum () +
+                                   ")");
 
-      // Excluding padding/margin
-      aBox1.internalMarkAsPrepared(new SizeSpec(fAvailableWidth, fBox1UsedHeight));
-      aBox1.internalSetElementPreparedSize(aBox1ElementPreparedSize);
+    // Excluding padding/margin
+    aBox1.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fBox1UsedHeight));
+    aBox1.internalSetElementPreparedSize (aBox1ElementPreparedSize);
 
-      aBox2.internalMarkAsPrepared(new SizeSpec(fAvailableWidth, fBox2UsedHeight));
-      aBox2.internalSetElementPreparedSize(aBox2ElementPreparedSize);
+    aBox2.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fBox2UsedHeight));
+    aBox2.internalSetElementPreparedSize (aBox2ElementPreparedSize);
 
-      return new PLSplitResult(new PLElementWithSize(aBox1, new SizeSpec(fAvailableWidth, fBox1UsedHeight)),
-              new PLElementWithSize(aBox2, new SizeSpec(fAvailableWidth, fBox2UsedHeight)));
+    return new PLSplitResult (new PLElementWithSize (aBox1, new SizeSpec (fAvailableWidth, fBox1UsedHeight)),
+                              new PLElementWithSize (aBox2, new SizeSpec (fAvailableWidth, fBox2UsedHeight)));
   }
 
   @Override
@@ -310,8 +321,29 @@ public abstract class AbstractPLBox<IMPLTYPE extends AbstractPLBox<IMPLTYPE>> ex
     {
       final float fStartLeft = aCtx.getStartLeft () + getOutlineLeft () + m_aRenderOffset.getWidth ();
       final float fStartTop = aCtx.getStartTop () - getOutlineTop () - m_aRenderOffset.getHeight ();
-      final PageRenderContext aElementCtx = new PageRenderContext (aCtx, fStartLeft, fStartTop, getRenderWidth (), getRenderHeight ());
+      final float fRenderWidth = getRenderWidth ();
+      final float fRenderHeight = getRenderHeight ();
+
+      final PDPageContentStreamWithCache aCSWC = aCtx.getContentStream ();
+      final boolean bClipContent = isClipContent ();
+      if (bClipContent)
+      {
+        aCSWC.saveGraphicsState ();
+        aCSWC.addRect (fStartLeft, fStartTop - fRenderHeight, fRenderWidth, fRenderHeight);
+        aCSWC.clip ();
+      }
+
+      final PageRenderContext aElementCtx = new PageRenderContext (aCtx,
+                                                                   fStartLeft,
+                                                                   fStartTop,
+                                                                   fRenderWidth,
+                                                                   fRenderHeight);
       m_aElement.render (aElementCtx);
+
+      if (bClipContent)
+      {
+        aCSWC.restoreGraphicsState ();
+      }
     }
     else
       PLDebugLog.debugRender (this, "Not rendering the box, because no element is contained");

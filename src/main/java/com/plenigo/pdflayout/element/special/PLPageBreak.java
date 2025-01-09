@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,14 +16,15 @@
  */
 package com.plenigo.pdflayout.element.special;
 
+import java.io.IOException;
+
+import javax.annotation.Nonnull;
+
 import com.helger.commons.string.ToStringGenerator;
 import com.plenigo.pdflayout.base.AbstractPLRenderableObject;
 import com.plenigo.pdflayout.render.PageRenderContext;
 import com.plenigo.pdflayout.render.PreparationContext;
 import com.plenigo.pdflayout.spec.SizeSpec;
-
-import javax.annotation.Nonnull;
-import java.io.IOException;
 
 /**
  * A page break that ensures a new page is started afterwards. The difference
@@ -35,16 +36,19 @@ import java.io.IOException;
  *
  * @author Philip Helger
  */
-public class PLPageBreak extends AbstractPLRenderableObject<PLPageBreak> {
-    private final boolean m_bForcePageBreak;
+public class PLPageBreak extends AbstractPLRenderableObject <PLPageBreak>
+{
+  private final boolean m_bForcePageBreak;
 
-    /**
-     * Constructor
-     *
-     * @param bForcePageBreak <code>true</code> if this is a forced page break, <code>false</code>
-     *                        if it is a normal page break.
-     */
-    public PLPageBreak(final boolean bForcePageBreak) {
+  /**
+   * Constructor
+   *
+   * @param bForcePageBreak
+   *        <code>true</code> if this is a forced page break, <code>false</code>
+   *        if it is a normal page break.
+   */
+  public PLPageBreak (final boolean bForcePageBreak)
+  {
     m_bForcePageBreak = bForcePageBreak;
   }
 

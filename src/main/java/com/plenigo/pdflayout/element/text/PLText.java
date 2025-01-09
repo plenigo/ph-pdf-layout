@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,24 +16,27 @@
  */
 package com.plenigo.pdflayout.element.text;
 
-import com.plenigo.pdflayout.spec.FontSpec;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.plenigo.pdflayout.spec.FontSpec;
 
 /**
  * Render text
  *
  * @author Philip Helger
  */
-public class PLText extends AbstractPLText<PLText> {
-    public PLText(@Nullable final String sText, @Nonnull final FontSpec aFontSpec) {
-        super(sText, aFontSpec);
-    }
+public class PLText extends AbstractPLText <PLText>
+{
+  public PLText (@Nullable final String sText, @Nonnull final FontSpec aFontSpec)
+  {
+    super (sText, aFontSpec);
+  }
 
-    @Override
-    @Nonnull
-    public PLText internalCreateNewVertSplitObject(@Nonnull final PLText aBase) {
+  @Override
+  @Nonnull
+  public PLText internalCreateNewVertSplitObject (@Nonnull final PLText aBase)
+  {
     final PLText ret = new PLText (null, aBase.getFontSpec ());
     ret.setBasicDataFrom (aBase);
     return ret;

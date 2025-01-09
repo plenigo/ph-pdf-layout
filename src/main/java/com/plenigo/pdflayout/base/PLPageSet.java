@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -56,7 +56,6 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
-import java.awt.*;
 import java.io.IOException;
 import java.util.function.Consumer;
 
@@ -67,7 +66,9 @@ import java.util.function.Consumer;
  * @author Philip Helger
  */
 @NotThreadSafe
-public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarginBorderPadding<PLPageSet>, IPLHasFillColor<PLPageSet> {
+public class PLPageSet extends AbstractPLObject<PLPageSet> implements
+        IPLHasMarginBorderPadding<PLPageSet>,
+        IPLHasFillColor<PLPageSet> {
     public static final boolean DEFAULT_DIFFERENT_FIRST_PAGE_HEADER = false;
     public static final boolean DEFAULT_DIFFERENT_FIRST_PAGE_FOOTER = false;
     private static final Logger LOGGER = LoggerFactory.getLogger(PLPageSet.class);
@@ -76,16 +77,24 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
     private MarginSpec m_aMargin = DEFAULT_MARGIN;
     private PaddingSpec m_aPadding = DEFAULT_PADDING;
     private BorderSpec m_aBorder = DEFAULT_BORDER;
-    private Color m_aFillColor = DEFAULT_FILL_COLOR;
+    private PLColor m_aFillColor = DEFAULT_FILL_COLOR;
+
     private boolean m_bDifferentFirstPageHeader = DEFAULT_DIFFERENT_FIRST_PAGE_HEADER;
     private IPLRenderableObject<?> m_aFirstPageHeader;
     private IPLRenderableObject<?> m_aPageHeader;
+
     private final ICommonsList<IPLRenderableObject<?>> m_aElements = new CommonsArrayList<>();
+
     private boolean m_bDifferentFirstPageFooter = DEFAULT_DIFFERENT_FIRST_PAGE_FOOTER;
     private IPLRenderableObject<?> m_aFirstPageFooter;
     private IPLRenderableObject<?> m_aPageFooter;
+
+    private boolean m_bPrepared = false;
+    private PLPageSetPrepareResult m_aPrepareResult;
+
     private IPreRenderContextCustomizer m_aPRCCustomizer;
     private IRenderContextCustomizer m_aRCCustomizer;
+
     private IPLRenderableObject<?> m_aFirstPageBackgroundHeader;
     private boolean m_bFoldMark;
     private String m_sWaterMark;
@@ -156,6 +165,17 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
         return m_aPageSize.getHeight();
     }
 
+    /**
+     * Throw an exception, if this object was already prepared.
+     *
+     * @throws IllegalStateException if already prepared
+     */
+    protected final void internalCheckNoPrepared() {
+        if (isPrepared())
+            throw new IllegalStateException(getDebugID() +
+                    " PageSet is already prepared - cannot modify it or prepare it again");
+    }
+
     @Nonnull
     public final MarginSpec getMargin() {
         return m_aMargin;
@@ -164,6 +184,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
     @Nonnull
     public final PLPageSet setMargin(@Nonnull final MarginSpec aMargin) {
         ValueEnforcer.notNull(aMargin, "Mergin");
+        internalCheckNoPrepared();
         m_aMargin = aMargin;
         return this;
     }
@@ -176,6 +197,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
     @Nonnull
     public final PLPageSet setPadding(@Nonnull final PaddingSpec aPadding) {
         ValueEnforcer.notNull(aPadding, "Padding");
+        internalCheckNoPrepared();
         m_aPadding = aPadding;
         return this;
     }
@@ -188,17 +210,19 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
     @Nonnull
     public final PLPageSet setBorder(@Nonnull final BorderSpec aBorder) {
         ValueEnforcer.notNull(aBorder, "Border");
+        internalCheckNoPrepared();
         m_aBorder = aBorder;
         return this;
     }
 
     @Nullable
-    public final Color getFillColor() {
+    public final PLColor getFillColor() {
         return m_aFillColor;
     }
 
     @Nonnull
-    public final PLPageSet setFillColor(@Nullable final Color aFillColor) {
+    public final PLPageSet setFillColor(@Nullable final PLColor aFillColor) {
+        internalCheckNoPrepared();
         m_aFillColor = aFillColor;
         return this;
     }
@@ -288,6 +312,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
      */
     @Nonnull
     public PLPageSet setDifferentFirstPageHeader(final boolean bDifferentFirstPageHeader) {
+        internalCheckNoPrepared();
         m_bDifferentFirstPageHeader = bDifferentFirstPageHeader;
         return this;
     }
@@ -325,6 +350,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
      */
     @Nonnull
     public PLPageSet setFirstPageHeader(@Nullable final IPLRenderableObject<?> aPageHeader) {
+        internalCheckNoPrepared();
         m_aFirstPageHeader = aPageHeader;
         return this;
     }
@@ -354,6 +380,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
      */
     @Nonnull
     public PLPageSet setPageHeader(@Nullable final IPLRenderableObject<?> aPageHeader) {
+        internalCheckNoPrepared();
         m_aPageHeader = aPageHeader;
         return this;
     }
@@ -383,6 +410,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
     @Nonnull
     public PLPageSet addElement(@Nonnull final IPLRenderableObject<?> aElement) {
         ValueEnforcer.notNull(aElement, "Element");
+        internalCheckNoPrepared();
         m_aElements.add(aElement);
         return this;
     }
@@ -410,6 +438,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
      */
     @Nonnull
     public PLPageSet setDifferentFirstPageFooter(final boolean bDifferentFirstPageFooter) {
+        internalCheckNoPrepared();
         m_bDifferentFirstPageFooter = bDifferentFirstPageFooter;
         return this;
     }
@@ -447,6 +476,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
      */
     @Nonnull
     public PLPageSet setFirstPageFooter(@Nullable final IPLRenderableObject<?> aFirstPageFooter) {
+        internalCheckNoPrepared();
         m_aFirstPageFooter = aFirstPageFooter;
         return this;
     }
@@ -476,6 +506,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
      */
     @Nonnull
     public PLPageSet setPageFooter(@Nullable final IPLRenderableObject<?> aPageFooter) {
+        internalCheckNoPrepared();
         m_aPageFooter = aPageFooter;
         return this;
     }
@@ -675,8 +706,20 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
         return ret;
     }
 
+    public final boolean isPrepared() {
+        return m_bPrepared;
+    }
+
+    @Nullable
+    public final PLPageSetPrepareResult internalGetPrepareResult() {
+        return m_aPrepareResult;
+    }
+
     @Nonnull
     public PLPageSetPrepareResult prepareAllPages(@Nonnull final PreparationContextGlobal aGlobalCtx) {
+        // Prepare only once!
+        internalCheckNoPrepared();
+
         // The result element
         final PLPageSetPrepareResult ret = new PLPageSetPrepareResult();
 
@@ -705,12 +748,11 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
             if (fEffectiveHeaderHeight > aFirstPageMBP.getMarginTop()) {
                 // If the height of the header exceeds the available top-margin, modify
                 // the margin so that the header fits!
-                if (LOGGER.isInfoEnabled())
-                    LOGGER.info("PageSet margin top was changed from " +
-                            aFirstPageMBP.getMarginTop() +
-                            " to " +
-                            fEffectiveHeaderHeight +
-                            " so that firstPageHeader fits!");
+                LOGGER.info("PageSet margin top was changed from " +
+                        aFirstPageMBP.getMarginTop() +
+                        " to " +
+                        fEffectiveHeaderHeight +
+                        " so that firstPageHeader fits!");
                 aFirstPageMBP.setMarginTop(fEffectiveHeaderHeight);
             }
         }
@@ -718,7 +760,9 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
         // Prepare default page header
         if (m_aPageHeader != null) {
             // Page header does not care about page padding
-            final PreparationContext aRPC = new PreparationContext(aGlobalCtx, m_aPageSize.getWidth() - getMarginXSum(), getMarginTop());
+            final PreparationContext aRPC = new PreparationContext(aGlobalCtx,
+                    m_aPageSize.getWidth() - getMarginXSum(),
+                    getMarginTop());
 
             if (PLDebugLog.isDebugPrepare())
                 PLDebugLog.debugPrepare(this,
@@ -735,12 +779,11 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
             if (fEffectiveHeaderHeight > getMarginTop()) {
                 // If the height of the header exceeds the available top-margin, modify
                 // the margin so that the header fits!
-                if (LOGGER.isInfoEnabled())
-                    LOGGER.info("PageSet margin top was changed from " +
-                            getMarginTop() +
-                            " to " +
-                            fEffectiveHeaderHeight +
-                            " so that pageHeader fits!");
+                LOGGER.info("PageSet margin top was changed from " +
+                        getMarginTop() +
+                        " to " +
+                        fEffectiveHeaderHeight +
+                        " so that pageHeader fits!");
                 setMarginTop(fEffectiveHeaderHeight);
             }
         }
@@ -782,12 +825,11 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
             if (fEffectiveFooterHeight > aFirstPageMBP.getMarginBottom()) {
                 // If the height of the footer exceeds the available bottom-margin,
                 // modify the margin so that the footer fits!
-                if (LOGGER.isInfoEnabled())
-                    LOGGER.info("PageSet margin bottom was changed from " +
-                            aFirstPageMBP.getMarginBottom() +
-                            " to " +
-                            fEffectiveFooterHeight +
-                            " so that firstPageFooter fits!");
+                LOGGER.info("PageSet margin bottom was changed from " +
+                        aFirstPageMBP.getMarginBottom() +
+                        " to " +
+                        fEffectiveFooterHeight +
+                        " so that firstPageFooter fits!");
                 aFirstPageMBP.setMarginBottom(fEffectiveFooterHeight);
             }
         }
@@ -795,7 +837,9 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
         // Prepare default page footer
         if (m_aPageFooter != null) {
             // Page footer does not care about page padding
-            final PreparationContext aRPC = new PreparationContext(aGlobalCtx, m_aPageSize.getWidth() - getMarginXSum(), getMarginBottom());
+            final PreparationContext aRPC = new PreparationContext(aGlobalCtx,
+                    m_aPageSize.getWidth() - getMarginXSum(),
+                    getMarginBottom());
 
             if (PLDebugLog.isDebugPrepare())
                 PLDebugLog.debugPrepare(this,
@@ -812,12 +856,11 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
             if (fEffectiveFooterHeight > getMarginBottom()) {
                 // If the height of the footer exceeds the available bottom-margin,
                 // modify the margin so that the footer fits!
-                if (LOGGER.isInfoEnabled())
-                    LOGGER.info("PageSet margin bottom was changed from " +
-                            getMarginBottom() +
-                            " to " +
-                            fEffectiveFooterHeight +
-                            " so that pageFooter fits!");
+                LOGGER.info("PageSet margin bottom was changed from " +
+                        getMarginBottom() +
+                        " to " +
+                        fEffectiveFooterHeight +
+                        " so that pageFooter fits!");
                 setMarginBottom(fEffectiveFooterHeight);
             }
         }
@@ -865,7 +908,6 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
                 final SizeSpec aElementPreparedSize = aElement.prepare(aRPC);
                 ret.addElement(new PLElementWithSize(aElement, aElementPreparedSize));
             }
-
             if (PLDebugLog.isDebugPrepare())
                 PLDebugLog.debugPrepare(this, "Finished preparing elements");
         }
@@ -873,7 +915,6 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
         // Split into pieces that fit onto a page
         // final float fYTop = getYTop ();
         // final float fYLeast = getOutlineBottom ();
-
         {
             if (PLDebugLog.isDebugSplit())
                 PLDebugLog.debugSplit(this, "Start splitting elements");
@@ -896,7 +937,6 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
                     // page break is necessary
                     bIsPagebreakDesired = false;
                 }
-
                 final float fElementPreparedWidth = aElementWithSize.getWidth();
                 final float fElementHeightFull = aElementWithSize.getHeightFull();
                 // First or other page?
@@ -918,18 +958,17 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
                                                 " and height " +
                                                 fSplitHeight);
 
-                            final PLSplitResult aSplitResult = aElement.getAsSplittable().splitElementVert(fElementPreparedWidth, fSplitHeight);
+                            final PLSplitResult aSplitResult = aElement.getAsSplittable()
+                                    .splitElementVert(fElementPreparedWidth, fSplitHeight);
                             if (aSplitResult != null)
                                 assert fSplitHeight > 0;
                             if (fSplitHeight <= 0)
                                 assert aSplitResult == null;
-
                             if (aSplitResult != null) {
                                 // Re-add them to the list and try again (they may be splitted
                                 // recursively)
                                 aElementsWithSize.add(0, aSplitResult.getFirstElement());
                                 aElementsWithSize.add(1, aSplitResult.getSecondElement());
-
                                 if (PLDebugLog.isDebugSplit()) {
                                     PLDebugLog.debugSplit(this,
                                             "Split " +
@@ -956,7 +995,6 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
                                                     aSplitResult.getSecondElement().getElement().getOutlineYSum() +
                                                     ")");
                                 }
-
                                 // Try to fit resulting split pieces onto page
                                 continue;
                             }
@@ -970,28 +1008,30 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
                             }
                         } // splitHeight > 0
                     }
-
                     // Next page
                     if (aCurPageElements.isEmpty()) {
                         if (!bIsPagebreakDesired) {
                             // one element too large for a page
-                            if (LOGGER.isWarnEnabled())
-                                LOGGER.warn("The single element " +
-                                        aElement.getDebugID() +
-                                        " does not fit onto a single page" +
-                                        (bIsVertSplittable ? " even though it is vertically splittable!" : " and is not vertically splittable!"));
+                            LOGGER.warn("The single element " +
+                                    aElement.getDebugID() +
+                                    " does not fit onto a single page" +
+                                    (bIsVertSplittable ? " even though it is vertically splittable!"
+                                            : " and is not vertically splittable!"));
                         }
                     } else {
                         // We found elements fitting onto a page (at least one)
                         if (LOGGER.isDebugEnabled())
                             LOGGER.debug("Adding " + aCurPageElements.size() + " elements to page " + ret.getPageNumber());
-
                         if (PLDebugLog.isDebugPrepare()) {
-                            final ICommonsList<String> aLastPageContent = new CommonsArrayList<>(aCurPageElements, x -> x.getElement().getDebugID());
+                            final ICommonsList<String> aLastPageContent = new CommonsArrayList<>(aCurPageElements,
+                                    x -> x.getElement()
+                                            .getDebugID());
                             PLDebugLog.debugPrepare(this,
-                                    "Finished page " + ret.getPageNumber() + " with: " + StringHelper.getImploded(aLastPageContent));
+                                    "Finished page " +
+                                            ret.getPageNumber() +
+                                            " with: " +
+                                            StringHelper.getImploded(aLastPageContent));
                         }
-
                         // Something on the current page -> start a new page
                         ret.addPerPageElements(aCurPageElements);
                         aCurPageElements = new CommonsArrayList<>();
@@ -1007,35 +1047,35 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
                         continue;
                     }
                 }
-
                 // Add element to current page (may also be a page break)
                 aCurPageElements.add(aElementWithSize);
 
                 // Go down
                 fCurY -= fElementHeightFull;
             }
-
             if (aCurPageElements.isNotEmpty()) {
                 // Add elements of last page
                 if (PLDebugLog.isDebugSplit()) {
-                    final ICommonsList<String> aLastPageContent = new CommonsArrayList<>(aCurPageElements, x -> x.getElement().getDebugID());
+                    final ICommonsList<String> aLastPageContent = new CommonsArrayList<>(aCurPageElements,
+                            x -> x.getElement().getDebugID());
                     PLDebugLog.debugSplit(this,
                             "Finished last page " +
                                     ret.getPageNumber() +
                                     " with: " +
                                     StringHelper.getImploded(", ", aLastPageContent));
                 }
-
                 if (LOGGER.isDebugEnabled())
                     LOGGER.debug("Adding " + aCurPageElements.size() + " elements to page " + ret.getPageNumber());
 
                 ret.addPerPageElements(aCurPageElements);
             }
-
             if (PLDebugLog.isDebugSplit())
                 PLDebugLog.debugSplit(this, "Finished splitting elements");
         }
 
+        // Remember at the end
+        m_bPrepared = true;
+        m_aPrepareResult = ret;
         return ret;
     }
 
@@ -1053,12 +1093,15 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
      * @throws IOException In case of render errors
      */
     public void renderAllPages(@Nonnull final PLPageSetPrepareResult aPrepareResult,
-            @Nonnull final PDDocument aDoc,
-            final boolean bCompressPDF,
-            @Nonnegative final int nPageSetIndex,
-            @Nonnegative final int nPageSetCount,
-            @Nonnegative final int nTotalPageStartIndex,
-            @Nonnegative final int nTotalPageCount) throws IOException {
+                               @Nonnull final PDDocument aDoc,
+                               final boolean bCompressPDF,
+                               @Nonnegative final int nPageSetIndex,
+                               @Nonnegative final int nPageSetCount,
+                               @Nonnegative final int nTotalPageStartIndex,
+                               @Nonnegative final int nTotalPageCount) throws IOException {
+        if (!m_bPrepared)
+            throw new IllegalStateException("Cannot render PageSet that is not prepared");
+
         // Start at the left top
         final float fXLeft = getOutlineLeft();
 
@@ -1082,9 +1125,10 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
             final PDPage aPage = new PDPage(m_aPageSize.getAsRectangle());
             aDoc.addPage(aPage);
 
-            final IPLRenderableObject<?> aPageHeader = bFirstPage && m_bDifferentFirstPageHeader ? m_aFirstPageHeader : m_aPageHeader;
-            final IPLRenderableObject<?> aPageFooter = bFirstPage && m_bDifferentFirstPageFooter ? m_aFirstPageFooter : m_aPageFooter;
-
+            final IPLRenderableObject<?> aPageHeader = bFirstPage && m_bDifferentFirstPageHeader ? m_aFirstPageHeader
+                    : m_aPageHeader;
+            final IPLRenderableObject<?> aPageFooter = bFirstPage && m_bDifferentFirstPageFooter ? m_aFirstPageFooter
+                    : m_aPageFooter;
             {
                 final PagePreRenderContext aPreRenderCtx = new PagePreRenderContext(this,
                         aDoc,
@@ -1110,7 +1154,6 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
                 for (final PLElementWithSize aElementWithHeight : aPerPage)
                     aElementWithHeight.getElement().visit(aVisitor);
             }
-
             final PDPageContentStreamWithCache aContentStream = new PDPageContentStreamWithCache(aDoc,
                     aPage,
                     PDPageContentStream.AppendMode.OVERWRITE,
@@ -1125,7 +1168,6 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
 
                     PLRenderHelper.fillAndRenderBorder(this, fLeft, fTop, fWidth, fHeight, aContentStream);
                 }
-
                 // Start with the page rectangle
                 if (aPageHeader != null) {
                     // Page header does not care about page padding
@@ -1162,7 +1204,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
                         m_aRCCustomizer.customizeRenderContext(aRCtx);
                     m_aFirstPageBackgroundHeader.render(aRCtx);
                 }
-                
+
                 float fCurY = _getYTop(aMBP);
                 for (final PLElementWithSize aElementWithHeight : aPerPage) {
                     final IPLRenderableObject<?> aElement = aElementWithHeight.getElement();
@@ -1185,7 +1227,6 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
                     // In
                     fCurY -= aElementWithHeight.getHeightFull();
                 }
-
                 if (aPageFooter != null) {
                     // Page footer does not care about page padding
                     // footer top-left
@@ -1228,9 +1269,9 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
                         cs.setGraphicsStateParameters(gs);
 
                         // Set color
-                        Color color = new Color(220, 227, 239);
-                        cs.setNonStrokingColor(color);
-                        cs.setStrokingColor(color);
+                        PLColor color = new PLColor(220, 227, 239);
+                        cs.setNonStrokingColor(color.getRed(), color.getGreen(), color.getBlue());
+                        cs.setStrokingColor(color.getRed(), color.getGreen(), color.getBlue());
 
                         cs.beginText();
                         cs.newLineAtOffset(x, y);
@@ -1270,6 +1311,8 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
                 .appendIfNotNull("PageFooter", m_aPageFooter)
                 .appendIfNotNull("PRCCustomizer", m_aPRCCustomizer)
                 .appendIfNotNull("RCCustomizer", m_aRCCustomizer)
+                .append("Prepared", m_bPrepared)
+                .appendIfNotNull("PrepareResult", m_aPrepareResult)
                 .getToString();
     }
 }

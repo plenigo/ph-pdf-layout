@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,17 +16,18 @@
  */
 package com.plenigo.pdflayout;
 
-import com.helger.commons.collection.impl.ICommonsMap;
-import com.helger.commons.io.resource.ClassPathResource;
-import com.helger.commons.lang.PropertiesHelper;
+import javax.annotation.concurrent.Immutable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.concurrent.Immutable;
+import com.helger.commons.collection.impl.ICommonsMap;
+import com.helger.commons.io.resource.ClassPathResource;
+import com.helger.commons.lang.PropertiesHelper;
 
 /**
  * Contains global configuration constants.
- * 
+ *
  * @author Philip Helger
  */
 @Immutable
@@ -44,7 +45,7 @@ public final class PLConfig
   static
   {
     String sProjectVersion = null;
-    final ICommonsMap <String, String> p = PropertiesHelper.loadProperties (new ClassPathResource ("ph-pdf-layout4-version.properties"));
+    final ICommonsMap <String, String> p = PropertiesHelper.loadProperties (new ClassPathResource ("ph-pdf-layout-version.properties"));
     if (p != null)
       sProjectVersion = p.get ("version");
     if (sProjectVersion == null)

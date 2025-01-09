@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,6 +32,19 @@
  */
 package com.plenigo.pdflayout.element.vbox;
 
+import java.io.IOException;
+import java.util.function.Consumer;
+import java.util.function.ObjIntConsumer;
+
+import javax.annotation.CheckForSigned;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.ArrayHelper;
@@ -51,37 +64,28 @@ import com.plenigo.pdflayout.render.PageRenderContext;
 import com.plenigo.pdflayout.render.PreparationContext;
 import com.plenigo.pdflayout.spec.HeightSpec;
 import com.plenigo.pdflayout.spec.SizeSpec;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.CheckForSigned;
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-import java.io.IOException;
-import java.util.function.Consumer;
-import java.util.function.ObjIntConsumer;
 
 /**
  * Vertical box - groups several rows.
  *
- * @param <IMPLTYPE> Implementation type
- *
  * @author Philip Helger
+ * @param <IMPLTYPE>
+ *        Implementation type
  */
-public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> extends AbstractPLRenderableObject<IMPLTYPE> implements
-        IPLSplittableObject<IMPLTYPE, IMPLTYPE> {
-    public static final boolean DEFAULT_FULL_WIDTH = true;
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPLVBox.class);
+public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>> extends
+                                     AbstractPLRenderableObject <IMPLTYPE> implements
+                                     IPLSplittableObject <IMPLTYPE, IMPLTYPE>
+{
+  public static final boolean DEFAULT_FULL_WIDTH = true;
+  private static final Logger LOGGER = LoggerFactory.getLogger (AbstractPLVBox.class);
 
-    // All the rows of this VBox
-    private final ICommonsList<PLVBoxRow> m_aRows = new CommonsArrayList<>();
-    // Vertical splittable?
-    private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
-    // Header rows to be repeated after a split
-    private int m_nHeaderRowCount = 0;
-    // Always use the full width?
+  // All the rows of this VBox
+  private final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList <> ();
+  // Vertical splittable?
+  private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
+  // Header rows to be repeated after a split
+  private int m_nHeaderRowCount = 0;
+  // Always use the full width?
   private boolean m_bFullWidth = DEFAULT_FULL_WIDTH;
 
   // Status vars
@@ -162,7 +166,7 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
   @Nullable
   public PLVBoxRow getFirstRow ()
   {
-    return m_aRows.getFirst ();
+    return m_aRows.getFirstOrNull ();
   }
 
   /**
@@ -171,21 +175,22 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
   @Nullable
   public PLVBoxRow getLastRow ()
   {
-    return m_aRows.getLast ();
+    return m_aRows.getLastOrNull ();
   }
 
-    /**
-     * Get the element in the row at the specified index.
-     *
-     * @param nIndex The index to use. Should be &ge; 0.
-     *
-     * @return <code>null</code> if an invalid index was provided.
-     */
-    @Nullable
-    public IPLRenderableObject<?> getRowElementAtIndex(@Nonnegative final int nIndex) {
-        final PLVBoxRow aRow = getRowAtIndex(nIndex);
-        return aRow == null ? null : aRow.getElement();
-    }
+  /**
+   * Get the element in the row at the specified index.
+   *
+   * @param nIndex
+   *        The index to use. Should be &ge; 0.
+   * @return <code>null</code> if an invalid index was provided.
+   */
+  @Nullable
+  public IPLRenderableObject <?> getRowElementAtIndex (@Nonnegative final int nIndex)
+  {
+    final PLVBoxRow aRow = getRowAtIndex (nIndex);
+    return aRow == null ? null : aRow.getElement ();
+  }
 
   /**
    * @return The element in the first row or <code>null</code> if no row is
@@ -255,7 +260,8 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
    * @return the created row
    */
   @Nonnull
-  public final PLVBoxRow addAndReturnRow (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final HeightSpec aHeight)
+  public final PLVBoxRow addAndReturnRow (@Nonnull final IPLRenderableObject <?> aElement,
+                                          @Nonnull final HeightSpec aHeight)
   {
     internalCheckNotPrepared ();
     return _addAndReturnRow (-1, aElement, aHeight);
@@ -323,7 +329,9 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
    * @return this for chaining
    */
   @Nonnull
-  public IMPLTYPE addRow (@Nonnegative final int nIndex, @Nonnull final IPLRenderableObject <?> aElement, @Nonnull final HeightSpec aHeight)
+  public IMPLTYPE addRow (@Nonnegative final int nIndex,
+                          @Nonnull final IPLRenderableObject <?> aElement,
+                          @Nonnull final HeightSpec aHeight)
   {
     addAndReturnRow (nIndex, aElement, aHeight);
     return thisAsT ();
@@ -482,7 +490,6 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
       }
       ++nIndex;
     }
-
     // 2. prepare all auto widths items (2-pass)
     float fUsedAutoHeightFullForStar = fUsedHeightFull;
     {
@@ -512,7 +519,6 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
 
           // Use the used size of the element as the row height
           final float fRowHeightFull = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
-
           if (fRowHeightFull <= fAvailableAutoRowHeight)
           {
             // Update used height
@@ -545,7 +551,6 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
         }
         ++nIndex;
       }
-
       // Second pass: split all too high auto rows on fRemainingHeightAuto
       nIndex = 0;
       for (final PLVBoxRow aRow : m_aRows)
@@ -560,7 +565,8 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
 
           // Percentage of used height compared to total used height of all too
           // high rows (0-1)
-          final float fAvailableRowHeightPerc = fUsedHeightAutoTooHigh == 0 ? 0 : fTooHighRowHeight / fUsedHeightAutoTooHigh;
+          final float fAvailableRowHeightPerc = fUsedHeightAutoTooHigh == 0 ? 0 : fTooHighRowHeight /
+                                                                                  fUsedHeightAutoTooHigh;
 
           // Use x% of remaining height
           // Ensure the height is not smaller than the minimum height - may be
@@ -592,30 +598,25 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
           {
             fUsedAutoHeightFullForStar += fNewAvailableRowHeight;
             if (!aElement.isVertSplittable ())
-              if (LOGGER.isWarnEnabled ())
-                LOGGER.warn ("VBox row element " +
-                             aElement.getDebugID () +
-                             " uses more height (" +
-                             fRowHeightFull +
-                             ") than is available (" +
-                             fNewAvailableRowHeight +
-                             " and is NOT vertical splittable!");
+              LOGGER.warn ("VBox row element " +
+                           aElement.getDebugID () +
+                           " uses more height (" +
+                           fRowHeightFull +
+                           ") than is available (" +
+                           fNewAvailableRowHeight +
+                           " and is NOT vertical splittable!");
           }
           else
             fUsedAutoHeightFullForStar += fRowHeightFull;
-
           // Without padding and margin
           m_aPreparedRowSize[nIndex] = new SizeSpec (m_bFullWidth ? fElementWidth : fRowWidthFull, fRowHeightFull);
           m_aPreparedElementSize[nIndex] = aElementPreparedSize;
-
         }
         ++nIndex;
       }
-
       // remaining unused parts of auto rows is automatically available to
       // star height rows (based on fUsedHeightFull)
     }
-
     // 3. prepare all star height items
     {
       fRestHeight = fElementHeight - fUsedAutoHeightFullForStar;
@@ -650,7 +651,9 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
 
           // Update used height
           // If no height is left, use the net size of the element
-          final float fRowHeightFull = bTooSmallRestHeight ? aElementPreparedSize.getHeight () + aElement.getOutlineYSum () : fRowHeight;
+          final float fRowHeightFull = bTooSmallRestHeight ? aElementPreparedSize.getHeight () +
+                                                             aElement.getOutlineYSum ()
+                                                           : fRowHeight;
           fUsedHeightFull += fRowHeightFull;
           // Don't change rest-height!
 
@@ -661,29 +664,31 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
         ++nIndex;
       }
     }
-
     // Set min size for block elements
     {
       nIndex = 0;
-      for (final PLVBoxRow aRow : m_aRows) {
-          final IPLRenderableObject<?> aElement = aRow.getElement();
-          if (aElement instanceof AbstractPLElement<?>) {
-              final AbstractPLElement<?> aRealElement = (AbstractPLElement<?>) aElement;
-              // Set minimum row width and height
-              aRealElement.setMinSize(m_bFullWidth ? fElementWidth - aRealElement.getOutlineXSum() : fMaxRowWidthNet,
-                      m_aPreparedRowSize[nIndex].getHeight() - aRealElement.getOutlineYSum());
-          }
-          ++nIndex;
+      for (final PLVBoxRow aRow : m_aRows)
+      {
+        final IPLRenderableObject <?> aElement = aRow.getElement ();
+        if (aElement instanceof AbstractPLElement <?>)
+        {
+          final AbstractPLElement <?> aRealElement = (AbstractPLElement <?>) aElement;
+          // Set minimum row width and height
+          aRealElement.setMinSize (m_bFullWidth ? fElementWidth - aRealElement.getOutlineXSum () : fMaxRowWidthNet,
+                                   m_aPreparedRowSize[nIndex].getHeight () - aRealElement.getOutlineYSum ());
+        }
+        ++nIndex;
       }
     }
-
     // Small consistency check (with rounding included)
     if (PLDebugLog.isDebugPrepare ())
     {
       if (fMaxRowWidthFull - fElementWidth > 0.01)
-        PLDebugLog.debugPrepare (this, "uses more width (" + fMaxRowWidthFull + ") than available (" + fElementWidth + ")!");
+        PLDebugLog.debugPrepare (this,
+                                 "uses more width (" + fMaxRowWidthFull + ") than available (" + fElementWidth + ")!");
       if (fUsedHeightFull - fElementHeight > 0.01 && !isVertSplittable ())
-        PLDebugLog.debugPrepare (this, "uses more height (" + fUsedHeightFull + ") than available (" + fElementHeight + ")!");
+        PLDebugLog.debugPrepare (this,
+                                 "uses more height (" + fUsedHeightFull + ") than available (" + fElementHeight + ")!");
     }
     return new SizeSpec (fMaxRowWidthFull, fUsedHeightFull);
   }
@@ -703,7 +708,6 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
   {
     if (fAvailableHeight <= 0)
       return null;
-
     if (!containsAnyVertSplittableElement ())
     {
       // Splitting makes no sense
@@ -711,10 +715,11 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
         PLDebugLog.debugSplit (this, "Cannot split because no vertical splittable elements are contained");
       return null;
     }
-
     // Create resulting VBoxes - the first one is not splittable again!
-    final AbstractPLVBox <?> aVBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1").setVertSplittable (false);
-    final AbstractPLVBox <?> aVBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2").setVertSplittable (true);
+    final AbstractPLVBox <?> aVBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1")
+                                                                                   .setVertSplittable (false);
+    final AbstractPLVBox <?> aVBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2")
+                                                                                   .setVertSplittable (true);
 
     final int nTotalRows = getRowCount ();
     final ICommonsList <SizeSpec> aVBox1RowSize = new CommonsArrayList <> (nTotalRows);
@@ -732,7 +737,6 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
       aVBox1RowSize.add (m_aPreparedRowSize[nRow]);
       aVBox1ElementSize.add (m_aPreparedElementSize[nRow]);
     }
-
     // The height and width after header rows are identical
     final ICommonsList <SizeSpec> aVBox2RowSize = aVBox1RowSize.getClone ();
     final ICommonsList <SizeSpec> aVBox2ElementSize = aVBox1ElementSize.getClone ();
@@ -744,7 +748,6 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
     {
       final IPLRenderableObject <?> aRowElement = getRowElementAtIndex (nRow);
       final float fRowHeight = m_aPreparedRowSize[nRow].getHeight ();
-
       if (bOnVBox1)
       {
         if (fUsedVBox1RowHeight + fRowHeight <= fAvailableHeight)
@@ -774,7 +777,8 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
                                            PLDebugLog.getWH (fSplitWidth, fSplitHeight));
 
             // Try to split the element contained in the row
-            final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElementVert (fSplitWidth, fSplitHeight);
+            final PLSplitResult aSplitResult = aRowElement.getAsSplittable ()
+                                                          .splitElementVert (fSplitWidth, fSplitHeight);
             if (aSplitResult != null)
             {
               final IPLRenderableObject <?> aVBox1RowElement = aSplitResult.getFirstElement ().getElement ();
@@ -822,10 +826,13 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
             {
               if (PLDebugLog.isDebugSplit ())
                 PLDebugLog.debugSplit (this,
-                                       "Failed to split row element " + aRowElement.getDebugID () + " (Row " + nRow + ") into pieces");
+                                       "Failed to split row element " +
+                                             aRowElement.getDebugID () +
+                                             " (Row " +
+                                             nRow +
+                                             ") into pieces");
             }
           }
-
           if (!bSplittedRow)
           {
             // just add the full row to the second VBox since the row does not
@@ -847,7 +854,6 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
         aVBox2ElementSize.add (m_aPreparedElementSize[nRow]);
       }
     }
-
     if (aVBox1.getRowCount () == m_nHeaderRowCount)
     {
       // Splitting makes no sense!
@@ -855,7 +861,6 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
         PLDebugLog.debugSplit (this, "Splitting makes no sense, because VBox 1 would be empty");
       return null;
     }
-
     if (aVBox2.getRowCount () == m_nHeaderRowCount)
     {
       // Splitting makes no sense!
@@ -863,18 +868,17 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
         PLDebugLog.debugSplit (this, "Splitting makes no sense, because VBox 2 would be empty");
       return null;
     }
+    // Excluding padding/margin
+    aVBox1.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fUsedVBox1RowHeight));
+    aVBox1.m_aPreparedRowSize = ArrayHelper.newArray (aVBox1RowSize, SizeSpec.class);
+    aVBox1.m_aPreparedElementSize = ArrayHelper.newArray (aVBox1ElementSize, SizeSpec.class);
 
-      // Excluding padding/margin
-      aVBox1.internalMarkAsPrepared(new SizeSpec(fAvailableWidth, fUsedVBox1RowHeight));
-      aVBox1.m_aPreparedRowSize = ArrayHelper.newArray(aVBox1RowSize, SizeSpec.class);
-      aVBox1.m_aPreparedElementSize = ArrayHelper.newArray(aVBox1ElementSize, SizeSpec.class);
+    aVBox2.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fUsedVBox2RowHeight));
+    aVBox2.m_aPreparedRowSize = ArrayHelper.newArray (aVBox2RowSize, SizeSpec.class);
+    aVBox2.m_aPreparedElementSize = ArrayHelper.newArray (aVBox2ElementSize, SizeSpec.class);
 
-      aVBox2.internalMarkAsPrepared(new SizeSpec(fAvailableWidth, fUsedVBox2RowHeight));
-      aVBox2.m_aPreparedRowSize = ArrayHelper.newArray(aVBox2RowSize, SizeSpec.class);
-      aVBox2.m_aPreparedElementSize = ArrayHelper.newArray(aVBox2ElementSize, SizeSpec.class);
-
-      return new PLSplitResult(new PLElementWithSize(aVBox1, new SizeSpec(fAvailableWidth, fUsedVBox1RowHeight)),
-              new PLElementWithSize(aVBox2, new SizeSpec(fAvailableWidth, fUsedVBox2RowHeight)));
+    return new PLSplitResult (new PLElementWithSize (aVBox1, new SizeSpec (fAvailableWidth, fUsedVBox1RowHeight)),
+                              new PLElementWithSize (aVBox2, new SizeSpec (fAvailableWidth, fUsedVBox2RowHeight)));
   }
 
   @Override

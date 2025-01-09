@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,14 @@
  */
 package com.plenigo.pdflayout.spec;
 
+import java.io.Serializable;
+
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+
+import org.apache.pdfbox.cos.COSArray;
+import org.apache.pdfbox.cos.COSFloat;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.annotation.ReturnsMutableCopy;
@@ -23,12 +31,6 @@ import com.helger.commons.collection.ArrayHelper;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
-import org.apache.pdfbox.cos.COSArray;
-import org.apache.pdfbox.cos.COSFloat;
-
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import java.io.Serializable;
 
 /**
  * Different dashed line times
@@ -75,7 +77,8 @@ public class LineDashPatternSpec implements Serializable
   public LineDashPatternSpec (@Nonnull final float [] aPattern, final float fPhase)
   {
     ValueEnforcer.notNull (aPattern, "Pattern");
-    ValueEnforcer.isTrue (aPattern.length <= 2, () -> "Too many patterns (" + aPattern.length + ") provided. At max 2 items are allowed.");
+    ValueEnforcer.isTrue (aPattern.length <= 2,
+                          () -> "Too many patterns (" + aPattern.length + ") provided. At max 2 items are allowed.");
     for (final float fPatternValue : aPattern)
       ValueEnforcer.isGT0 (fPatternValue, "PatternValue");
 
@@ -134,6 +137,6 @@ public class LineDashPatternSpec implements Serializable
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("pattern", m_aPattern).append ("phase", m_fPhase).getToString ();
+    return new ToStringGenerator (null).append ("Pattern", m_aPattern).append ("Phase", m_fPhase).getToString ();
   }
 }

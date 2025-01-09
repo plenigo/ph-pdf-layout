@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,37 +16,32 @@
  */
 package com.plenigo.pdflayout.spec;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.id.IHasID;
 import com.helger.commons.lang.EnumHelper;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Represents the possible vertical alignments.
  *
  * @author Philip Helger
  */
-public enum EVertAlignment implements IHasID<String> {
-    /**
-     * Align top
-     */
-    TOP("top"),
+public enum EVertAlignment implements IHasID <String>
+{
+  /** Align top */
+  TOP ("top"),
 
-    /**
-     * Align middle
-     */
-    MIDDLE("middle"),
+  /** Align middle */
+  MIDDLE ("middle"),
 
-    /**
-     * Align bottom
-     */
-    BOTTOM("bottom");
+  /** Align bottom */
+  BOTTOM ("bottom");
 
-    public static final EVertAlignment DEFAULT = TOP;
+  public static final EVertAlignment DEFAULT = TOP;
 
-    private final String m_sID;
+  private final String m_sID;
 
   EVertAlignment (@Nonnull @Nonempty final String sID)
   {

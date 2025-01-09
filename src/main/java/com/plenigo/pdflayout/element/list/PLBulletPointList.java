@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,12 @@
  */
 package com.plenigo.pdflayout.element.list;
 
+import java.io.IOException;
+
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.helger.commons.ValueEnforcer;
 import com.plenigo.pdflayout.base.AbstractPLRenderableObject;
 import com.plenigo.pdflayout.base.IPLRenderableObject;
@@ -28,34 +34,32 @@ import com.plenigo.pdflayout.render.PreparationContext;
 import com.plenigo.pdflayout.spec.SizeSpec;
 import com.plenigo.pdflayout.spec.WidthSpec;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.IOException;
-
 /**
  * A simple bullet point list.
  *
  * @author Philip Helger
  * @since 5.1.0
  */
-public class PLBulletPointList extends AbstractPLRenderableObject<PLBulletPointList> implements
-        IPLSplittableObject<PLBulletPointList, PLTable> {
-    private final PLTable m_aTable;
-    private final IBulletPointCreator m_aBulletPointCreator;
+public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPointList> implements
+                               IPLSplittableObject <PLBulletPointList, PLTable>
+{
+  private final PLTable m_aTable;
+  private final IBulletPointCreator m_aBulletPointCreator;
 
-    public PLBulletPointList(@Nonnull final WidthSpec aWidthSpec, @Nonnull final IBulletPointCreator aBulletPointCreator) {
-        ValueEnforcer.notNull(aWidthSpec, "WidthSpec");
-        ValueEnforcer.notNull(aBulletPointCreator, "BulletPointCreator");
+  public PLBulletPointList (@Nonnull final WidthSpec aWidthSpec, @Nonnull final IBulletPointCreator aBulletPointCreator)
+  {
+    ValueEnforcer.notNull (aWidthSpec, "WidthSpec");
+    ValueEnforcer.notNull (aBulletPointCreator, "BulletPointCreator");
 
-        // Using different width types requires to NOT use a colspan
-        m_aTable = new PLTable(aWidthSpec, WidthSpec.star()).setID("bulletpoint-list");
-        m_aBulletPointCreator = aBulletPointCreator;
-    }
+    // Using different width types requires to NOT use a colspan
+    m_aTable = new PLTable (aWidthSpec, WidthSpec.star ()).setID ("bulletpoint-list");
+    m_aBulletPointCreator = aBulletPointCreator;
+  }
 
-    @Nonnull
-    public final PLTable getUnderlyingTable() {
-        return m_aTable;
+  @Nonnull
+  public final PLTable getUnderlyingTable ()
+  {
+    return m_aTable;
   }
 
   @Nonnull
@@ -64,16 +68,17 @@ public class PLBulletPointList extends AbstractPLRenderableObject<PLBulletPointL
     return m_aBulletPointCreator;
   }
 
-    @Nonnull
-    public PLBulletPointList addBulletPoint(@Nonnull final IPLRenderableObject<?> aElement) {
-        final int nBulletPointIndex = m_aTable.getRowCount();
+  @Nonnull
+  public PLBulletPointList addBulletPoint (@Nonnull final IPLRenderableObject <?> aElement)
+  {
+    final int nBulletPointIndex = m_aTable.getRowCount ();
 
-        final PLTableCell aCellLeft = new PLTableCell(m_aBulletPointCreator.getBulletPointElement(nBulletPointIndex)).setID("bulletpoint");
-        final PLTableCell aCellRight = new PLTableCell(aElement).setID("content");
+    final PLTableCell aCellLeft = new PLTableCell (m_aBulletPointCreator.getBulletPointElement (nBulletPointIndex)).setID ("bulletpoint");
+    final PLTableCell aCellRight = new PLTableCell (aElement).setID ("content");
 
-        m_aTable.addRow(aCellLeft, aCellRight);
-        return this;
-    }
+    m_aTable.addRow (aCellLeft, aCellRight);
+    return this;
+  }
 
   @Override
   protected SizeSpec onPrepare (final PreparationContext aCtx)

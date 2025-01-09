@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,36 +16,40 @@
  */
 package com.plenigo.pdflayout.element.special;
 
+import java.io.IOException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+
 import com.helger.commons.string.ToStringGenerator;
 import com.plenigo.pdflayout.base.AbstractPLRenderableObject;
 import com.plenigo.pdflayout.render.PageRenderContext;
 import com.plenigo.pdflayout.render.PreparationContext;
 import com.plenigo.pdflayout.spec.SizeSpec;
 
-import javax.annotation.Nonnull;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-import java.io.IOException;
-
 /**
  * A vertical spacer
  *
  * @author Philip Helger
  */
-public class PLSpacerY extends AbstractPLRenderableObject<PLSpacerY> {
-    private float m_fHeight = -1;
+public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY>
+{
+  private float m_fHeight = -1;
 
-    public PLSpacerY() {
-        this(0f);
-    }
+  public PLSpacerY ()
+  {
+    this (0f);
+  }
 
-    public PLSpacerY(final float fHeight) {
-        setHeight(fHeight);
-    }
+  public PLSpacerY (final float fHeight)
+  {
+    setHeight (fHeight);
+  }
 
-    @Override
-    @Nonnull
-    @OverridingMethodsMustInvokeSuper
-    public PLSpacerY setBasicDataFrom(@Nonnull final PLSpacerY aSource)
+  @Override
+  @Nonnull
+  @OverridingMethodsMustInvokeSuper
+  public PLSpacerY setBasicDataFrom (@Nonnull final PLSpacerY aSource)
   {
     super.setBasicDataFrom (aSource);
     setHeight (aSource.m_fHeight);

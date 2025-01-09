@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,20 +16,21 @@
  */
 package com.plenigo.pdflayout.render;
 
+import java.io.IOException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
+
 import com.plenigo.pdflayout.base.IPLElement;
 import com.plenigo.pdflayout.base.IPLHasFillColor;
 import com.plenigo.pdflayout.base.IPLHasMarginBorderPadding;
 import com.plenigo.pdflayout.base.IPLObject;
+import com.plenigo.pdflayout.base.PLColor;
 import com.plenigo.pdflayout.debug.PLDebugLog;
 import com.plenigo.pdflayout.debug.PLDebugRender;
 import com.plenigo.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.plenigo.pdflayout.spec.BorderSpec;
 import com.plenigo.pdflayout.spec.BorderStyleSpec;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-import java.awt.*;
-import java.io.IOException;
 
 @Immutable
 public final class PLRenderHelper
@@ -57,31 +58,39 @@ public final class PLRenderHelper
    * @throws IOException
    *         In case of a PDFBox error
    */
-  public static void renderBorder(@Nonnull final IPLObject<?> aElement,
-          @Nonnull final PDPageContentStreamWithCache aContentStream,
-          final float fLeft,
-          final float fTop,
-          final float fWidth,
-          final float fHeight,
-          @Nonnull final BorderSpec aBorder) throws IOException {
-      final float fRight = fLeft + fWidth;
-      final float fBottom = fTop - fHeight;
+  public static void renderBorder (@Nonnull final IPLObject <?> aElement,
+                                   @Nonnull final PDPageContentStreamWithCache aContentStream,
+                                   final float fLeft,
+                                   final float fTop,
+                                   final float fWidth,
+                                   final float fHeight,
+                                   @Nonnull final BorderSpec aBorder) throws IOException
+  {
+    final float fRight = fLeft + fWidth;
+    final float fBottom = fTop - fHeight;
 
-      if (aBorder.hasAllBorders() && aBorder.areAllBordersEqual()) {
-          // draw full rect
-          final BorderStyleSpec aAll = aBorder.getLeft();
-          // The border position must be in the middle of the line
-          final float fLineWidth = aAll.getLineWidth();
-          final float fHalfLineWidth = fLineWidth / 2f;
+    if (aBorder.hasAllBorders () && aBorder.areAllBordersEqual ())
+    {
+      // draw full rect
+      final BorderStyleSpec aAll = aBorder.getLeft ();
+      // The border position must be in the middle of the line
+      final float fLineWidth = aAll.getLineWidth ();
+      final float fHalfLineWidth = fLineWidth / 2f;
 
       if (PLDebugLog.isDebugRender ())
         PLDebugLog.debugRender (aElement,
-                                "Border around " + PLDebugLog.getXYWH (fLeft, fTop, fWidth, fHeight) + " with line width " + fLineWidth);
+                                "Border around " +
+                                          PLDebugLog.getXYWH (fLeft, fTop, fWidth, fHeight) +
+                                          " with line width " +
+                                          fLineWidth);
 
       aContentStream.setStrokingColor (aAll.getColor ());
       aContentStream.setLineDashPattern (aAll.getLineDashPattern ());
       aContentStream.setLineWidth (fLineWidth);
-      aContentStream.addRect (fLeft + fHalfLineWidth, fBottom + fHalfLineWidth, fWidth - fLineWidth, fHeight - fLineWidth);
+      aContentStream.addRect (fLeft + fHalfLineWidth,
+                              fBottom + fHalfLineWidth,
+                              fWidth - fLineWidth,
+                              fHeight - fLineWidth);
       aContentStream.stroke ();
     }
     else
@@ -101,54 +110,69 @@ public final class PLRenderHelper
         {
           if (PLDebugLog.isDebugRender ())
             PLDebugLog.debugRender (aElement,
-                                    "Border top " + PLDebugLog.getXYWH (fLeft, fTop, fWidth, 0) + " with line width " + fTopWidth);
+                                    "Border top " +
+                                              PLDebugLog.getXYWH (fLeft, fTop, fWidth, 0) +
+                                              " with line width " +
+                                              fTopWidth);
 
           final float fDelta = fTopWidth / 2f;
           aContentStream.setStrokingColor (aTop.getColor ());
           aContentStream.setLineDashPattern (aTop.getLineDashPattern ());
           aContentStream.setLineWidth (fTopWidth);
           aContentStream.drawLine (fLeft, fTop - fDelta, fRight - fRightWidth, fTop - fDelta);
+          aContentStream.stroke ();
         }
 
         if (aRight != null)
         {
           if (PLDebugLog.isDebugRender ())
             PLDebugLog.debugRender (aElement,
-                                    "Border right " + PLDebugLog.getXYWH (fRight, fTop, 0, fHeight) + " with line width " + fRightWidth);
+                                    "Border right " +
+                                              PLDebugLog.getXYWH (fRight, fTop, 0, fHeight) +
+                                              " with line width " +
+                                              fRightWidth);
 
           final float fDelta = fRightWidth / 2f;
           aContentStream.setStrokingColor (aRight.getColor ());
           aContentStream.setLineDashPattern (aRight.getLineDashPattern ());
           aContentStream.setLineWidth (fRightWidth);
           aContentStream.drawLine (fRight - fDelta, fTop, fRight - fDelta, fBottom + fBottomWidth);
+          aContentStream.stroke ();
         }
 
         if (aBottom != null)
         {
           if (PLDebugLog.isDebugRender ())
             PLDebugLog.debugRender (aElement,
-                                    "Border bottom " + PLDebugLog.getXYWH (fLeft, fBottom, fWidth, 0) + " with line width " + fBottomWidth);
+                                    "Border bottom " +
+                                              PLDebugLog.getXYWH (fLeft, fBottom, fWidth, 0) +
+                                              " with line width " +
+                                              fBottomWidth);
 
           final float fDelta = fBottomWidth / 2f;
           aContentStream.setStrokingColor (aBottom.getColor ());
           aContentStream.setLineDashPattern (aBottom.getLineDashPattern ());
           aContentStream.setLineWidth (fBottomWidth);
           aContentStream.drawLine (fLeft + fLeftWidth, fBottom + fDelta, fRight, fBottom + fDelta);
+          aContentStream.stroke ();
         }
 
         if (aLeft != null)
         {
           if (PLDebugLog.isDebugRender ())
             PLDebugLog.debugRender (aElement,
-                                    "Border left " + PLDebugLog.getXYWH (fLeft, fTop, 0, fHeight) + " with line width " + fLeftWidth);
+                                    "Border left " +
+                                              PLDebugLog.getXYWH (fLeft, fTop, 0, fHeight) +
+                                              " with line width " +
+                                              fLeftWidth);
 
           final float fDelta = fLeftWidth / 2f;
           aContentStream.setStrokingColor (aLeft.getColor ());
           aContentStream.setLineDashPattern (aLeft.getLineDashPattern ());
           aContentStream.setLineWidth (fLeftWidth);
           aContentStream.drawLine (fLeft + fDelta, fTop - fTopWidth, fLeft + fDelta, fBottom);
+          aContentStream.stroke ();
         }
-        aContentStream.stroke ();
       }
   }
 
@@ -169,17 +193,18 @@ public final class PLRenderHelper
    * @param <T>
    *        element type to render
    */
-  public static <T extends IPLElement<T>> void fillAndRenderBorder(@Nonnull final T aElement,
-          @Nonnull final PageRenderContext aCtx,
-          final float fIndentX,
-          final float fIndentY) throws IOException {
-      // Border starts after margin
-      final float fLeft = aCtx.getStartLeft() + aElement.getMarginLeft() + fIndentX;
-      final float fTop = aCtx.getStartTop() - aElement.getMarginTop() - fIndentY;
-      final float fWidth = aElement.getRenderWidth() + aElement.getBorderXSumWidth() + aElement.getPaddingXSum();
-      final float fHeight = aElement.getRenderHeight() + aElement.getBorderYSumWidth() + aElement.getPaddingYSum();
+  public static <T extends IPLElement <T>> void fillAndRenderBorder (@Nonnull final T aElement,
+                                                                     @Nonnull final PageRenderContext aCtx,
+                                                                     final float fIndentX,
+                                                                     final float fIndentY) throws IOException
+  {
+    // Border starts after margin
+    final float fLeft = aCtx.getStartLeft () + aElement.getMarginLeft () + fIndentX;
+    final float fTop = aCtx.getStartTop () - aElement.getMarginTop () - fIndentY;
+    final float fWidth = aElement.getRenderWidth () + aElement.getBorderXSumWidth () + aElement.getPaddingXSum ();
+    final float fHeight = aElement.getRenderHeight () + aElement.getBorderYSumWidth () + aElement.getPaddingYSum ();
 
-      fillAndRenderBorder(aElement, fLeft, fTop, fWidth, fHeight, aCtx.getContentStream());
+    fillAndRenderBorder (aElement, fLeft, fTop, fWidth, fHeight, aCtx.getContentStream ());
   }
 
   /**
@@ -215,7 +240,7 @@ public final class PLRenderHelper
     if (bDebugRender)
     {
       // Debug margin with a filled rectangle
-      final Color aOutlineColor = PLDebugRender.getDebugOutlineColor (aElement);
+      final PLColor aOutlineColor = PLDebugRender.getDebugOutlineColor (aElement);
       if (aOutlineColor != null)
       {
         aContentStream.setNonStrokingColor (aOutlineColor);
@@ -227,7 +252,7 @@ public final class PLRenderHelper
     }
 
     // Fill before border
-    final Color aFillColor = aElement.getFillColor ();
+    final PLColor aFillColor = aElement.getFillColor ();
     if (aFillColor != null)
     {
       aContentStream.setNonStrokingColor (aFillColor);

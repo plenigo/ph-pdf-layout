@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,31 +16,33 @@
  */
 package com.plenigo.pdflayout.base;
 
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.id.IHasID;
-import com.helger.commons.traits.IGenericImplTrait;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.id.IHasID;
+import com.helger.commons.traits.IGenericImplTrait;
+
 /**
  * Base interface for a PDF layout object
  *
- * @param <IMPLTYPE> Implementation type
- *
  * @author Philip Helger
+ * @param <IMPLTYPE>
+ *        Implementation type
  */
-public interface IPLObject<IMPLTYPE extends IPLObject<IMPLTYPE>> extends IHasID<String>, IGenericImplTrait<IMPLTYPE>, IPLVisitable {
-    default boolean hasID(@Nullable final String sID) {
-        return getID().equals(sID);
-    }
+public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends IHasID <String>, IGenericImplTrait <IMPLTYPE>, IPLVisitable
+{
+  default boolean hasID (@Nullable final String sID)
+  {
+    return getID ().equals (sID);
+  }
 
-    /**
-     * @return The debug ID of this element. Neither <code>null</code> nor empty.
-     * The debug ID is usually automatically created automatically from
-     * the ID.
-     */
+  /**
+   * @return The debug ID of this element. Neither <code>null</code> nor empty.
+   *         The debug ID is usually automatically created automatically from
+   *         the ID.
+   */
   @Nonnull
   @Nonempty
   String getDebugID ();

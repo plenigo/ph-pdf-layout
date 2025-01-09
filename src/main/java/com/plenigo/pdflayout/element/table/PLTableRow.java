@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,16 @@
  */
 package com.plenigo.pdflayout.element.table;
 
+import java.io.IOException;
+import java.util.function.Consumer;
+import java.util.function.ObjIntConsumer;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.helger.commons.mutable.MutableInt;
 import com.plenigo.pdflayout.base.IPLRenderableObject;
+import com.plenigo.pdflayout.base.PLColor;
 import com.plenigo.pdflayout.element.hbox.AbstractPLHBox;
 import com.plenigo.pdflayout.element.hbox.PLHBoxColumn;
 import com.plenigo.pdflayout.render.PageRenderContext;
@@ -27,32 +35,27 @@ import com.plenigo.pdflayout.spec.MarginSpec;
 import com.plenigo.pdflayout.spec.PaddingSpec;
 import com.plenigo.pdflayout.spec.WidthSpec;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.awt.*;
-import java.io.IOException;
-import java.util.function.Consumer;
-import java.util.function.ObjIntConsumer;
-
 /**
  * A special HBox representing a table row.
  *
  * @author Philip Helger
  */
-public class PLTableRow extends AbstractPLHBox<PLTableRow> {
-    public PLTableRow() {
-    }
+public class PLTableRow extends AbstractPLHBox <PLTableRow>
+{
+  public PLTableRow ()
+  {}
 
-    @Override
-    @Nonnull
-    protected PLTableCell internalCreateVertSplitEmptyElement(@Nonnull final IPLRenderableObject<?> aSrcObject,
-            final float fWidth,
-            final float fHeight) {
-        final PLTableCell ret = new PLTableCell(null);
-        ret.setBasicDataFrom((PLTableCell) aSrcObject);
-        ret.prepare(new PreparationContext(null, fWidth, fHeight));
-        return ret;
-    }
+  @Override
+  @Nonnull
+  protected PLTableCell internalCreateVertSplitEmptyElement (@Nonnull final IPLRenderableObject <?> aSrcObject,
+                                                             final float fWidth,
+                                                             final float fHeight)
+  {
+    final PLTableCell ret = new PLTableCell (null);
+    ret.setBasicDataFrom ((PLTableCell) aSrcObject);
+    ret.prepare (new PreparationContext (null, fWidth, fHeight));
+    return ret;
+  }
 
   @Nonnull
   public PLTableRow internalCreateNewVertSplitObject (@Nonnull final PLTableRow aBase)
@@ -114,7 +117,9 @@ public class PLTableRow extends AbstractPLHBox<PLTableRow> {
     });
   }
 
-  public void forEachCell (final int nStartIncl, final int nEndIncl, @Nonnull final Consumer <? super PLTableCell> aConsumer)
+  public void forEachCell (final int nStartIncl,
+                           final int nEndIncl,
+                           @Nonnull final Consumer <? super PLTableCell> aConsumer)
   {
     forEachCell ( (x, idx) -> {
       if (idx >= nStartIncl && idx <= nEndIncl)
@@ -122,7 +127,9 @@ public class PLTableRow extends AbstractPLHBox<PLTableRow> {
     });
   }
 
-  public void forEachCell (final int nStartIncl, final int nEndIncl, @Nonnull final ObjIntConsumer <? super PLTableCell> aConsumer)
+  public void forEachCell (final int nStartIncl,
+                           final int nEndIncl,
+                           @Nonnull final ObjIntConsumer <? super PLTableCell> aConsumer)
   {
     forEachCell ( (x, idx) -> {
       if (idx >= nStartIncl && idx <= nEndIncl)
@@ -139,7 +146,7 @@ public class PLTableRow extends AbstractPLHBox<PLTableRow> {
   }
 
   @Nonnull
-  public PLTableRow setFillColor (@Nullable final Color aFillColor)
+  public PLTableRow setFillColor (@Nullable final PLColor aFillColor)
   {
     forEachCell (x -> x.setFillColor (aFillColor));
     return this;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,15 @@
  */
 package com.plenigo.pdflayout.element.image;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
@@ -26,32 +35,26 @@ import com.plenigo.pdflayout.render.PagePreRenderContext;
 import com.plenigo.pdflayout.render.PageRenderContext;
 import com.plenigo.pdflayout.render.PreparationContext;
 import com.plenigo.pdflayout.spec.SizeSpec;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 /**
  * Base class for a static image based on {@link BufferedImage}.
  *
- * @param <IMPLTYPE> Implementation type
- *
  * @author Philip Helger
+ * @param <IMPLTYPE>
+ *        Implementation type
  */
-public abstract class AbstractPLImage<IMPLTYPE extends AbstractPLImage<IMPLTYPE>> extends AbstractPLInlineElement<IMPLTYPE> {
-    public static final EPLImageType DEFAULT_IMAGE_TYPE = EPLImageType.JPEG;
+public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYPE>> extends AbstractPLInlineElement <IMPLTYPE>
+{
+  public static final EPLImageType DEFAULT_IMAGE_TYPE = EPLImageType.JPEG;
 
-    private final float m_fImageWidth;
-    private final float m_fImageHeight;
-    private EPLImageType m_eImageType = DEFAULT_IMAGE_TYPE;
+  private final float m_fImageWidth;
+  private final float m_fImageHeight;
+  private EPLImageType m_eImageType = DEFAULT_IMAGE_TYPE;
 
-    // Status var
-    private PDImageXObject m_aXObject;
+  // Status var
+  private PDImageXObject m_aXObject;
 
-    public AbstractPLImage(@Nonnegative final float fImageWidth, @Nonnegative final float fImageHeight)
+  public AbstractPLImage (@Nonnegative final float fImageWidth, @Nonnegative final float fImageHeight)
   {
     ValueEnforcer.isGT0 (fImageWidth, "ImageWidth");
     ValueEnforcer.isGT0 (fImageHeight, "ImageHeight");

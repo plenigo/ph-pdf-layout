@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,11 +16,10 @@
  */
 package com.plenigo.pdflayout.base;
 
-import com.helger.commons.traits.IGenericImplTrait;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
+
+import com.helger.commons.traits.IGenericImplTrait;
 
 /**
  * Base interface for objects with a fill color
@@ -34,7 +33,7 @@ public interface IPLHasFillColor <IMPLTYPE extends IPLHasFillColor <IMPLTYPE>> e
   /**
    * By default nothing is filled, so the default value is <code>null</code>.
    */
-  Color DEFAULT_FILL_COLOR = null;
+  PLColor DEFAULT_FILL_COLOR = null;
 
   /**
    * Set the element fill color.
@@ -42,15 +41,16 @@ public interface IPLHasFillColor <IMPLTYPE extends IPLHasFillColor <IMPLTYPE>> e
    * @param aFillColor
    *        The fill color to use. May be <code>null</code>.
    * @return this
+   * @since 7.2.0
    */
   @Nonnull
-  IMPLTYPE setFillColor (@Nullable Color aFillColor);
+  IMPLTYPE setFillColor (@Nullable PLColor aFillColor);
 
   /**
    * @return The current fill color. May be <code>null</code>.
    */
   @Nullable
-  Color getFillColor ();
+  PLColor getFillColor ();
 
   default boolean hasFillColor ()
   {

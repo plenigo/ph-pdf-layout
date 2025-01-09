@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,13 +16,13 @@
  */
 package com.plenigo.pdflayout.element.vbox;
 
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
 import com.plenigo.pdflayout.base.IPLRenderableObject;
 import com.plenigo.pdflayout.spec.HeightSpec;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * This class represents a single row within a VBox. This is a pseudo element
@@ -33,8 +33,8 @@ import javax.annotation.concurrent.NotThreadSafe;
 @NotThreadSafe
 public final class PLVBoxRow
 {
-    private IPLRenderableObject<?> m_aElement;
-    private final HeightSpec m_aHeight;
+  private IPLRenderableObject <?> m_aElement;
+  private final HeightSpec m_aHeight;
 
   public PLVBoxRow (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final HeightSpec aHeight)
   {
