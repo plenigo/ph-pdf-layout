@@ -23,6 +23,7 @@ import com.plenigo.pdflayout.PageLayoutPDF;
 import com.plenigo.pdflayout.base.PLPageSet;
 import com.plenigo.pdflayout.element.hbox.PLHBox;
 import com.plenigo.pdflayout.element.special.PLSpacerY;
+import com.plenigo.pdflayout.spec.EHorzAlignment;
 import com.plenigo.pdflayout.spec.FontSpec;
 import com.plenigo.pdflayout.spec.PreloadFont;
 import com.plenigo.pdflayout.spec.WidthSpec;
@@ -87,13 +88,57 @@ public final class PLMultiLineTextBoxTest {
     }
 
     @Test
+    public void testMultiTextLinesRightAligned() throws PDFCreationException {
+        final FontSpec r10 = new FontSpec(PreloadFont.REGULAR, 10);
+        final FontSpec r10b = new FontSpec(PreloadFont.REGULAR_BOLD, 10);
+        final FontSpec r6 = new FontSpec(PreloadFont.REGULAR, 6);
+        final FontSpec r20 = new FontSpec(PreloadFont.REGULAR, 20);
+        final FontSpec r20b = new FontSpec(PreloadFont.REGULAR_BOLD, 20);
+        final FontSpec r14 = new FontSpec(PreloadFont.REGULAR, 14);
+
+        final PLPageSet aPS1 = new PLPageSet(PDRectangle.A4);
+
+        aPS1.addElement(getPLMultiLineTextBox().setHorzAlign(EHorzAlignment.RIGHT));
+
+        aPS1.addElement(new PLSpacerY(20f));
+
+        aPS1.addElement(getPLText().setHorzAlign(EHorzAlignment.RIGHT));
+
+        aPS1.addElement(new PLSpacerY(20f));
+
+        PLHBox aHBox = new PLHBox();
+        aHBox.addColumn(getPLMultiLineTextBox().setHorzAlign(EHorzAlignment.RIGHT), WidthSpec.perc(50));
+
+        aHBox.addColumn(getPLText().setHorzAlign(EHorzAlignment.RIGHT), WidthSpec.perc(50));
+
+        aPS1.addElement(aHBox);
+
+        aPS1.addElement(new PLSpacerY(20f));
+
+        final PLMultiLineTextBox aMLBox = new PLMultiLineTextBox().setHorzAlign(EHorzAlignment.RIGHT);
+        aMLBox.addMultiLineText(new PLMultiLineText("The text can be very Big", r20));
+        aMLBox.addMultiLineText(new PLMultiLineText(" or also very Big and bold", r20b));
+        aMLBox.addMultiLineText(new PLMultiLineText(" but also very small.", r6));
+        aMLBox.addMultiLineText(new PLMultiLineText(" A normal size can also be chosen if you want", r10));
+        aMLBox.addMultiLineText(new PLMultiLineText(", also with bold", r10b));
+        aMLBox.addMultiLineText(new PLMultiLineText(" or any other font size", r14));
+
+        aPS1.addElement(aMLBox);
+
+        final PageLayoutPDF aPageLayout = new PageLayoutPDF();
+        aPageLayout.addPageSet(aPS1);
+
+        PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/text/multi-line-style-right-aligned.pdf"));
+    }
+
+    @Test
     public void testMultiTextLinesWithEmptyLine() throws PDFCreationException {
         final FontSpec r10 = new FontSpec(PreloadFont.REGULAR, 10);
 
         final PLMultiLineTextBox aMLBox = new PLMultiLineTextBox();
         aMLBox.addMultiLineText(new PLMultiLineText("The text can be very Big", r10));
         aMLBox.addMultiLineText(new PLMultiLineText("", r10));
-        aMLBox.addMultiLineText(new PLMultiLineText(" an can have empty text.", r10));
+        aMLBox.addMultiLineText(new PLMultiLineText(" and can have empty text.", r10));
 
         final PLPageSet aPS1 = new PLPageSet(PDRectangle.A4);
         aPS1.addElement(aMLBox);

@@ -16,37 +16,29 @@
  */
 package com.plenigo.pdflayout.supplementary.issues;
 
-import java.io.File;
-import java.io.IOException;
-
+import com.helger.commons.io.file.FileSystemRecursiveIterator;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.io.file.FileSystemRecursiveIterator;
+import java.io.File;
+import java.io.IOException;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+public final class MainIssue3204 {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainIssue3204.class);
 
-public final class MainIssue3204
-{
-  private static final Logger LOGGER = LoggerFactory.getLogger (MainIssue3204.class);
-
-  @SuppressFBWarnings ("DMI_HARDCODED_ABSOLUTE_FILENAME")
-  public static void main (final String [] args) throws IOException
-  {
-    int n = 0;
-    for (final File f : new FileSystemRecursiveIterator ("/"))
-      if (f.isFile () && f.getName ().endsWith (".pdf"))
-      {
-        LOGGER.info (f.getAbsolutePath ());
-        try (PDDocument aDoc = Loader.loadPDF (f))
-        {
-          new PDFRenderer (aDoc).renderImageWithDPI (0, 195);
-          n++;
-        }
-      }
-    LOGGER.info (n + " files found");
-  }
+    public static void main(final String[] args) throws IOException {
+        int n = 0;
+        for (final File f : new FileSystemRecursiveIterator("/"))
+            if (f.isFile() && f.getName().endsWith(".pdf")) {
+                LOGGER.info(f.getAbsolutePath());
+                try (PDDocument aDoc = Loader.loadPDF(f)) {
+                    new PDFRenderer(aDoc).renderImageWithDPI(0, 195);
+                    n++;
+                }
+            }
+        LOGGER.info(n + " files found");
+    }
 }
