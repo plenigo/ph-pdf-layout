@@ -84,7 +84,7 @@ public final class PLMultiLineTextBoxTest {
         final PageLayoutPDF aPageLayout = new PageLayoutPDF();
         aPageLayout.addPageSet(aPS1);
 
-        PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/text/multi-line-style.pdf"));
+        PDFTestComparer.renderAndCompare(aPageLayout, new File("pdf/text/multi-line-style.pdf"));
     }
 
     @Test
@@ -128,7 +128,7 @@ public final class PLMultiLineTextBoxTest {
         final PageLayoutPDF aPageLayout = new PageLayoutPDF();
         aPageLayout.addPageSet(aPS1);
 
-        PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/text/multi-line-style-right-aligned.pdf"));
+        PDFTestComparer.renderAndCompare(aPageLayout, new File("pdf/text/multi-line-style-right-aligned.pdf"));
     }
 
     @Test
@@ -145,7 +145,7 @@ public final class PLMultiLineTextBoxTest {
 
         final PageLayoutPDF aPageLayout = new PageLayoutPDF();
         aPageLayout.addPageSet(aPS1);
-        PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/text/multi-line-style-empty-line.pdf"));
+        PDFTestComparer.renderAndCompare(aPageLayout, new File("pdf/text/multi-line-style-empty-line.pdf"));
     }
 
     private PLMultiLineTextBox getPLMultiLineTextBox() {
