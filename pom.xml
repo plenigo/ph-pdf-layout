@@ -48,7 +48,7 @@
   </organization>
 
   <properties>
-      <pdfbox.version>3.0.3</pdfbox.version>
+      <pdfbox.version>3.0.2</pdfbox.version>
       <pdfcompare.version>1.2.2</pdfcompare.version>
       <maven.compiler.source>21</maven.compiler.source>
       <maven.compiler.target>21</maven.compiler.target>

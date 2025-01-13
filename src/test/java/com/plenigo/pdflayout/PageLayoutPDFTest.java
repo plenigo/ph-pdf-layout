@@ -298,4 +298,34 @@ public final class PageLayoutPDFTest
     aPageLayout.addPageSet (aPS1);
     PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/test-din-letter.pdf"));
   }
+
+  @Test
+  public void testFolderMark () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
+    aPS1.setFoldMark(true);
+    aPS1.addElement (new PLText ("Dummy line", r10));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+
+    aPageLayout.addPageSet (aPS1);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/test-folder-mark.pdf"));
+  }
+
+  @Test
+  public void testWaterMark () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
+    aPS1.setWaterMark("TEST");
+    aPS1.addElement (new PLText ("Dummy line", r10));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+
+    aPageLayout.addPageSet (aPS1);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/test-water-mark.pdf"));
+  }
 }

@@ -56,6 +56,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
+import java.awt.Color;
 import java.io.IOException;
 import java.util.function.Consumer;
 
@@ -1269,9 +1270,9 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
                         cs.setGraphicsStateParameters(gs);
 
                         // Set color
-                        PLColor color = new PLColor(220, 227, 239);
-                        cs.setNonStrokingColor(color.getRed(), color.getGreen(), color.getBlue());
-                        cs.setStrokingColor(color.getRed(), color.getGreen(), color.getBlue());
+                        Color color = new Color(220, 227, 239);
+                        cs.setNonStrokingColor(color);
+                        cs.setStrokingColor(color);
 
                         cs.beginText();
                         cs.newLineAtOffset(x, y);

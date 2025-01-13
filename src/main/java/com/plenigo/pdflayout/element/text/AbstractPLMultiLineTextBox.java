@@ -315,8 +315,21 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
                     }
 
                 } else if (hasNext) {
-                    m_aRows.add(new PLVBoxRow(aElement, HeightSpec.auto()));
-                    fRestWidth = fElementWidth;
+                    if (getHorzAlign() == EHorzAlignment.RIGHT) {
+                        multiLineTextBox = new PLHBox();
+                        multiLineTextBox.addColumn(aElement, widthSpec);
+                        fMaxFontHeight = textFontHeight;
+                        fRestWidth = fElementWidth - width;
+                        if (fRestWidth > 0) {
+                            multiLineTextBox.addColumn(0, new PLBox(), WidthSpec.abs(fRestWidth));
+                        }
+                        onPrepareMultiLineTextBox(aCtx, multiLineTextBox, fMaxFontHeight);
+                        m_aRows.add(new PLVBoxRow(multiLineTextBox, HeightSpec.auto()));
+                        multiLineTextBox = null;
+                    } else {
+                        m_aRows.add(new PLVBoxRow(aElement, HeightSpec.auto()));
+                        fRestWidth = fElementWidth;
+                    }
                 } else if (width < fElementWidth) {
                     multiLineTextBox = new PLHBox();
                     multiLineTextBox.addColumn(aElement, widthSpec);
