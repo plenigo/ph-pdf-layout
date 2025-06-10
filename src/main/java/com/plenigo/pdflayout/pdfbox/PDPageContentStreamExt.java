@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -63,6 +63,8 @@ import org.apache.pdfbox.util.NumberFormatUtil;
 import com.helger.commons.annotation.CodingStyleguideUnaware;
 import com.helger.commons.collection.NonBlockingStack;
 import com.plenigo.pdflayout.base.PLColor;
+import com.plenigo.pdflayout.spec.ELineCapStyle;
+import com.plenigo.pdflayout.spec.ELineJoinStyle;
 
 /**
  * Provides the ability to write to a page content stream.<br>
@@ -72,6 +74,8 @@ import com.plenigo.pdflayout.base.PLColor;
  * <li>Removed all deprecated methods</li>
  * <li>Allowing to prepend content</li>
  * </ul>
+ * This class is basically the same as the PDFBox internal class
+ * <code>PDAbstractContentStream</code> just with optimizations
  *
  * @author Ben Litchfield
  */
@@ -118,8 +122,7 @@ public class PDPageContentStreamExt implements Closeable
    * @param sourcePage
    *        The page to write the contents to.
    * @param appendContent
-   *        Indicates whether content will be overwritten. If false all previous
-   *        content is deleted.
+   *        Indicates whether content will be overwritten. If false all previous content is deleted.
    * @param compress
    *        Tell if the content stream should compress the page contents.
    * @throws IOException
@@ -141,8 +144,7 @@ public class PDPageContentStreamExt implements Closeable
    * @param sourcePage
    *        The page to write the contents to.
    * @param appendContent
-   *        Indicates whether content will be overwritten. If false all previous
-   *        content is deleted.
+   *        Indicates whether content will be overwritten. If false all previous content is deleted.
    * @param compress
    *        Tell if the content stream should compress the page contents.
    * @param resetContext
@@ -167,7 +169,7 @@ public class PDPageContentStreamExt implements Closeable
 
       // Add new stream to contents array
       final COSBase contents = sourcePage.getCOSObject ().getDictionaryObject (COSName.CONTENTS);
-      COSArray array;
+      final COSArray array;
       if (contents instanceof COSArray)
       {
         // If contents is already an array, a new stream is simply appended to
@@ -236,8 +238,7 @@ public class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * Create a new appearance stream. Note that this is not actually a "page"
-   * content stream.
+   * Create a new appearance stream. Note that this is not actually a "page" content stream.
    *
    * @param doc
    *        The document the page is part of.
@@ -252,8 +253,7 @@ public class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * Create a new appearance stream. Note that this is not actually a "page"
-   * content stream.
+   * Create a new appearance stream. Note that this is not actually a "page" content stream.
    *
    * @param aDoc
    *        The document the appearance is part of.
@@ -285,8 +285,7 @@ public class PDPageContentStreamExt implements Closeable
    * Begin some text operations.
    *
    * @throws IOException
-   *         If there is an error writing to the stream or if you attempt to
-   *         nest beginText calls.
+   *         If there is an error writing to the stream or if you attempt to nest beginText calls.
    * @throws IllegalStateException
    *         If the method was not allowed to be called at this time.
    */
@@ -304,8 +303,7 @@ public class PDPageContentStreamExt implements Closeable
    * End some text operations.
    *
    * @throws IOException
-   *         If there is an error writing to the stream or if you attempt to
-   *         nest endText calls.
+   *         If there is an error writing to the stream or if you attempt to nest endText calls.
    * @throws IllegalStateException
    *         If the method was not allowed to be called at this time.
    */
@@ -344,9 +342,8 @@ public class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * Set the character spacing. The value shall be added to the horizontal or
-   * vertical component of the glyph's displacement, depending on the writing
-   * mode.
+   * Set the character spacing. The value shall be added to the horizontal or vertical component of
+   * the glyph's displacement, depending on the writing mode.
    *
    * @param spacing
    *        character spacing
@@ -408,8 +405,8 @@ public class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * Move to the start of the next line of text. Requires the leading (see
-   * {@link #setLeading}) to have been set.
+   * Move to the start of the next line of text. Requires the leading (see {@link #setLeading}) to
+   * have been set.
    *
    * @throws IOException
    *         If there is an error writing to the stream.
@@ -422,8 +419,8 @@ public class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * The Td operator. Move to the start of the next line, offset from the start
-   * of the current line by (tx, ty).
+   * The Td operator. Move to the start of the next line, offset from the start of the current line
+   * by (tx, ty).
    *
    * @param tx
    *        The x translation.
@@ -444,8 +441,8 @@ public class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * The Tm operator. Sets the text matrix to the given values. A current text
-   * matrix will be replaced with the new one.
+   * The Tm operator. Sets the text matrix to the given values. A current text matrix will be
+   * replaced with the new one.
    *
    * @param matrix
    *        the transformation matrix
@@ -518,8 +515,7 @@ public class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * Draw an inline image at the x,y coordinates, with the default size of the
-   * image.
+   * Draw an inline image at the x,y coordinates, with the default size of the image.
    *
    * @param inlineImage
    *        The inline image to draw.
@@ -767,8 +763,7 @@ public class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * Set the stroking color using an AWT color. Conversion uses the default sRGB
-   * color space.
+   * Set the stroking color using an AWT color. Conversion uses the default sRGB color space.
    *
    * @param aColor
    *        The color to set.
@@ -866,8 +861,7 @@ public class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * Sets the non-stroking color and, if necessary, the non-stroking color
-   * space.
+   * Sets the non-stroking color and, if necessary, the non-stroking color space.
    *
    * @param color
    *        Color in a specific color space.
@@ -907,8 +901,7 @@ public class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * Set the non-stroking color using an AWT color. Conversion uses the default
-   * sRGB color space.
+   * Set the non-stroking color using an AWT color. Conversion uses the default sRGB color space.
    *
    * @param aColor
    *        The color to set.
@@ -1088,9 +1081,8 @@ public class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * Append a cubic Bézier curve to the current path. The curve extends from the
-   * current point to the point (x3, y3), using (x1, y1) and (x2, y2) as the
-   * Bézier control points.
+   * Append a cubic Bézier curve to the current path. The curve extends from the current point to
+   * the point (x3, y3), using (x1, y1) and (x2, y2) as the Bézier control points.
    *
    * @param x1
    *        x coordinate of the point 1
@@ -1125,9 +1117,8 @@ public class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * Append a cubic Bézier curve to the current path. The curve extends from the
-   * current point to the point (x3, y3), using the current point and (x2, y2)
-   * as the Bézier control points.
+   * Append a cubic Bézier curve to the current path. The curve extends from the current point to
+   * the point (x3, y3), using the current point and (x2, y2) as the Bézier control points.
    *
    * @param x2
    *        x coordinate of the point 2
@@ -1155,9 +1146,8 @@ public class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * Append a cubic Bézier curve to the current path. The curve extends from the
-   * current point to the point (x3, y3), using (x1, y1) and (x3, y3) as the
-   * Bézier control points.
+   * Append a cubic Bézier curve to the current path. The curve extends from the current point to
+   * the point (x3, y3), using (x1, y1) and (x3, y3) as the Bézier control points.
    *
    * @param x1
    *        x coordinate of the point 1
@@ -1332,8 +1322,7 @@ public class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * Intersects the current clipping path with the current path, using the
-   * nonzero rule.
+   * Intersects the current clipping path with the current path, using the nonzero rule.
    *
    * @throws IOException
    *         If the content stream could not be written
@@ -1353,8 +1342,7 @@ public class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * Intersects the current clipping path with the current path, using the
-   * even-odd rule.
+   * Intersects the current clipping path with the current path, using the even-odd rule.
    *
    * @throws IOException
    *         If the content stream could not be written
@@ -1396,6 +1384,23 @@ public class PDPageContentStreamExt implements Closeable
   /**
    * Set the line join style.
    *
+   * @param eLineJoinStyle
+   *        0 for miter join, 1 for round join, and 2 for bevel join.
+   * @throws IOException
+   *         If the content stream could not be written.
+   * @throws IllegalStateException
+   *         If the method was called within a text block.
+   * @throws IllegalArgumentException
+   *         If the parameter is not a valid line join style.
+   */
+  public void setLineJoinStyle (@Nonnull final ELineJoinStyle eLineJoinStyle) throws IOException
+  {
+    setLineJoinStyle (eLineJoinStyle.getID ());
+  }
+
+  /**
+   * Set the line join style.
+   *
    * @param lineJoinStyle
    *        0 for miter join, 1 for round join, and 2 for bevel join.
    * @throws IOException
@@ -1420,6 +1425,23 @@ public class PDPageContentStreamExt implements Closeable
     {
       throw new IllegalArgumentException ("Error: unknown value for line join style");
     }
+  }
+
+  /**
+   * Set the line cap style.
+   *
+   * @param eLineCapStyle
+   *        Line cap style to use
+   * @throws IOException
+   *         If the content stream could not be written.
+   * @throws IllegalStateException
+   *         If the method was called within a text block.
+   * @throws IllegalArgumentException
+   *         If the parameter is not a valid line cap style.
+   */
+  public void setLineCapStyle (@Nonnull final ELineCapStyle eLineCapStyle) throws IOException
+  {
+    setLineCapStyle (eLineCapStyle.getID ());
   }
 
   /**
@@ -1494,8 +1516,8 @@ public class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * Begin a marked content sequence with a reference to an entry in the page
-   * resources' Properties dictionary.
+   * Begin a marked content sequence with a reference to an entry in the page resources' Properties
+   * dictionary.
    *
    * @param tag
    *        the tag
@@ -1673,8 +1695,7 @@ public class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * Close the content stream. This must be called when you are done with this
-   * object.
+   * Close the content stream. This must be called when you are done with this object.
    *
    * @throws IOException
    *         If the underlying stream has a problem being written to.

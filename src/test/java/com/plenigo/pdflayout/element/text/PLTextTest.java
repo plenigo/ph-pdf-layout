@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,10 +47,13 @@ import com.helger.font.alegreya_sans.EFontResourceAlegreyaSans;
 import com.helger.font.anaheim.EFontResourceAnaheim;
 import com.helger.font.api.IHasFontResource;
 import com.helger.font.exo2.EFontResourceExo2;
+import com.helger.font.kurinto.mono.EFontResourceKurintoMono;
+import com.helger.font.kurinto.sans.EFontResourceKurintoSans;
 import com.helger.font.lato2.EFontResourceLato2;
 import com.helger.font.markazi.EFontResourceMarkazi;
 import com.helger.font.noto_sans_hk.EFontResourceNotoSansHK;
 import com.helger.font.noto_sans_sc.EFontResourceNotoSansSC;
+import com.helger.font.noto_sans_tc.EFontResourceNotoSansTC;
 import com.helger.font.open_sans.EFontResourceOpenSans;
 import com.helger.font.roboto.EFontResourceRoboto;
 import com.helger.font.source_sans_pro.EFontResourceSourceSansPro;
@@ -248,7 +251,55 @@ public final class PLTextTest
   }
 
   @Test
-  public void testArabicCharacters () throws PDFCreationException
+  public void testCustomFontKurintoSans () throws PDFCreationException
+  {
+    // Load TTF font
+    final PreloadFont aFont = PreloadFont.createEmbedding (EFontResourceKurintoSans.KURINTO_SANS_REGULAR.getFontResource ());
+    aFont.setUseFontLineHeightFromHHEA ();
+    final PreloadFont aFont2 = PreloadFont.createEmbedding (EFontResourceKurintoSans.KURINTO_SANS_BOLD.getFontResource ());
+    aFont2.setUseFontLineHeightFromHHEA ();
+
+    final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
+                     "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
+                     "Tataa: €";
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
+
+    aPS1.addElement (new PLText (s, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLText (s, new FontSpec (aFont2, 10)));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.setCompressPDF (false);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/font-kurinto-sans.pdf"));
+  }
+
+  @Test
+  public void testCustomFontKurintoMono () throws PDFCreationException
+  {
+    // Load TTF font
+    final PreloadFont aFont = PreloadFont.createEmbedding (EFontResourceKurintoMono.KURINTO_MONO_REGULAR.getFontResource ());
+    aFont.setUseFontLineHeightFromHHEA ();
+    final PreloadFont aFont2 = PreloadFont.createEmbedding (EFontResourceKurintoMono.KURINTO_MONO_BOLD.getFontResource ());
+    aFont2.setUseFontLineHeightFromHHEA ();
+
+    final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
+                     "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
+                     "Tataa: €";
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
+
+    aPS1.addElement (new PLText (s, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLText (s, new FontSpec (aFont2, 10)));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.setCompressPDF (false);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/font-kurinto-mono.pdf"));
+  }
+
+  @Test
+  public void testCustomFontMarkazi () throws PDFCreationException
   {
     // Load TTF font
     final PreloadFont aFont = PreloadFont.createEmbedding (EFontResourceMarkazi.MARKAZI_NORMAL.getFontResource ());
@@ -271,18 +322,19 @@ public final class PLTextTest
   {
     // Load TTF font
     final PreloadFont aFont = PreloadFont.createEmbedding (EFontResourceNotoSansSC.NOTO_SANS_SC_REGULAR.getFontResource ());
+    aFont.setUseFontLineHeightFromHHEA ();
     final PreloadFont aFont2 = PreloadFont.createEmbedding (EFontResourceNotoSansSC.NOTO_SANS_SC_BOLD.getFontResource ());
+    aFont2.setUseFontLineHeightFromHHEA ();
 
     final String s = "Ascii line 1\n" + "Ascii line 2\n" + "他们所有的设备和仪器彷佛都是有生命的。\n" + "Ascii before EOL\n" + "Ascii EOL";
     final String sAsciiOnly = "Ascii line 3\n" + "Ascii line 4\n" + "Ascii 5";
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
 
-    final float fLineSpacing = 0.5f;
-    aPS1.addElement (new PLText (s, new FontSpec (aFont, 10)).setLineSpacing (fLineSpacing));
-    aPS1.addElement (new PLText (sAsciiOnly, new FontSpec (aFont, 10)).setLineSpacing (fLineSpacing));
-    aPS1.addElement (new PLText (s, new FontSpec (aFont2, 10)).setLineSpacing (fLineSpacing));
-    aPS1.addElement (new PLText (sAsciiOnly, new FontSpec (aFont2, 10)).setLineSpacing (fLineSpacing));
+    aPS1.addElement (new PLText (s, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLText (sAsciiOnly, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLText (s, new FontSpec (aFont2, 10)));
+    aPS1.addElement (new PLText (sAsciiOnly, new FontSpec (aFont2, 10)));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
@@ -290,11 +342,37 @@ public final class PLTextTest
   }
 
   @Test
-  public void testChineseCharacters () throws PDFCreationException
+  public void testCustomFontNotoSansTC () throws PDFCreationException
+  {
+    // Load TTF font
+    final PreloadFont aFont = PreloadFont.createEmbedding (EFontResourceNotoSansTC.NOTO_SANS_TC_REGULAR.getFontResource ());
+    aFont.setUseFontLineHeightFromHHEA ();
+    final PreloadFont aFont2 = PreloadFont.createEmbedding (EFontResourceNotoSansTC.NOTO_SANS_TC_BOLD.getFontResource ());
+    aFont2.setUseFontLineHeightFromHHEA ();
+
+    final String s = "Ascii line 1\n" + "Ascii line 2\n" + "他们所有的设备和仪器彷佛都是有生命的。\n" + "Ascii before EOL\n" + "Ascii EOL";
+    final String sAsciiOnly = "Ascii line 3\n" + "Ascii line 4\n" + "Ascii 5";
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
+
+    aPS1.addElement (new PLText (s, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLText (sAsciiOnly, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLText (s, new FontSpec (aFont2, 10)));
+    aPS1.addElement (new PLText (sAsciiOnly, new FontSpec (aFont2, 10)));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
+    aPageLayout.addPageSet (aPS1);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/font-noto-sans-tc.pdf"));
+  }
+
+  @Test
+  public void testCustomFontNotoSansHK () throws PDFCreationException
   {
     // Load TTF font
     final PreloadFont aFont = PreloadFont.createEmbedding (EFontResourceNotoSansHK.NOTO_SANS_HK_REGULAR.getFontResource ());
+    aFont.setUseFontLineHeightFromHHEA ();
     final PreloadFont aFont2 = PreloadFont.createEmbedding (EFontResourceNotoSansHK.NOTO_SANS_HK_BOLD.getFontResource ());
+    aFont2.setUseFontLineHeightFromHHEA ();
 
     final String s = "Ascii line 1\n" + "Ascii line 2\n" + "他们所有的设备和仪器彷佛都是有生命的。\n" + "Ascii before EOL\n" + "Ascii EOL";
 
@@ -337,10 +415,23 @@ public final class PLTextTest
                                                                     EFontResourceSourceSansPro.SOURCE_SANS_PRO_NORMAL,
                                                                     EFontResourceSourceSansPro.SOURCE_SANS_PRO_BOLD,
                                                                     EFontResourceMarkazi.MARKAZI_NORMAL,
-                                                                    EFontResourceMarkazi.MARKAZI_BOLD))
+                                                                    EFontResourceMarkazi.MARKAZI_BOLD,
+                                                                    EFontResourceNotoSansHK.NOTO_SANS_HK_REGULAR,
+                                                                    EFontResourceNotoSansHK.NOTO_SANS_HK_BLACK,
+                                                                    EFontResourceNotoSansSC.NOTO_SANS_SC_REGULAR,
+                                                                    EFontResourceNotoSansSC.NOTO_SANS_SC_BLACK,
+                                                                    EFontResourceNotoSansTC.NOTO_SANS_TC_REGULAR,
+                                                                    EFontResourceNotoSansTC.NOTO_SANS_TC_BLACK,
+                                                                    EFontResourceKurintoMono.KURINTO_MONO_REGULAR,
+                                                                    EFontResourceKurintoMono.KURINTO_MONO_BOLD,
+                                                                    EFontResourceKurintoSans.KURINTO_SANS_REGULAR,
+                                                                    EFontResourceKurintoSans.KURINTO_SANS_BOLD))
     {
       // Load TTF font
       final PreloadFont aFont = PreloadFont.createEmbedding (aHasFont.getFontResource ());
+      if (aHasFont.getFontResource ().getFontName ().startsWith ("Kurinto ") ||
+          aHasFont.getFontResource ().getFontName ().startsWith ("Noto "))
+        aFont.setUseFontLineHeightFromHHEA ();
 
       aPS1.addElement (new PLText ("[External] [" + aHasFont.getFontResourceID () + "]: " + s + "\n",
                                    new FontSpec (aFont, 10)));
@@ -505,5 +596,39 @@ public final class PLTextTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/center-issue31.pdf"));
+  }
+
+  @Test
+  public void testCreateSimpleFooter () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10, PLColor.RED);
+    final FontSpec r12 = new FontSpec (PreloadFont.REGULAR, 12);
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+    aPS1.setPadding (15);
+    aPS1.setMarginBottom (40);
+
+    aPS1.addElement (new PLText ("This is the main text - bla bla", r12));
+
+    final StringBuilder aSB = new StringBuilder ();
+    for (final String s : new String [] { "Name and whatever else you need",
+                                          "Streetname",
+                                          "Building number or complex, whatever is needed",
+                                          "Postal code or postbox",
+                                          "City or village",
+                                          "Country code",
+                                          "Country name",
+                                          "Anything",
+                                          "Just for testing purposes" })
+    {
+      if (aSB.length () > 0)
+        aSB.append (" • ");
+      aSB.append (s);
+    }
+    aPS1.setPageFooter (new PLBox (new PLText (aSB.toString (), r10)).setPadding (5));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.addPageSet (aPS1);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/simple-footer.pdf"));
   }
 }

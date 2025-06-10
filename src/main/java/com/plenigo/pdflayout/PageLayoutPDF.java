@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -79,6 +79,7 @@ import com.helger.commons.vendor.VendorInfo;
 @NotThreadSafe
 public class PageLayoutPDF implements IPLVisitable
 {
+  public static final String DEFAULT_DOCUMENT_LANGUAGE = "de-DE";
   /**
    * By default certain parts of the created PDFs are compressed, to safe space.
    */
@@ -96,11 +97,13 @@ public class PageLayoutPDF implements IPLVisitable
   private String m_sDocumentTitle;
   private String m_sDocumentKeywords;
   private String m_sDocumentSubject;
+  private String m_sDocumentLanguage = DEFAULT_DOCUMENT_LANGUAGE;
   private boolean m_bCompressPDF = DEFAULT_COMPRESS_PDF;
   private boolean m_bCreatePDF_A = DEFAULT_CREATE_PDF_A;
   private float m_fPdfVersion = 0f;
   private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList <> ();
   private IPDDocumentCustomizer m_aDocumentCustomizer;
+  private IXMPMetadataCustomizer m_aMetadataCustomizer;
 
   /**
    * Constructor. Initializes Author, CreationDate and Creator from class
@@ -255,6 +258,19 @@ public class PageLayoutPDF implements IPLVisitable
     return this;
   }
 
+  @Nullable
+  public final String getDocumentLanguage ()
+  {
+    return m_sDocumentLanguage;
+  }
+
+  @Nonnull
+  public final PageLayoutPDF setDocumentLanguage (@Nullable final String sDocumentLanguage)
+  {
+    m_sDocumentLanguage = sDocumentLanguage;
+    return this;
+  }
+
   @Nonnull
   @ReturnsMutableCopy
   public ICommonsList <? extends PLPageSet> getAllPageSets ()
@@ -293,6 +309,19 @@ public class PageLayoutPDF implements IPLVisitable
   public final PageLayoutPDF setDocumentCustomizer (@Nullable final IPDDocumentCustomizer aDocumentCustomizer)
   {
     m_aDocumentCustomizer = aDocumentCustomizer;
+    return this;
+  }
+
+  @Nullable
+  public final IXMPMetadataCustomizer getMetadataCustomizer ()
+  {
+    return m_aMetadataCustomizer;
+  }
+
+  @Nonnull
+  public final PageLayoutPDF setMetadataCustomizer (@Nullable final IXMPMetadataCustomizer aMetadataCustomizer)
+  {
+    m_aMetadataCustomizer = aMetadataCustomizer;
     return this;
   }
 
@@ -507,6 +536,9 @@ public class PageLayoutPDF implements IPLVisitable
             aIdentificationSchema.setPart (Integer.valueOf (3));
             aIdentificationSchema.setConformance ("A");
 
+            if (m_aMetadataCustomizer != null)
+              m_aMetadataCustomizer.customizeMetadata (aXmpMetadata);
+
             try (final NonBlockingByteArrayOutputStream aXmpOS = new NonBlockingByteArrayOutputStream ())
             {
               final XmpSerializer aSerializer = new XmpSerializer ();
@@ -535,8 +567,10 @@ public class PageLayoutPDF implements IPLVisitable
             aIntent.setRegistryName ("http://www.color.org");
 
             aDocCatalogue.addOutputIntent (aIntent);
-            aDocCatalogue.setLanguage ("de-DE");
           }
+
+          if (StringHelper.hasText (m_sDocumentLanguage))
+            aDocCatalogue.setLanguage (m_sDocumentLanguage);
 
           for (final PDPage aPage : aDoc.getPages ())
           {

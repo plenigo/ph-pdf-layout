@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,7 +45,7 @@ public class BulletPointCreatorSymbol extends BulletPointCreatorConstant
   {
     final PLText ret = (PLText) super.getBulletPointElement (nBulletPointIndex);
     // Vertical align
-    ret.setCustomAscentFirstLine (PLConvert.getWidthForFontSize (450, getFontSpec ().getFontSize ()));
+    ret.setCustomAscentFirstLine (PLConvert.getForFontSize (450, getFontSpec ().getFontSize ()));
     return ret;
   }
 

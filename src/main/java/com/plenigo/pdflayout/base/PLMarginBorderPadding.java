@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -90,10 +90,9 @@ public class PLMarginBorderPadding implements IPLHasMarginBorderPadding <PLMargi
   @Override
   public String toString ()
   {
-    return ToStringGenerator.getDerived (super.toString ())
-                            .append ("Margin", m_aMargin)
-                            .append ("Padding", m_aPadding)
-                            .append ("Border", m_aBorder)
-                            .getToString ();
+    return new ToStringGenerator (null).append ("Margin", m_aMargin)
+                                       .append ("Padding", m_aPadding)
+                                       .append ("Border", m_aBorder)
+                                       .getToString ();
   }
 }

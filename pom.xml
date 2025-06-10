@@ -21,7 +21,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.plenigo</groupId>
   <artifactId>ph-pdf-layout</artifactId>
-  <version>7.3.5</version>
+  <version>7.3.8</version>
   <packaging>bundle</packaging>
   <name>ph-pdf-layout</name>
   <description>Library for creating nicely layouted PDF documents based on PDFBox</description>
@@ -48,8 +48,8 @@
   </organization>
 
   <properties>
-      <pdfbox.version>3.0.2</pdfbox.version>
-      <pdfcompare.version>1.2.2</pdfcompare.version>
+      <pdfbox.version>3.0.5</pdfbox.version>
+      <pdfcompare.version>1.2.3</pdfcompare.version>
       <maven.compiler.source>21</maven.compiler.source>
       <maven.compiler.target>21</maven.compiler.target>
   </properties>
@@ -59,14 +59,14 @@
       <dependency>
         <groupId>com.helger.commons</groupId>
         <artifactId>ph-commons-parent-pom</artifactId>
-        <version>11.1.8</version>
+        <version>11.2.5</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.helger.font</groupId>
         <artifactId>ph-fonts-parent-pom</artifactId>
-        <version>5.0.3</version>
+        <version>5.0.4</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -98,7 +98,7 @@
       <dependency>
         <groupId>de.rototor.pdfbox</groupId>
         <artifactId>graphics2d</artifactId>
-        <version>3.0.2</version>
+        <version>3.0.3</version>
       </dependency>
       <dependency>
         <groupId>com.formdev</groupId>
@@ -219,6 +219,21 @@
     <dependency>
       <groupId>com.helger.font</groupId>
       <artifactId>ph-fonts-noto-sans-sc</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.helger.font</groupId>
+      <artifactId>ph-fonts-noto-sans-tc</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.helger.font</groupId>
+      <artifactId>ph-fonts-kurinto-mono</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.helger.font</groupId>
+      <artifactId>ph-fonts-kurinto-sans</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
