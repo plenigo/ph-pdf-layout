@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,7 @@ public class PLDebugTestRule extends ExternalResource
   /** When this rule is used, global debug is enabled. */
   public static final boolean ENABLE_DEBUG = true;
 
-  private static final IPLDebugOutput NO_OP = new IPLDebugOutput ()
+  private static final PLDebugLog.IPLDebugOutput NO_OP = new PLDebugLog.IPLDebugOutput ()
   {
     public boolean isEnabled ()
     {
@@ -68,6 +68,6 @@ public class PLDebugTestRule extends ExternalResource
   {
     // Reset debug stuff to previous state
     PLDebugLog.setDebugAll (m_bOldDebug);
-    PLDebugLog.setDebugOutput (new PLDebugLog.PLDebugOutputLogger ());
+    PLDebugLog.setDebugOutput (PLDebugLog.PLDebugOutputLogger.INSTANCE);
   }
 }

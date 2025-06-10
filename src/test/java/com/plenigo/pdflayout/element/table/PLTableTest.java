@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -778,6 +778,34 @@ public final class PLTableTest
   }
 
   @Test
+  public void testColumnWidthStar () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    aPS1.addElement (new PLText ("First line", r10).setID ("first-line"));
+
+    final String sShortText = "Dummy";
+    final String sLongText = "This is a cell with a lot more text in it";
+
+    // Outer table
+    final PLTable aOuterTable = new PLTable (WidthSpec.star (), WidthSpec.star ());
+    for (int i = 0; i < 20; ++i)
+    {
+      aOuterTable.addRow (new PLTableCell (new PLText (sShortText, r10)),
+                          new PLTableCell (new PLText (sLongText, r10)));
+    }
+    EPLTableGridType.FULL.applyGridToTable (aOuterTable, new BorderStyleSpec (PLColor.RED));
+    aPS1.addElement (aOuterTable);
+
+    aPS1.addElement (new PLText ("Last line", r10).setID ("last-line"));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
+    aPageLayout.addPageSet (aPS1);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/column-width-star.pdf"));
+  }
+
+  @Test
   public void testIssue21 () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
@@ -794,8 +822,8 @@ public final class PLTableTest
     {
       final PLTable aInnerTable = new PLTable (WidthSpec.perc (30), WidthSpec.perc (70));
       for (int j = 0; j < 4; ++j)
-        aInnerTable.addAndReturnRow (new PLTableCell (new PLText (sShortText, r10)),
-                                     new PLTableCell (new PLText (sShortText, r10)));
+        aInnerTable.addRow (new PLTableCell (new PLText (sShortText, r10)),
+                            new PLTableCell (new PLText (sShortText, r10)));
       EPLTableGridType.FULL.applyGridToTable (aInnerTable, new BorderStyleSpec (PLColor.GREEN));
 
       aOuterTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10)).setPadding (5),

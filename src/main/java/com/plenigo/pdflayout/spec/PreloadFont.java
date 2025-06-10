@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,11 +21,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnull;
 import javax.annotation.WillNotClose;
 import javax.annotation.concurrent.NotThreadSafe;
 
-import com.plenigo.pdflayout.debug.PLDebugLog;
+import org.apache.fontbox.ttf.HeaderTable;
+import org.apache.fontbox.ttf.HorizontalHeaderTable;
+import org.apache.fontbox.ttf.OS2WindowsMetricsTable;
 import org.apache.fontbox.ttf.OTFParser;
 import org.apache.fontbox.ttf.OpenTypeFont;
 import org.apache.fontbox.ttf.TTFParser;
@@ -46,12 +49,14 @@ import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.id.IHasID;
 import com.helger.commons.io.stream.StreamHelper;
+import com.helger.commons.state.ESuccess;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.font.api.IFontResource;
+import com.plenigo.pdflayout.debug.PLDebugLog;
 
 /**
- * Represents an abstract font that is potentially not yet loaded and can be
- * used in multiple documents.<br>
+ * Represents an abstract font that is potentially not yet loaded and can be used in multiple
+ * documents.<br>
  * Note: {@link PDFont} is not Serializable.
  *
  * @author Philip Helger
@@ -120,6 +125,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
   private IFontResource m_aFontRes;
   private boolean m_bEmbed;
   private int m_nFallbackCodePoint;
+  private float m_fFontLineHeight;
   // Status vars
   private transient TrueTypeFont m_aTTF;
   private transient OpenTypeFont m_aOTF;
@@ -130,15 +136,35 @@ public final class PreloadFont implements IHasID <String>, Serializable
       switch (m_aFontRes.getFontType ())
       {
         case TTF:
+        {
           if (PLDebugLog.isDebugFont ())
             PLDebugLog.debugFont (m_aFontRes.toString (), "Loading TTF font");
+          m_aOTF = null;
           m_aTTF = new TTFParser ().parse (new RandomAccessReadBuffer (m_aFontRes.getInputStream ()));
+
+          if (false)
+          {
+            final float fFactor = 1000.0f / m_aTTF.getHeader ().getUnitsPerEm ();
+            System.out.println ("head: " + (m_aTTF.getHeader ().getYMax () - m_aTTF.getHeader ().getYMin ()) * fFactor);
+            System.out.println ("hhea: " +
+                                (m_aTTF.getHorizontalHeader ().getAscender () -
+                                 m_aTTF.getHorizontalHeader ().getDescender () +
+                                 m_aTTF.getHorizontalHeader ().getLineGap ()) * fFactor);
+            System.out.println ("os2: " +
+                                (m_aTTF.getOS2Windows ().getTypoAscender () -
+                                 m_aTTF.getOS2Windows ().getTypoDescender () +
+                                 m_aTTF.getOS2Windows ().getTypoLineGap ()) * fFactor);
+          }
           break;
+        }
         case OTF:
+        {
           if (PLDebugLog.isDebugFont ())
             PLDebugLog.debugFont (m_aFontRes.toString (), "Loading OTF font");
+          m_aTTF = null;
           m_aOTF = new OTFParser ().parse (new RandomAccessReadBuffer (m_aFontRes.getInputStream ()));
           break;
+        }
         default:
           throw new IllegalArgumentException ("Cannot parse font resources of type " + m_aFontRes.getFontType ());
       }
@@ -166,6 +192,14 @@ public final class PreloadFont implements IHasID <String>, Serializable
     // TTF and OTF are not written
   }
 
+  /**
+   * Constructor for a predefined font
+   *
+   * @param aFont
+   *        The font to use. May not be <code>null</code>.
+   * @param nFallbackCodePoint
+   *        The fallback code point to be used if a character is not contained in the font.
+   */
   private PreloadFont (@Nonnull final PDFont aFont, final int nFallbackCodePoint)
   {
     ValueEnforcer.notNull (aFont, "Font");
@@ -174,8 +208,22 @@ public final class PreloadFont implements IHasID <String>, Serializable
     m_aFontRes = null;
     m_bEmbed = false;
     m_nFallbackCodePoint = nFallbackCodePoint;
+    // Font height needs to be determined by the bounding box
+    m_fFontLineHeight = -1;
   }
 
+  /**
+   * Constructor for a custom font provided as {@link IFontResource}
+   *
+   * @param aFontRes
+   *        The font resource to use. May not be <code>null</code>.
+   * @param bEmbed
+   *        <code>true</code> to embed the font, <code>false</code> to not embed it.
+   * @param nFallbackCodePoint
+   *        The fallback code point to be used if a character is not contained in the font.
+   * @throws IOException
+   *         in case loading the font fails
+   */
   private PreloadFont (@Nonnull final IFontResource aFontRes, final boolean bEmbed, final int nFallbackCodePoint)
                                                                                                                   throws IOException
   {
@@ -197,12 +245,11 @@ public final class PreloadFont implements IHasID <String>, Serializable
   }
 
   /**
-   * Load the {@link PDFont} associated to this preload font. This class uses no
-   * caching!
+   * Load the {@link PDFont} associated to this preload font. This class uses no caching!
    *
    * @param aDoc
-   *        The {@link PDDocument} to which the font should be attached to. May
-   *        not be <code>null</code>.
+   *        The {@link PDDocument} to which the font should be attached to. May not be
+   *        <code>null</code>.
    * @return The loaded font.
    * @throws IOException
    *         In case loading the external file fails
@@ -216,12 +263,14 @@ public final class PreloadFont implements IHasID <String>, Serializable
       return m_aFont;
     }
 
-    PDFont ret = null;
+    final PDFont ret;
     if (m_aTTF != null)
       ret = PDType0Font.load (aDoc, m_aTTF, m_bEmbed);
     else
       if (m_aOTF != null)
         ret = PDType0Font.load (aDoc, m_aOTF, m_bEmbed);
+      else
+        ret = null;
 
     if (ret == null)
       throw new IllegalArgumentException ("Cannot load font resources of type " + m_aFontRes.getFontType ());
@@ -229,12 +278,89 @@ public final class PreloadFont implements IHasID <String>, Serializable
   }
 
   /**
-   * @return The fallback code point to be used if a character is not contained
-   *         in the font. Defaults to '?'.
+   * @return The fallback code point to be used if a character is not contained in the font.
+   *         Defaults to '?'.
    */
   public int getFallbackCodePoint ()
   {
     return m_nFallbackCodePoint;
+  }
+
+  /**
+   * Set the font line height based on the TTF/OTF font resource <code>hhea</code> table. This
+   * method is especially helpful for the "Noto" or the "Kurinto" font family. See issue #46 for
+   * details.
+   *
+   * @return ESuccess.SUCCESS if the line height was set, ESuccess.FAILURE if not.
+   * @since 7.3.7
+   */
+  @Nonnull
+  public ESuccess setUseFontLineHeightFromHHEA ()
+  {
+    try
+    {
+      final HeaderTable aHeaderTable = m_aTTF != null ? m_aTTF.getHeader () : m_aOTF != null ? m_aOTF.getHeader ()
+                                                                                             : null;
+      final HorizontalHeaderTable aHorzHeaderTable = m_aTTF != null ? m_aTTF.getHorizontalHeader () : m_aOTF != null
+                                                                                                                     ? m_aOTF.getHorizontalHeader ()
+                                                                                                                     : null;
+      if (aHeaderTable == null || aHorzHeaderTable == null)
+        return ESuccess.FAILURE;
+
+      m_fFontLineHeight = (aHorzHeaderTable.getAscender () -
+                           aHorzHeaderTable.getDescender () +
+                           aHorzHeaderTable.getLineGap ()) * (1000.0f / aHeaderTable.getUnitsPerEm ());
+      if (PLDebugLog.isDebugFont ())
+        PLDebugLog.debugFont (m_aFontRes.toString (), "Loaded font has 'hhea' line height " + m_fFontLineHeight);
+      return ESuccess.SUCCESS;
+    }
+    catch (final IOException ex)
+    {
+      throw new IllegalStateException ("Failed to read the 'hhea' table from the font resource", ex);
+    }
+  }
+
+  /**
+   * Set the font line height based on the TTF/OTF font resource <code>os/2</code> table. See issue
+   * #46 for details.
+   *
+   * @return ESuccess.SUCCESS if the line height was set, ESuccess.FAILURE if not.
+   * @since 7.3.7
+   */
+  @Nonnull
+  public ESuccess setUseFontLineHeightFromOS2 ()
+  {
+    try
+    {
+      final HeaderTable aHeaderTable = m_aTTF != null ? m_aTTF.getHeader () : m_aOTF != null ? m_aOTF.getHeader ()
+                                                                                             : null;
+      final OS2WindowsMetricsTable aOS2Table = m_aTTF != null ? m_aTTF.getOS2Windows () : m_aOTF != null ? m_aOTF
+                                                                                                                 .getOS2Windows ()
+                                                                                                         : null;
+      if (aHeaderTable == null || aOS2Table == null)
+        return ESuccess.FAILURE;
+
+      m_fFontLineHeight = (aOS2Table.getTypoAscender () - aOS2Table.getTypoDescender () + aOS2Table.getTypoLineGap ()) *
+                          (1000.0f / aHeaderTable.getUnitsPerEm ());
+      if (PLDebugLog.isDebugFont ())
+        PLDebugLog.debugFont (m_aFontRes.toString (), "Loaded font has 'os/2' line height " + m_fFontLineHeight);
+      return ESuccess.SUCCESS;
+    }
+    catch (final IOException ex)
+    {
+      throw new IllegalStateException ("Failed to read the 'hhea' table from the font resource", ex);
+    }
+  }
+
+  /**
+   * @return The font line height taken from the external font resource <code>hhea</code> table.
+   *         This value is &lt; 0 for embedded fonts.
+   * @since 7.3.7
+   */
+  @CheckForSigned
+  public float getFontLineHeight ()
+  {
+    return m_fFontLineHeight;
   }
 
   @Override
@@ -264,7 +390,8 @@ public final class PreloadFont implements IHasID <String>, Serializable
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (null).appendIfNotNull ("Font", m_aFont)
+    return new ToStringGenerator (null).append ("ID", m_sID)
+                                       .appendIfNotNull ("Font", m_aFont)
                                        .appendIfNotNull ("FontResource", m_aFontRes)
                                        .append ("Embed", m_bEmbed)
                                        .append ("FallbackCodePoint", m_nFallbackCodePoint)
@@ -272,8 +399,8 @@ public final class PreloadFont implements IHasID <String>, Serializable
   }
 
   /**
-   * Create a new {@link PreloadFont} from an existing {@link IFontResource}
-   * where the subset cannot be embedded into the resulting PDF.
+   * Create a new {@link PreloadFont} from an existing {@link IFontResource} where the subset cannot
+   * be embedded into the resulting PDF.
    *
    * @param aFontRes
    *        The font resource to include. May not be <code>null</code>.
@@ -296,8 +423,8 @@ public final class PreloadFont implements IHasID <String>, Serializable
   }
 
   /**
-   * Create a new {@link PreloadFont} from an existing {@link IFontResource}
-   * where the subset can be embedded into the resulting PDF.
+   * Create a new {@link PreloadFont} from an existing {@link IFontResource} where the subset can be
+   * embedded into the resulting PDF.
    *
    * @param aFontRes
    *        The font resource to include. May not be <code>null</code>.

@@ -41,7 +41,7 @@ public final class PDFTestComparer
     final File fExpected = FileHelper.getCanonicalFileOrNull (new File ("example-files/",
                                                                         StringHelper.trimStart (fTarget.getPath (),
                                                                                                 "pdf")));
-    assertTrue ("Expected PDF file '" + fExpected.getAbsolutePath () + "' does not exist", fExpected.isFile ());
+    assertTrue ("Non-existing PDF file '" + fExpected.getAbsolutePath () + "' to compare to", fExpected.isFile ());
 
     try
     {
@@ -49,7 +49,7 @@ public final class PDFTestComparer
       final CompareResult aResult = new PdfComparator <> (fExpected, fTarget).compare ();
       assertTrue ("Difference in file " + fTarget.getAbsolutePath (), aResult.isEqual ());
     }
-    catch (RenderingException | IOException ex)
+    catch (final RenderingException | IOException ex)
     {
       throw new PDFCreationException ("Failed to compare PDFs", ex);
     }

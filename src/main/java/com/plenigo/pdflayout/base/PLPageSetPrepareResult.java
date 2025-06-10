@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -90,7 +90,7 @@ public final class PLPageSetPrepareResult
    * Set the page header height of the first page. This method may only be
    * called once.
    *
-   * @param fFooterHeight
+   * @param fHeaderHeight
    *        Height without padding or margin.
    */
   void setFirstHeaderHeight (final float fHeaderHeight)
