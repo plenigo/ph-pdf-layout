@@ -16,8 +16,7 @@
  */
 package com.plenigo.pdflayout.config;
 
-import javax.annotation.Nonnull;
-
+import com.helger.xml.microdom.convert.IMicroTypeConverterRegistry;
 import com.plenigo.pdflayout.base.PLColor;
 import com.plenigo.pdflayout.config.xml.BorderSpecMicroTypeConverter;
 import com.plenigo.pdflayout.config.xml.BorderStyleSpecMicroTypeConverter;
@@ -43,7 +42,7 @@ import com.plenigo.pdflayout.spec.PaddingSpec;
 import com.plenigo.pdflayout.spec.SizeSpec;
 import com.plenigo.pdflayout.spec.TextAndWidthSpec;
 import com.plenigo.pdflayout.spec.WidthSpec;
-import com.helger.xml.microdom.convert.IMicroTypeConverterRegistry;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Micro type converter registration for all micro type converter contained in
@@ -52,27 +51,25 @@ import com.helger.xml.microdom.convert.IMicroTypeConverterRegistry;
  *
  * @author Philip Helger
  */
-public final class PDFMicroTypeConverterRegistry
-{
-  private PDFMicroTypeConverterRegistry ()
-  {}
+public final class PDFMicroTypeConverterRegistry {
+    private PDFMicroTypeConverterRegistry() {
+    }
 
-  public static void registerMicroTypeConverter (@Nonnull final IMicroTypeConverterRegistry aRegistry,
-                                                 @Nonnull final IPreloadFontResolver aPreloadFontResolver)
-  {
-    // Details
-    aRegistry.registerMicroElementTypeConverter (BorderSpec.class, new BorderSpecMicroTypeConverter ());
-    aRegistry.registerMicroElementTypeConverter (BorderStyleSpec.class, new BorderStyleSpecMicroTypeConverter ());
-    aRegistry.registerMicroElementTypeConverter (FontSpec.class, new FontSpecMicroTypeConverter(aPreloadFontResolver));
-    aRegistry.registerMicroElementTypeConverter (HeightSpec.class, new HeightSpecMicroTypeConverter ());
-    aRegistry.registerMicroElementTypeConverter (LineDashPatternSpec.class,
-                                                 new LineDashPatternSpecMicroTypeConverter ());
-    aRegistry.registerMicroElementTypeConverter (MarginSpec.class, new MarginSpecMicroTypeConverter ());
-    aRegistry.registerMicroElementTypeConverter (PaddingSpec.class, new PaddingSpecMicroTypeConverter());
-    aRegistry.registerMicroElementTypeConverter (PLCellRange.class, new PLCellRangeMicroTypeConverter());
-    aRegistry.registerMicroElementTypeConverter (PLColor.class, new PLColorMicroTypeConverter ());
-    aRegistry.registerMicroElementTypeConverter (SizeSpec.class, new SizeSpecMicroTypeConverter());
-    aRegistry.registerMicroElementTypeConverter (TextAndWidthSpec.class, new TextAndWidthSpecMicroTypeConverter());
-    aRegistry.registerMicroElementTypeConverter (WidthSpec.class, new WidthSpecMicroTypeConverter ());
-  }
+    public static void registerMicroTypeConverter(@NonNull final IMicroTypeConverterRegistry aRegistry,
+                                                  @NonNull final IPreloadFontResolver aPreloadFontResolver) {
+        // Details
+        aRegistry.registerMicroElementTypeConverter(BorderSpec.class, new BorderSpecMicroTypeConverter());
+        aRegistry.registerMicroElementTypeConverter(BorderStyleSpec.class, new BorderStyleSpecMicroTypeConverter());
+        aRegistry.registerMicroElementTypeConverter(FontSpec.class, new FontSpecMicroTypeConverter(aPreloadFontResolver));
+        aRegistry.registerMicroElementTypeConverter(HeightSpec.class, new HeightSpecMicroTypeConverter());
+        aRegistry.registerMicroElementTypeConverter(LineDashPatternSpec.class,
+                new LineDashPatternSpecMicroTypeConverter());
+        aRegistry.registerMicroElementTypeConverter(MarginSpec.class, new MarginSpecMicroTypeConverter());
+        aRegistry.registerMicroElementTypeConverter(PaddingSpec.class, new PaddingSpecMicroTypeConverter());
+        aRegistry.registerMicroElementTypeConverter(PLCellRange.class, new PLCellRangeMicroTypeConverter());
+        aRegistry.registerMicroElementTypeConverter(PLColor.class, new PLColorMicroTypeConverter());
+        aRegistry.registerMicroElementTypeConverter(SizeSpec.class, new SizeSpecMicroTypeConverter());
+        aRegistry.registerMicroElementTypeConverter(TextAndWidthSpec.class, new TextAndWidthSpecMicroTypeConverter());
+        aRegistry.registerMicroElementTypeConverter(WidthSpec.class, new WidthSpecMicroTypeConverter());
+    }
 }

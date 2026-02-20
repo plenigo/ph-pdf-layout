@@ -16,14 +16,13 @@
  */
 package com.plenigo.pdflayout.base;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.concurrent.NotThreadSafe;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.tostring.ToStringGenerator;
 import com.plenigo.pdflayout.spec.BorderSpec;
 import com.plenigo.pdflayout.spec.MarginSpec;
 import com.plenigo.pdflayout.spec.PaddingSpec;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents a single page layout as element. It consists of a page size, a
@@ -32,67 +31,60 @@ import com.plenigo.pdflayout.spec.PaddingSpec;
  * @author Philip Helger
  */
 @NotThreadSafe
-public class PLMarginBorderPadding implements IPLHasMarginBorderPadding <PLMarginBorderPadding>
-{
-  private MarginSpec m_aMargin;
-  private PaddingSpec m_aPadding;
-  private BorderSpec m_aBorder;
+public class PLMarginBorderPadding implements IPLHasMarginBorderPadding<PLMarginBorderPadding> {
+    private MarginSpec m_aMargin;
+    private PaddingSpec m_aPadding;
+    private BorderSpec m_aBorder;
 
-  public PLMarginBorderPadding (@Nonnull final MarginSpec aMargin, @Nonnull final PaddingSpec aPadding, @Nonnull final BorderSpec aBorder)
-  {
-    setMargin (aMargin);
-    setPadding (aPadding);
-    setBorder (aBorder);
-  }
+    public PLMarginBorderPadding(@NonNull final MarginSpec aMargin,
+                                 @NonNull final PaddingSpec aPadding,
+                                 @NonNull final BorderSpec aBorder) {
+        setMargin(aMargin);
+        setPadding(aPadding);
+        setBorder(aBorder);
+    }
 
-  @Nonnull
-  public final MarginSpec getMargin ()
-  {
-    return m_aMargin;
-  }
+    @NonNull
+    public final MarginSpec getMargin() {
+        return m_aMargin;
+    }
 
-  @Nonnull
-  public final PLMarginBorderPadding setMargin (@Nonnull final MarginSpec aMargin)
-  {
-    ValueEnforcer.notNull (aMargin, "Mergin");
-    m_aMargin = aMargin;
-    return this;
-  }
+    @NonNull
+    public final PLMarginBorderPadding setMargin(@NonNull final MarginSpec aMargin) {
+        ValueEnforcer.notNull(aMargin, "Mergin");
+        m_aMargin = aMargin;
+        return this;
+    }
 
-  @Nonnull
-  public final PaddingSpec getPadding ()
-  {
-    return m_aPadding;
-  }
+    @NonNull
+    public final PaddingSpec getPadding() {
+        return m_aPadding;
+    }
 
-  @Nonnull
-  public final PLMarginBorderPadding setPadding (@Nonnull final PaddingSpec aPadding)
-  {
-    ValueEnforcer.notNull (aPadding, "Padding");
-    m_aPadding = aPadding;
-    return this;
-  }
+    @NonNull
+    public final PLMarginBorderPadding setPadding(@NonNull final PaddingSpec aPadding) {
+        ValueEnforcer.notNull(aPadding, "Padding");
+        m_aPadding = aPadding;
+        return this;
+    }
 
-  @Nonnull
-  public final BorderSpec getBorder ()
-  {
-    return m_aBorder;
-  }
+    @NonNull
+    public final BorderSpec getBorder() {
+        return m_aBorder;
+    }
 
-  @Nonnull
-  public final PLMarginBorderPadding setBorder (@Nonnull final BorderSpec aBorder)
-  {
-    ValueEnforcer.notNull (aBorder, "Border");
-    m_aBorder = aBorder;
-    return this;
-  }
+    @NonNull
+    public final PLMarginBorderPadding setBorder(@NonNull final BorderSpec aBorder) {
+        ValueEnforcer.notNull(aBorder, "Border");
+        m_aBorder = aBorder;
+        return this;
+    }
 
-  @Override
-  public String toString ()
-  {
-    return new ToStringGenerator (null).append ("Margin", m_aMargin)
-                                       .append ("Padding", m_aPadding)
-                                       .append ("Border", m_aBorder)
-                                       .getToString ();
-  }
+    @Override
+    public String toString() {
+        return new ToStringGenerator(null).append("Margin", m_aMargin)
+                .append("Padding", m_aPadding)
+                .append("Border", m_aBorder)
+                .getToString();
+    }
 }

@@ -1,19 +1,19 @@
 package com.plenigo.pdflayout.element.svg;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.Nonnegative;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.io.nonblocking.NonBlockingByteArrayInputStream;
+import com.helger.base.tostring.ToStringGenerator;
 import com.kitfox.svg.SVGDiagram;
 import com.kitfox.svg.SVGException;
 import com.kitfox.svg.SVGUniverse;
 import com.plenigo.pdflayout.render.PagePreRenderContext;
 import de.rototor.pdfbox.graphics2d.PdfBoxGraphics2D;
 import org.apache.pdfbox.pdmodel.graphics.form.PDFormXObject;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.io.IOException;
 
 /**
@@ -24,28 +24,27 @@ import java.io.IOException;
 public class PLSvg extends AbstractPLSvg<PLSvg> {
     private final byte[] m_aSvg;
 
-    public PLSvg(@Nonnull final byte[] aSvg, @Nonnegative final float fImageWidth, @Nonnegative final float fImageHeight) {
+    public PLSvg(final byte[] aSvg, @Nonnegative final float fImageWidth, @Nonnegative final float fImageHeight) {
         super(fImageWidth, fImageHeight);
         ValueEnforcer.notNull(aSvg, "Svg");
         m_aSvg = aSvg;
     }
 
     @Override
-    @Nonnull
+    @NonNull
     @OverridingMethodsMustInvokeSuper
-    public PLSvg setBasicDataFrom(@Nonnull final PLSvg aSource) {
+    public PLSvg setBasicDataFrom(@NonNull final PLSvg aSource) {
         super.setBasicDataFrom(aSource);
         return this;
     }
 
-    @Nullable
     public byte[] getSvg() {
         return m_aSvg;
     }
 
     @Override
-    @Nonnull
-    protected PDFormXObject getXObject(@Nonnull final PagePreRenderContext aCtx) throws IOException, SVGException {
+    @NonNull
+    protected PDFormXObject getXObject(@NonNull final PagePreRenderContext aCtx) throws IOException, SVGException {
         SVGUniverse svgUniverse = new SVGUniverse();
         PdfBoxGraphics2D graphics;
 

@@ -16,13 +16,12 @@
  */
 package com.plenigo.pdflayout;
 
-import java.io.IOException;
-
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.helger.annotation.CheckReturnValue;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
+import java.io.IOException;
 
 /**
  * Callback interface for PDF customization
@@ -40,17 +39,16 @@ public interface IPDDocumentCustomizer
    * @throws IOException
    *         in case something goes wrong
    */
-  void customizeDocument (@Nonnull PDDocument aDoc) throws IOException;
+  void customizeDocument (@NonNull PDDocument aDoc) throws IOException;
 
   /**
    * Invoke this customizer and afterwards the provided customizer.
    *
    * @param aNextCustomizer
-   *        The customizer to be invoked after this customizer. May be
-   *        <code>null</code>.
+   *        The customizer to be invoked after this customizer. May be <code>null</code>.
    * @return A new, non-<code>null</code> customizer.
    */
-  @Nonnull
+  @NonNull
   @CheckReturnValue
   default IPDDocumentCustomizer and (@Nullable final IPDDocumentCustomizer aNextCustomizer)
   {
@@ -58,19 +56,19 @@ public interface IPDDocumentCustomizer
   }
 
   /**
-   * Create a customizer that invokes both customizers if they are
-   * non-<code>null</code>.
+   * Create a customizer that invokes both customizers if they are non-<code>null</code>.
    *
    * @param aCustomizer1
    *        The first customizer to be invoked. May be <code>null</code>.
    * @param aCustomizer2
-   *        The second customizer to be invoked after the first customizer (if
-   *        present). May be <code>null</code>.
+   *        The second customizer to be invoked after the first customizer (if present). May be
+   *        <code>null</code>.
    * @return <code>null</code> if both parameters are <code>null</code>.
    */
   @Nullable
   @CheckReturnValue
-  static IPDDocumentCustomizer and (@Nullable final IPDDocumentCustomizer aCustomizer1, @Nullable final IPDDocumentCustomizer aCustomizer2)
+  static IPDDocumentCustomizer and (@Nullable final IPDDocumentCustomizer aCustomizer1,
+                                    @Nullable final IPDDocumentCustomizer aCustomizer2)
   {
     if (aCustomizer1 != null)
     {

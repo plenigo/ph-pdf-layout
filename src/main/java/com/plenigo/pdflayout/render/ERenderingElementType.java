@@ -21,9 +21,8 @@ package com.plenigo.pdflayout.render;
  *
  * @author Philip Helger
  */
-public enum ERenderingElementType
-{
-  PAGE_HEADER,
-  CONTENT_ELEMENT,
-  PAGE_FOOTER;
+public enum ERenderingElementType {
+    PAGE_HEADER,
+    CONTENT_ELEMENT,
+    PAGE_FOOTER;
 }

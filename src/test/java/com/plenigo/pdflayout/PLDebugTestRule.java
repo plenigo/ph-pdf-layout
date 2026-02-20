@@ -19,7 +19,7 @@ package com.plenigo.pdflayout;
 import org.junit.rules.ExternalResource;
 
 import com.plenigo.pdflayout.debug.PLDebugLog;
-import com.plenigo.pdflayout.debug.PLDebugLog.IPLDebugOutput;
+import com.plenigo.pdflayout.debug.PLDebugLog.PLDebugOutputLogger;
 
 public class PLDebugTestRule extends ExternalResource
 {
@@ -41,6 +41,7 @@ public class PLDebugTestRule extends ExternalResource
 
   private final boolean m_bDebug;
   private boolean m_bOldDebug;
+  private PLDebugLog.IPLDebugOutput m_aOldOutput;
 
   public PLDebugTestRule ()
   {
@@ -57,10 +58,16 @@ public class PLDebugTestRule extends ExternalResource
   {
     // Remember old states
     m_bOldDebug = PLDebugLog.isDebugFont ();
+    m_aOldOutput = PLDebugLog.getDebugOutput ();
 
     // Init debug stuff to state specified in ctor
     PLDebugLog.setDebugAll (m_bDebug);
     PLDebugLog.setDebugOutput (NO_OP);
+  }
+
+  public void enableLogging ()
+  {
+    PLDebugLog.setDebugOutput (PLDebugOutputLogger.INSTANCE);
   }
 
   @Override
@@ -68,6 +75,6 @@ public class PLDebugTestRule extends ExternalResource
   {
     // Reset debug stuff to previous state
     PLDebugLog.setDebugAll (m_bOldDebug);
-    PLDebugLog.setDebugOutput (PLDebugLog.PLDebugOutputLogger.INSTANCE);
+    PLDebugLog.setDebugOutput (m_aOldOutput);
   }
 }

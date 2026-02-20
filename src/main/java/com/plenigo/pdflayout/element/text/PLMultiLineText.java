@@ -17,9 +17,9 @@
 package com.plenigo.pdflayout.element.text;
 
 import com.plenigo.pdflayout.spec.FontSpec;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Render text to multi lines.
@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * @author plenigo
  */
 public class PLMultiLineText extends AbstractPLMultiLineText<PLMultiLineText> {
-    public PLMultiLineText(@Nullable final String sText, @Nonnull final FontSpec aFontSpec) {
+    public PLMultiLineText(@Nullable final String sText, @NonNull final FontSpec aFontSpec) {
         super(sText, aFontSpec);
     }
 }

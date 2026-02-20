@@ -16,7 +16,10 @@
  */
 package com.plenigo.pdflayout.element.table;
 
-import javax.annotation.Nonnull;
+import com.plenigo.pdflayout.element.table.PLTable;
+import com.plenigo.pdflayout.element.table.PLTableCell;
+import com.plenigo.pdflayout.element.table.PLTableRow;
+import org.jspecify.annotations.NonNull;
 
 /**
  * PLTable helper class containing additional methods to deal with PLTable
@@ -24,39 +27,34 @@ import javax.annotation.Nonnull;
  *
  * @author Saskia Reimerth
  */
-public class PLTableHelper
-{
+public class PLTableHelper {
 
-  private PLTableHelper ()
-  {}
-
-  /**
-   * If two joined rows both have borders at their connecting side, the doubles
-   * width has to be removed
-   *
-   * @param ret
-   *        the PLTable, whose doubled borders are to be removed
-   */
-  public static void avoidDoubleBorders (@Nonnull final PLTable ret)
-  {
-    boolean bPreviousRowHasBottomBorder = false;
-    for (int i = 0; i < ret.getRowCount (); i++)
-    {
-      boolean bRowHasBottomBorder = true;
-      boolean bRowHasTopBorder = true;
-      final PLTableRow aRow = ret.getRowAtIndex (i);
-      for (int j = 0; j < aRow.getColumnCount (); j++)
-      {
-        final PLTableCell aCell = aRow.getCellAtIndex (j);
-
-        if (aCell.getBorderBottomWidth () == 0)
-          bRowHasBottomBorder = false;
-        if (aCell.getBorderTopWidth () == 0)
-          bRowHasTopBorder = false;
-      }
-      if (bPreviousRowHasBottomBorder && bRowHasTopBorder)
-        aRow.setBorderTop (null);
-      bPreviousRowHasBottomBorder = bRowHasBottomBorder;
+    private PLTableHelper() {
     }
-  }
+
+    /**
+     * If two joined rows both have borders at their connecting side, the doubles
+     * width has to be removed
+     *
+     * @param ret the PLTable, whose doubled borders are to be removed
+     */
+    public static void avoidDoubleBorders(@NonNull final PLTable ret) {
+        boolean bPreviousRowHasBottomBorder = false;
+        for (int i = 0; i < ret.getRowCount(); i++) {
+            boolean bRowHasBottomBorder = true;
+            boolean bRowHasTopBorder = true;
+            final PLTableRow aRow = ret.getRowAtIndex(i);
+            for (int j = 0; j < aRow.getColumnCount(); j++) {
+                final PLTableCell aCell = aRow.getCellAtIndex(j);
+
+                if (aCell.getBorderBottomWidth() == 0)
+                    bRowHasBottomBorder = false;
+                if (aCell.getBorderTopWidth() == 0)
+                    bRowHasTopBorder = false;
+            }
+            if (bPreviousRowHasBottomBorder && bRowHasTopBorder)
+                aRow.setBorderTop(null);
+            bPreviousRowHasBottomBorder = bRowHasBottomBorder;
+        }
+    }
 }

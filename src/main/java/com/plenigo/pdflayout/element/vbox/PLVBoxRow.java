@@ -16,13 +16,12 @@
  */
 package com.plenigo.pdflayout.element.vbox;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.concurrent.NotThreadSafe;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.tostring.ToStringGenerator;
 import com.plenigo.pdflayout.base.IPLRenderableObject;
 import com.plenigo.pdflayout.spec.HeightSpec;
+import org.jspecify.annotations.NonNull;
 
 /**
  * This class represents a single row within a VBox. This is a pseudo element
@@ -31,39 +30,33 @@ import com.plenigo.pdflayout.spec.HeightSpec;
  * @author Philip Helger
  */
 @NotThreadSafe
-public final class PLVBoxRow
-{
-  private IPLRenderableObject <?> m_aElement;
-  private final HeightSpec m_aHeight;
+public final class PLVBoxRow {
+    private IPLRenderableObject<?> m_aElement;
+    private final HeightSpec m_aHeight;
 
-  public PLVBoxRow (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final HeightSpec aHeight)
-  {
-    internalSetElement (aElement);
-    m_aHeight = ValueEnforcer.notNull (aHeight, "Height");
-  }
+    public PLVBoxRow(@NonNull final IPLRenderableObject<?> aElement, @NonNull final HeightSpec aHeight) {
+        internalSetElement(aElement);
+        m_aHeight = ValueEnforcer.notNull(aHeight, "Height");
+    }
 
-  @Nonnull
-  public IPLRenderableObject <?> getElement ()
-  {
-    return m_aElement;
-  }
+    @NonNull
+    public IPLRenderableObject<?> getElement() {
+        return m_aElement;
+    }
 
-  @Nonnull
-  PLVBoxRow internalSetElement (@Nonnull final IPLRenderableObject <?> aElement)
-  {
-    m_aElement = ValueEnforcer.notNull (aElement, "Element");
-    return this;
-  }
+    @NonNull
+    PLVBoxRow internalSetElement(@NonNull final IPLRenderableObject<?> aElement) {
+        m_aElement = ValueEnforcer.notNull(aElement, "Element");
+        return this;
+    }
 
-  @Nonnull
-  public HeightSpec getHeight ()
-  {
-    return m_aHeight;
-  }
+    @NonNull
+    public HeightSpec getHeight() {
+        return m_aHeight;
+    }
 
-  @Override
-  public String toString ()
-  {
-    return new ToStringGenerator (this).append ("Element", m_aElement).append ("Height", m_aHeight).getToString ();
-  }
+    @Override
+    public String toString() {
+        return new ToStringGenerator(this).append("Element", m_aElement).append("Height", m_aHeight).getToString();
+    }
 }

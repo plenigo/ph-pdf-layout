@@ -20,11 +20,10 @@ package com.plenigo.pdflayout.base;
  * Base interface for inline elements. They currently have no further
  * properties.
  *
+ * @param <IMPLTYPE> Implementation type
+ *
  * @author Philip Helger
- * @param <IMPLTYPE>
- *        Implementation type
  */
-public interface IPLInlineElement <IMPLTYPE extends IPLInlineElement <IMPLTYPE>> extends IPLElement <IMPLTYPE>
-{
-  /* empty */
+public interface IPLInlineElement<IMPLTYPE extends IPLInlineElement<IMPLTYPE>> extends IPLElement<IMPLTYPE> {
+    /* empty */
 }

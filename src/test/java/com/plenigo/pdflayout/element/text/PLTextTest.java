@@ -19,6 +19,9 @@ package com.plenigo.pdflayout.element.text;
 import java.io.File;
 import java.util.Map;
 
+import com.helger.base.CGlobal;
+import com.helger.base.string.StringHelper;
+import com.helger.collection.commons.CommonsArrayList;
 import com.plenigo.pdflayout.PDFCreationException;
 import com.plenigo.pdflayout.PDFTestComparer;
 import com.plenigo.pdflayout.PLDebugTestRule;
@@ -40,9 +43,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
-import com.helger.commons.CGlobal;
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.string.StringHelper;
 import com.helger.font.alegreya_sans.EFontResourceAlegreyaSans;
 import com.helger.font.anaheim.EFontResourceAnaheim;
 import com.helger.font.api.IHasFontResource;
@@ -318,7 +318,7 @@ public final class PLTextTest
   }
 
   @Test
-  public void testSimplifiedChineseCharacters () throws PDFCreationException
+  public void testCustomFontNotoSansSC () throws PDFCreationException
   {
     // Load TTF font
     final PreloadFont aFont = PreloadFont.createEmbedding (EFontResourceNotoSansSC.NOTO_SANS_SC_REGULAR.getFontResource ());
@@ -401,7 +401,7 @@ public final class PLTextTest
       aPS1.addElement (new PLText ("[Standard] [" + aEntry.getKey () + "]: " + s + "\n",
                                    new FontSpec (aEntry.getValue (), 10)));
     }
-    for (final IHasFontResource aHasFont : new CommonsArrayList <> (EFontResourceAlegreyaSans.ALGREYA_SANS_NORMAL,
+    for (final IHasFontResource aHasFont : new CommonsArrayList<>(EFontResourceAlegreyaSans.ALGREYA_SANS_NORMAL,
                                                                     EFontResourceAlegreyaSans.ALGREYA_SANS_BLACK,
                                                                     EFontResourceAnaheim.ANAHEIM_REGULAR,
                                                                     EFontResourceExo2.EXO2_NORMAL,

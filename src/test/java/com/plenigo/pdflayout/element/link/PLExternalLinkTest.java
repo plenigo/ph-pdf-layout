@@ -21,6 +21,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.helger.base.string.StringHelper;
+import com.helger.io.resource.ClassPathResource;
 import com.plenigo.pdflayout.PDFCreationException;
 import com.plenigo.pdflayout.PDFTestComparer;
 import com.plenigo.pdflayout.PLDebugTestRule;
@@ -38,9 +40,6 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
-
-import com.helger.commons.io.resource.ClassPathResource;
-import com.helger.commons.string.StringHelper;
 
 /**
  * Test class for {@link PLExternalLink}

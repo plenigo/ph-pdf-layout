@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014-2024 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@
  * (c) 2011-2014 phloc systems.
  * Derived from the original javadoc CSS from Sun JDK
  */
- 
+
 body {
 	background-color: #FFFFFF;
 	color: #353833;
@@ -207,7 +207,7 @@ ul.subNavList li {
 }
 
 .topNav a:link,.topNav a:active,.topNav a:visited,.bottomNav a:link,.bottomNav a:active,.bottomNav a:visited
-	{
+{
 	color: #FFFFFF;
 	text-decoration: none;
 }
@@ -264,7 +264,7 @@ ul.subNavList li {
 }
 
 div.details ul.blockList ul.blockList ul.blockList li.blockList h4,div.details ul.blockList ul.blockList ul.blockListLast li.blockList h4
-	{
+{
 	background-color: #DEE3E9;
 	border-bottom: 1px solid #9EADC0;
 	border-top: 1px solid #9EADC0;
@@ -290,7 +290,7 @@ ul.blockList li.blockList h2 {
 }
 
 .contentContainer,.sourceContainer,.classUseContainer,.serializedFormContainer,.constantValuesContainer
-	{
+{
 	clear: both;
 	padding: 10px 20px;
 	position: relative;
@@ -317,7 +317,7 @@ ul.blockList li.blockList h2 {
 }
 
 .contentContainer .description dl dt,.contentContainer .details dl dt,.serializedFormContainer dl dt
-	{
+{
 	color: #4E4E4E;
 	font-size: 1.1em;
 	font-weight: bold;
@@ -325,7 +325,7 @@ ul.blockList li.blockList h2 {
 }
 
 .contentContainer .description dl dd,.contentContainer .details dl dd,.serializedFormContainer dl dd
-	{
+{
 	margin: 10px 0 10px 20px;
 }
 
@@ -373,14 +373,14 @@ ul.blockList li.blockList,ul.blockListLast li.blockList {
 }
 
 ul.blockList ul.blockList li.blockList,ul.blockList ul.blockListLast li.blockList
-	{
+{
 	background-color: #F9F9F9;
 	border: 1px solid #9EADC0;
 	padding: 0 20px 5px 10px;
 }
 
 ul.blockList ul.blockList ul.blockList li.blockList,ul.blockList ul.blockList ul.blockListLast li.blockList
-	{
+{
 	-moz-border-bottom-colors: none;
 	-moz-border-left-colors: none;
 	-moz-border-right-colors: none;
@@ -420,13 +420,13 @@ table tr td dl,table tr td dl dt,table tr td dl dd {
 }
 
 .contentContainer table,.classUseContainer table,.constantValuesContainer table
-	{
+{
 	border-bottom: 1px solid #9EADC0;
 	width: 100%;
 }
 
 .contentContainer ul li table,.classUseContainer ul li table,.constantValuesContainer ul li table
-	{
+{
 	width: 100%;
 }
 
@@ -435,18 +435,18 @@ table tr td dl,table tr td dl dt,table tr td dl dd {
 }
 
 .contentContainer ul li table th.colOne,.contentContainer ul li table th.colFirst,.contentContainer ul li table th.colLast,.classUseContainer ul li table th,.constantValuesContainer ul li table th,.contentContainer ul li table td.colOne,.contentContainer ul li table td.colFirst,.contentContainer ul li table td.colLast,.classUseContainer ul li table td,.constantValuesContainer ul li table td
-	{
+{
 	padding-right: 20px;
 	vertical-align: top;
 }
 
 .contentContainer ul li table th.colLast,.classUseContainer ul li table th.colLast,.constantValuesContainer ul li table th.colLast,.contentContainer ul li table td.colLast,.classUseContainer ul li table td.colLast,.constantValuesContainer ul li table td.colLast,.contentContainer ul li table th.colOne,.classUseContainer ul li table th.colOne,.contentContainer ul li table td.colOne,.classUseContainer ul li table td.colOne
-	{
+{
 	padding-right: 3px;
 }
 
 .overviewSummary caption,.packageSummary caption,.contentContainer ul.blockList li.blockList caption,.summary caption,.classUseContainer caption,.constantValuesContainer caption
-	{
+{
 	background-repeat: no-repeat;
 	clear: none;
 	color: #FFFFFF;
@@ -463,7 +463,7 @@ caption a:link,caption a:hover,caption a:active,caption a:visited {
 }
 
 .overviewSummary caption span,.packageSummary caption span,.contentContainer ul.blockList li.blockList caption span,.summary caption span,.classUseContainer caption span,.constantValuesContainer caption span
-	{
+{
 	background-image: url("resources/titlebar.gif");
 	display: block;
 	float: left;
@@ -474,7 +474,7 @@ caption a:link,caption a:hover,caption a:active,caption a:visited {
 }
 
 .overviewSummary .tabEnd,.packageSummary .tabEnd,.contentContainer ul.blockList li.blockList .tabEnd,.summary .tabEnd,.classUseContainer .tabEnd,.constantValuesContainer .tabEnd
-	{
+{
 	background-image: url("resources/titlebar_end.gif");
 	background-position: right top;
 	background-repeat: no-repeat;
@@ -501,7 +501,7 @@ ul.blockList ul.blockList li.blockList table {
 }
 
 .overviewSummary td,.packageSummary td,.contentContainer ul.blockList li.blockList td,.summary td,.classUseContainer td,.constantValuesContainer td
-	{
+{
 	padding: 3px 3px 3px 7px;
 	text-align: left;
 }
@@ -515,7 +515,7 @@ th.colFirst,th.colLast,th.colOne,.constantValuesContainer th {
 }
 
 td.colOne a:link,td.colOne a:active,td.colOne a:visited,td.colOne a:hover,td.colFirst a:link,td.colFirst a:active,td.colFirst a:visited,td.colFirst a:hover,td.colLast a:link,td.colLast a:active,td.colLast a:visited,td.colLast a:hover,.constantValuesContainer td a:link,.constantValuesContainer td a:active,.constantValuesContainer td a:visited,.constantValuesContainer td a:hover
-	{
+{
 	font-weight: bold;
 }
 
@@ -539,7 +539,7 @@ table.overviewSummary {
 }
 
 table.overviewSummary td.colFirst,table.overviewSummary th.colFirst,table.overviewSummary td.colOne,table.overviewSummary th.colOne
-	{
+{
 	vertical-align: middle;
 	width: 25%;
 }

@@ -5,14 +5,13 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.io.file.FileHelper;
-import com.helger.commons.string.StringHelper;
+import com.helger.annotation.concurrent.Immutable;
+import com.helger.base.string.StringHelper;
+import com.helger.io.file.FileHelper;
 
 import de.redsix.pdfcompare.CompareResult;
 import de.redsix.pdfcompare.PdfComparator;
@@ -31,7 +30,7 @@ public final class PDFTestComparer
   private PDFTestComparer ()
   {}
 
-  public static void renderAndCompare (@Nonnull final PageLayoutPDF aPageLayout, final File fTarget)
+  public static void renderAndCompare (@NonNull final PageLayoutPDF aPageLayout, final File fTarget)
                                                                                                      throws PDFCreationException
   {
     // Render

@@ -18,6 +18,8 @@ package com.plenigo.pdflayout.base;
 
 import java.io.File;
 
+import com.helger.base.string.StringHelper;
+import com.plenigo.pdflayout.IPDDocumentCustomizer;
 import com.plenigo.pdflayout.PDFCreationException;
 import com.plenigo.pdflayout.PDFTestComparer;
 import com.plenigo.pdflayout.PLDebugTestRule;
@@ -26,17 +28,22 @@ import com.plenigo.pdflayout.element.box.PLBox;
 import com.plenigo.pdflayout.element.table.PLTable;
 import com.plenigo.pdflayout.element.table.PLTableCell;
 import com.plenigo.pdflayout.element.text.PLText;
+import com.plenigo.pdflayout.pdfbox.PDPageContentStreamExt;
 import com.plenigo.pdflayout.spec.BorderStyleSpec;
 import com.plenigo.pdflayout.spec.EHorzAlignment;
 import com.plenigo.pdflayout.spec.FontSpec;
 import com.plenigo.pdflayout.spec.PreloadFont;
 import com.plenigo.pdflayout.spec.WidthSpec;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+import org.apache.pdfbox.util.Matrix;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
-
-import com.helger.commons.string.StringHelper;
 
 /**
  * Test class for {@link PLPageSet}
@@ -221,6 +228,92 @@ public final class PLPageSetTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/placeholder.pdf"));
+  }
+
+  @Test
+  public void testWithPlaceholderCustomLeadingTrailing () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (0);
+
+    aPS1.setPageHeader (new PLBox (new PLText (EPLPlaceholder.PAGESET_INDEX.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_NUMBER.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_COUNT.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_PAGE_INDEX.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_PAGE_NUMBER.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_PAGE_COUNT.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.TOTAL_PAGE_INDEX.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.TOTAL_PAGE_NUMBER.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.TOTAL_PAGE_COUNT.getVariable () +
+                                               " / ${custom-var}",
+                                               r10).setID ("header")
+                                                   .setReplacePlaceholder (true)
+                                                   .setFillColor (PLColor.PINK)).setID ("headerbox")
+                                                                                .setHorzAlign (EHorzAlignment.CENTER)
+                                                                                .setBorder (PLColor.GREEN));
+
+    final StringBuilder aText = new StringBuilder ();
+    for (int i = 0; i < 80; ++i)
+      aText.append ("Line ").append (i).append ('\n');
+    aPS1.addElement (new PLText (aText.toString (), r10).setVertSplittable (true).setID ("content"));
+
+    aPS1.setPreRenderContextCustomizer (aCtx -> { aCtx.addPlaceholder ("${custom-var}", "ph-pdf-layout is cool :)"); });
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.setCustomLeadingPageCount (5).setCustomTrailingPageCount (10);
+    aPageLayout.addPageSet (aPS1);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/placeholder-custom-leading-trailing.pdf"));
+  }
+
+  @Test
+  public void testWithPlaceholderCustomTotal () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (0);
+
+    aPS1.setPageHeader (new PLBox (new PLText (EPLPlaceholder.PAGESET_INDEX.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_NUMBER.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_COUNT.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_PAGE_INDEX.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_PAGE_NUMBER.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_PAGE_COUNT.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.TOTAL_PAGE_INDEX.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.TOTAL_PAGE_NUMBER.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.TOTAL_PAGE_COUNT.getVariable () +
+                                               " / ${custom-var}",
+                                               r10).setID ("header")
+                                                   .setReplacePlaceholder (true)
+                                                   .setFillColor (PLColor.PINK)).setID ("headerbox")
+                                                                                .setHorzAlign (EHorzAlignment.CENTER)
+                                                                                .setBorder (PLColor.GREEN));
+
+    final StringBuilder aText = new StringBuilder ();
+    for (int i = 0; i < 80; ++i)
+      aText.append ("Line ").append (i).append ('\n');
+    aPS1.addElement (new PLText (aText.toString (), r10).setVertSplittable (true).setID ("content"));
+
+    aPS1.setPreRenderContextCustomizer (aCtx -> { aCtx.addPlaceholder ("${custom-var}", "ph-pdf-layout is cool :)"); });
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.setCustomTotalPageCount (20);
+    aPageLayout.addPageSet (aPS1);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/placeholder-custom-total.pdf"));
   }
 
   @Test
@@ -427,5 +520,51 @@ public final class PLPageSetTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/firstpage-smaller.pdf"));
+  }
+
+  @Test
+  public void testCreateWatermark () throws PDFCreationException
+  {
+    final IPDDocumentCustomizer aWatermarkCustomizer = aDoc -> {
+      final PDFont aFont = new PDType1Font(Standard14Fonts.FontName.COURIER);
+      final float fFontSize = 100.0f;
+      final String sMessage = "Draft Document";
+
+      for (final PDPage aPage : aDoc.getPages ())
+      {
+        final PDRectangle aPageSize = aPage.getMediaBox ();
+        // calculate to center of the page
+        // depends on the text and size you want to print
+        final float fCenterX = aPageSize.getWidth () * 0.2f;
+        final float fCenterY = aPageSize.getHeight () * 0.1f;
+        // prepend the content to the existing stream
+        try (final PDPageContentStreamExt aCustomizeCS = new PDPageContentStreamExt (aDoc,
+                                                                                     aPage,
+                                                                                     PDPageContentStream.AppendMode.PREPEND,
+                                                                                     true,
+                                                                                     true))
+        {
+          aCustomizeCS.saveGraphicsState ();
+          aCustomizeCS.beginText ();
+          aCustomizeCS.setFont (aFont, fFontSize);
+          // Gray text
+          aCustomizeCS.setNonStrokingColor (220, 220, 220);
+          // rotate the text
+          aCustomizeCS.setTextMatrix (Matrix.getRotateInstance (1.3 * Math.PI / 4, fCenterX, fCenterY));
+          aCustomizeCS.showText (sMessage);
+          aCustomizeCS.endText ();
+          aCustomizeCS.restoreGraphicsState ();
+        }
+      }
+    };
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
+    for (int i = 0; i < 145; ++i)
+      aPS1.addElement (new PLText ("Dummy line " + i, r10).setMargin (3, 0));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.setDocumentCustomizer (aWatermarkCustomizer);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/watermark.pdf"));
   }
 }

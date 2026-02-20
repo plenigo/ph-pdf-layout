@@ -16,79 +16,71 @@
  */
 package com.plenigo.pdflayout.base;
 
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.functional.IThrowingFunction;
+import com.helger.base.state.EChange;
+import org.jspecify.annotations.NonNull;
+
 import java.io.IOException;
-
-import javax.annotation.Nonnull;
-
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.functional.IThrowingFunction;
-import com.helger.commons.state.EChange;
 
 /**
  * Visitor callback
  *
  * @author Philip Helger
  */
-public interface IPLVisitor
-{
-  /**
-   * Call on page set start
-   *
-   * @param aPageSet
-   *        The current page set. Never <code>null</code>.
-   * @throws IOException
-   *         on PDFBox error
-   */
-  default void onPageSetStart (@Nonnull final PLPageSet aPageSet) throws IOException
-  {}
+public interface IPLVisitor {
+    /**
+     * Call on page set start
+     *
+     * @param aPageSet The current page set. Never <code>null</code>.
+     *
+     * @throws IOException on PDFBox error
+     */
+    default void onPageSetStart(@NonNull final PLPageSet aPageSet) throws IOException {
+    }
 
-  /**
-   * Call for each element in the current page set. This method is also called
-   * for page set header and footer elements.
-   *
-   * @param aElement
-   *        The current element. Never <code>null</code>.
-   * @return {@link EChange#CHANGED} if the object was modified.
-   * @throws IOException
-   *         on PDFBox error
-   */
-  @Nonnull
-  default EChange onElement (@Nonnull final IPLRenderableObject <?> aElement) throws IOException
-  {
-    return EChange.UNCHANGED;
-  }
+    /**
+     * Call for each element in the current page set. This method is also called
+     * for page set header and footer elements.
+     *
+     * @param aElement The current element. Never <code>null</code>.
+     *
+     * @return {@link EChange#CHANGED} if the object was modified.
+     *
+     * @throws IOException on PDFBox error
+     */
+    @NonNull
+    default EChange onElement(@NonNull final IPLRenderableObject<?> aElement) throws IOException {
+        return EChange.UNCHANGED;
+    }
 
-  /**
-   * Call on page set end
-   *
-   * @param aPageSet
-   *        The current page set.
-   * @throws IOException
-   *         on PDFBox error
-   */
-  default void onPageSetEnd (@Nonnull final PLPageSet aPageSet) throws IOException
-  {}
+    /**
+     * Call on page set end
+     *
+     * @param aPageSet The current page set.
+     *
+     * @throws IOException on PDFBox error
+     */
+    default void onPageSetEnd(@NonNull final PLPageSet aPageSet) throws IOException {
+    }
 
-  /**
-   * Special visitor method that visits only elements of this objects and
-   * ignores the others objects.
-   *
-   * @param aElementConsumer
-   *        The consumer to use. May not be <code>null</code>.
-   * @return The new element visitor to use
-   */
-  @Nonnull
-  static IPLVisitor createElementVisitor (@Nonnull final IThrowingFunction <? super IPLRenderableObject <?>, EChange, IOException> aElementConsumer)
-  {
-    ValueEnforcer.notNull (aElementConsumer, "ElementConsumer");
-    return new IPLVisitor ()
-    {
-      @Override
-      @Nonnull
-      public EChange onElement (@Nonnull final IPLRenderableObject <?> aElement) throws IOException
-      {
-        return aElementConsumer.apply (aElement);
-      }
-    };
-  }
+    /**
+     * Special visitor method that visits only elements of this objects and
+     * ignores the others objects.
+     *
+     * @param aElementConsumer The consumer to use. May not be <code>null</code>.
+     *
+     * @return The new element visitor to use
+     */
+    @NonNull
+    static IPLVisitor createElementVisitor(@NonNull final IThrowingFunction<? super com.plenigo.pdflayout.base.IPLRenderableObject<?>, EChange, IOException> aElementConsumer) {
+        ValueEnforcer.notNull(aElementConsumer, "ElementConsumer");
+        return new IPLVisitor() {
+            @Override
+            @NonNull
+            public EChange onElement(@NonNull final IPLRenderableObject<?> aElement) throws IOException {
+                return aElementConsumer.apply(aElement);
+            }
+        };
+    }
 }

@@ -16,103 +16,91 @@
  */
 package com.plenigo.pdflayout.base;
 
-import javax.annotation.Nonnull;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.tostring.ToStringGenerator;
 import com.plenigo.pdflayout.spec.EHorzAlignment;
 import com.plenigo.pdflayout.spec.EVertAlignment;
+import org.jspecify.annotations.NonNull;
 
 /**
- * Abstract implementation of {@link IPLBlockElement}.
+ * Abstract implementation of {@link com.plenigo.pdflayout.base.IPLBlockElement}.
+ *
+ * @param <IMPLTYPE> The implementation type of this class.
  *
  * @author Philip Helger
- * @param <IMPLTYPE>
- *        The implementation type of this class.
  */
-public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockElement <IMPLTYPE>> extends
-                                             AbstractPLElement <IMPLTYPE> implements
-                                             IPLBlockElement <IMPLTYPE>
-{
-  private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
-  private EVertAlignment m_eVertAlign = DEFAULT_VERT_ALIGNMENT;
-  // Always use the full width?
-  private boolean m_bFullWidth = DEFAULT_FULL_WIDTH;
-  private boolean m_bClipContent = DEFAULT_CLIP_CONTENT;
+public abstract class AbstractPLBlockElement<IMPLTYPE extends AbstractPLBlockElement<IMPLTYPE>> extends
+        AbstractPLElement<IMPLTYPE> implements
+        IPLBlockElement<IMPLTYPE> {
+    private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
+    private EVertAlignment m_eVertAlign = DEFAULT_VERT_ALIGNMENT;
+    // Always use the full width?
+    private boolean m_bFullWidth = DEFAULT_FULL_WIDTH;
+    private boolean m_bClipContent = DEFAULT_CLIP_CONTENT;
 
-  public AbstractPLBlockElement ()
-  {}
+    public AbstractPLBlockElement() {
+    }
 
-  @Override
-  @Nonnull
-  @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
-  {
-    super.setBasicDataFrom (aSource);
-    setHorzAlign (aSource.getHorzAlign ());
-    setVertAlign (aSource.getVertAlign ());
-    return thisAsT ();
-  }
+    @Override
+    @NonNull
+    @OverridingMethodsMustInvokeSuper
+    public IMPLTYPE setBasicDataFrom(@NonNull final IMPLTYPE aSource) {
+        super.setBasicDataFrom(aSource);
+        setHorzAlign(aSource.getHorzAlign());
+        setVertAlign(aSource.getVertAlign());
+        return thisAsT();
+    }
 
-  @Nonnull
-  public final EHorzAlignment getHorzAlign ()
-  {
-    return m_eHorzAlign;
-  }
+    @NonNull
+    public final EHorzAlignment getHorzAlign() {
+        return m_eHorzAlign;
+    }
 
-  @Nonnull
-  public final IMPLTYPE setHorzAlign (@Nonnull final EHorzAlignment eHorzAlign)
-  {
-    m_eHorzAlign = ValueEnforcer.notNull (eHorzAlign, "HorzAlign");
-    return thisAsT ();
-  }
+    @NonNull
+    public final IMPLTYPE setHorzAlign(@NonNull final EHorzAlignment eHorzAlign) {
+        m_eHorzAlign = ValueEnforcer.notNull(eHorzAlign, "HorzAlign");
+        return thisAsT();
+    }
 
-  @Nonnull
-  public final EVertAlignment getVertAlign ()
-  {
-    return m_eVertAlign;
-  }
+    @NonNull
+    public final EVertAlignment getVertAlign() {
+        return m_eVertAlign;
+    }
 
-  @Nonnull
-  public final IMPLTYPE setVertAlign (@Nonnull final EVertAlignment eVertAlign)
-  {
-    m_eVertAlign = ValueEnforcer.notNull (eVertAlign, "VertAlign");
-    return thisAsT ();
-  }
+    @NonNull
+    public final IMPLTYPE setVertAlign(@NonNull final EVertAlignment eVertAlign) {
+        m_eVertAlign = ValueEnforcer.notNull(eVertAlign, "VertAlign");
+        return thisAsT();
+    }
 
-  public final boolean isFullWidth ()
-  {
-    return m_bFullWidth;
-  }
+    public final boolean isFullWidth() {
+        return m_bFullWidth;
+    }
 
-  @Nonnull
-  public final IMPLTYPE setFullWidth (final boolean bFullWidth)
-  {
-    m_bFullWidth = bFullWidth;
-    return thisAsT ();
-  }
+    @NonNull
+    public final IMPLTYPE setFullWidth(final boolean bFullWidth) {
+        m_bFullWidth = bFullWidth;
+        return thisAsT();
+    }
 
-  public final boolean isClipContent ()
-  {
-    return m_bClipContent;
-  }
+    public final boolean isClipContent() {
+        return m_bClipContent;
+    }
 
-  @Nonnull
-  public final IMPLTYPE setClipContent (final boolean bClipContent)
-  {
-    m_bClipContent = bClipContent;
-    return thisAsT ();
-  }
+    @NonNull
+    public final IMPLTYPE setClipContent(final boolean bClipContent) {
+        m_bClipContent = bClipContent;
+        return thisAsT();
+    }
 
-  @Override
-  public String toString ()
-  {
-    return ToStringGenerator.getDerived (super.toString ())
-                            .append ("HorzAlign", m_eHorzAlign)
-                            .append ("VertAlign", m_eVertAlign)
-                            .append ("FullWidth", m_bFullWidth)
-                            .append ("ClipContent", m_bClipContent)
-                            .getToString ();
-  }
+    @Override
+    public String toString() {
+        return ToStringGenerator.getDerived(super.toString())
+                .append("HorzAlign", m_eHorzAlign)
+                .append("VertAlign", m_eVertAlign)
+                .append("FullWidth", m_bFullWidth)
+                .append("ClipContent", m_bClipContent)
+                .getToString();
+    }
 }

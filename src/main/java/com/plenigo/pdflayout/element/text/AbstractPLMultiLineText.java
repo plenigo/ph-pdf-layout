@@ -16,14 +16,19 @@
  */
 package com.plenigo.pdflayout.element.text;
 
-import com.helger.commons.CGlobal;
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.collection.impl.ICommonsMap;
-import com.helger.commons.state.EChange;
-import com.helger.commons.string.StringHelper;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.Nonnegative;
+import com.helger.base.state.EChange;
+import com.helger.base.string.StringReplace;
+import com.helger.base.tostring.ToStringGenerator;
+import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.ICommonsMap;
+import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import com.helger.annotation.CheckForSigned;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.base.CGlobal;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.collection.commons.ICommonsList;
 import com.plenigo.pdflayout.base.AbstractPLRenderableObject;
 import com.plenigo.pdflayout.base.EPLPlaceholder;
 import com.plenigo.pdflayout.base.IPLHasHorizontalAlignment;
@@ -37,12 +42,8 @@ import com.plenigo.pdflayout.spec.FontSpec;
 import com.plenigo.pdflayout.spec.LoadedFont;
 import com.plenigo.pdflayout.spec.SizeSpec;
 import com.plenigo.pdflayout.spec.TextAndWidthSpec;
+import com.helger.base.string.StringHelper;
 
-import javax.annotation.CheckForSigned;
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.io.IOException;
 
 /**
@@ -76,21 +77,21 @@ public abstract class AbstractPLMultiLineText<IMPLTYPE extends AbstractPLMultiLi
     protected ICommonsList<TextAndWidthSpec> m_aPreparedLinesUnmodified;
     protected ICommonsList<TextAndWidthSpec> m_aPreparedLines;
 
-    @Nonnull
+    @NonNull
     public static String getCleanedPLText(@Nullable final String sText) {
-        if (StringHelper.hasNoText(sText)) {
+        if (StringHelper.isEmpty(sText)) {
             return "";
         }
         // Unify line endings so that all "\r" are removed and only "\n" is
         // contained
         // Multiple \n after each other remain
         String sCleaned = sText;
-        sCleaned = StringHelper.replaceAll(sCleaned, "\r\n", "\n");
-        sCleaned = StringHelper.replaceAll(sCleaned, '\r', '\n');
+        sCleaned = StringReplace.replaceAll (sCleaned, "\r\n", "\n");
+        sCleaned = StringReplace.replaceAll (sCleaned, '\r', '\n');
         return sCleaned;
     }
 
-    public AbstractPLMultiLineText(@Nullable final String sText, @Nonnull final FontSpec aFontSpec) {
+    public AbstractPLMultiLineText(@Nullable final String sText, @NonNull final FontSpec aFontSpec) {
         _setText(sText);
         m_aFontSpec = ValueEnforcer.notNull(aFontSpec, "FontSpec");
     }
@@ -106,9 +107,9 @@ public abstract class AbstractPLMultiLineText<IMPLTYPE extends AbstractPLMultiLi
     }
 
     @Override
-    @Nonnull
+    @NonNull
     @OverridingMethodsMustInvokeSuper
-    public IMPLTYPE setBasicDataFrom(@Nonnull final IMPLTYPE aSource) {
+    public IMPLTYPE setBasicDataFrom(@NonNull final IMPLTYPE aSource) {
         super.setBasicDataFrom(aSource);
         setHorzAlign(aSource.getHorzAlign());
         setMaxRows(aSource.getMaxRows());
@@ -119,7 +120,7 @@ public abstract class AbstractPLMultiLineText<IMPLTYPE extends AbstractPLMultiLi
      * @return The original text provided in the constructor, with newlines
      * unified. Never <code>null</code>.
      */
-    @Nonnull
+    @NonNull
     public final String getText() {
         return m_sOriginalText;
     }
@@ -155,7 +156,7 @@ public abstract class AbstractPLMultiLineText<IMPLTYPE extends AbstractPLMultiLi
      *
      * @return this for chaining.
      */
-    @Nonnull
+    @NonNull
     public final IMPLTYPE setURI(@Nullable final String sURI) {
         m_sURI = sURI;
         return thisAsT();
@@ -173,18 +174,18 @@ public abstract class AbstractPLMultiLineText<IMPLTYPE extends AbstractPLMultiLi
      * @return The font specification to be used as provided in the constructor.
      * Never <code>null</code>.
      */
-    @Nonnull
+    @NonNull
     public final FontSpec getFontSpec() {
         return m_aFontSpec;
     }
 
-    @Nonnull
+    @NonNull
     public final EHorzAlignment getHorzAlign() {
         return m_eHorzAlign;
     }
 
-    @Nonnull
-    public final IMPLTYPE setHorzAlign(@Nonnull final EHorzAlignment eHorzAlign) {
+    @NonNull
+    public final IMPLTYPE setHorzAlign(@NonNull final EHorzAlignment eHorzAlign) {
         m_eHorzAlign = ValueEnforcer.notNull(eHorzAlign, "HorzAlign");
         return thisAsT();
     }
@@ -206,13 +207,13 @@ public abstract class AbstractPLMultiLineText<IMPLTYPE extends AbstractPLMultiLi
      *
      * @return this for chaining
      */
-    @Nonnull
+    @NonNull
     public final IMPLTYPE setMaxRows(final int nMaxRows) {
         m_nMaxRows = nMaxRows;
         return thisAsT();
     }
 
-    final void internalSetPreparedLines(@Nonnull final ICommonsList<TextAndWidthSpec> aLines) {
+    final void internalSetPreparedLines(@NonNull final ICommonsList<TextAndWidthSpec> aLines) {
         final int nLineCount = aLines.size();
         m_nPreparedLineCountUnmodified = nLineCount;
         m_aPreparedLinesUnmodified = aLines;
@@ -255,7 +256,7 @@ public abstract class AbstractPLMultiLineText<IMPLTYPE extends AbstractPLMultiLi
      *
      * @throws IOException On PDFBox error
      */
-    @Nonnull
+    @NonNull
     private SizeSpec _prepareText(final float fAvailableWidth, final boolean bAlreadyReplaced) throws IOException {
         final float fFontSize = m_aFontSpec.getFontSize();
         m_fTextHeight = m_aLoadedFont.getTextHeight(fFontSize);
@@ -279,7 +280,7 @@ public abstract class AbstractPLMultiLineText<IMPLTYPE extends AbstractPLMultiLi
             sTextToFit = m_sTextWithPlaceholdersReplaced;
         } else {
             // Use the approximations from the placeholders
-            sTextToFit = StringHelper.replaceMultiple(m_sOriginalText, ESTIMATION_REPLACEMENTS);
+            sTextToFit = StringReplace.replaceMultiple(m_sOriginalText, ESTIMATION_REPLACEMENTS);
         }
         internalSetPreparedLines(m_aLoadedFont.getFitToWidth(sTextToFit, fFontSize, fAvailableWidth, m_fMaxAvailableWidth));
 
@@ -294,7 +295,7 @@ public abstract class AbstractPLMultiLineText<IMPLTYPE extends AbstractPLMultiLi
     }
 
     @Override
-    protected SizeSpec onPrepare(@Nonnull final PreparationContext aCtx) {
+    protected SizeSpec onPrepare(@NonNull final PreparationContext aCtx) {
         final float fElementWidth = aCtx.getAvailableWidth() - getOutlineXSum();
 
         // Load font into document
@@ -327,8 +328,8 @@ public abstract class AbstractPLMultiLineText<IMPLTYPE extends AbstractPLMultiLi
     }
 
     @Override
-    @Nonnull
-    public EChange beforeRender(@Nonnull final PagePreRenderContext aCtx) throws IOException {
+    @NonNull
+    public EChange beforeRender(@NonNull final PagePreRenderContext aCtx) throws IOException {
         return EChange.UNCHANGED;
     }
 
@@ -337,7 +338,7 @@ public abstract class AbstractPLMultiLineText<IMPLTYPE extends AbstractPLMultiLi
     }
 
     @Override
-    protected void onRender(@Nonnull final PageRenderContext aCtx) throws IOException {
+    protected void onRender(@NonNull final PageRenderContext aCtx) throws IOException {
         if (hasNoText()) {
             // Nothing to do - empty text
             return;

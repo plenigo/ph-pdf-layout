@@ -16,90 +16,80 @@
  */
 package com.plenigo.pdflayout.element.image;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-
+import com.helger.annotation.Nonnegative;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.io.iface.IHasInputStream;
+import com.helger.base.io.stream.StreamHelper;
+import com.helger.base.tostring.ToStringGenerator;
+import com.plenigo.pdflayout.render.PagePreRenderContext;
 import org.apache.pdfbox.pdmodel.graphics.image.CCITTFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.io.IHasInputStream;
-import com.helger.commons.io.stream.StreamHelper;
-import com.helger.commons.string.ToStringGenerator;
-import com.plenigo.pdflayout.render.PagePreRenderContext;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Represent a static image based on {@link BufferedImage} read from an
  * {@link InputStream}. This is not supported for the image type
  * {@link EPLImageType#LOSSLESS}!
  *
- * @see PLImage
  * @author Philip Helger
+ * @see PLImage
  */
-public class PLStreamImage extends AbstractPLImage <PLStreamImage>
-{
-  private final IHasInputStream m_aIIS;
+public class PLStreamImage extends AbstractPLImage<PLStreamImage> {
+    private final IHasInputStream m_aIIS;
 
-  public PLStreamImage (@Nonnull final IHasInputStream aImage, @Nonnegative final float fImageWidth, @Nonnegative final float fImageHeight)
-  {
-    super (fImageWidth, fImageHeight);
-    ValueEnforcer.notNull (aImage, "Image");
+    public PLStreamImage(@NonNull final IHasInputStream aImage, @Nonnegative final float fImageWidth, @Nonnegative final float fImageHeight) {
+        super(fImageWidth, fImageHeight);
+        ValueEnforcer.notNull(aImage, "Image");
 
-    m_aIIS = aImage;
-  }
-
-  @Override
-  @Nonnull
-  @OverridingMethodsMustInvokeSuper
-  public PLStreamImage setBasicDataFrom (@Nonnull final PLStreamImage aSource)
-  {
-    super.setBasicDataFrom (aSource);
-    return this;
-  }
-
-  @Nullable
-  public IHasInputStream getIIS ()
-  {
-    return m_aIIS;
-  }
-
-  @Override
-  @Nonnull
-  protected PDImageXObject getXObject (@Nonnull final PagePreRenderContext aCtx) throws IOException
-  {
-    // The input stream is only sometimes closed automatically
-    final InputStream aIS = m_aIIS.getInputStream ();
-    if (aIS == null)
-      throw new IOException ("Failed to open InputStream from " + m_aIIS);
-
-    try (final InputStream aRealIS = aIS)
-    {
-      final byte [] aBytes = StreamHelper.getAllBytes (aRealIS);
-      switch (getImageType ())
-      {
-        case CCITT:
-          return CCITTFactory.createFromByteArray (aCtx.getDocument (), aBytes);
-        case JPEG:
-          return JPEGFactory.createFromByteArray (aCtx.getDocument (), aBytes);
-        case LOSSLESS:
-          // API does not support it
-          throw new IllegalStateException ("Lossless images cannot be read from Stream - use the version with BufferedImage!");
-        default:
-          throw new IllegalStateException ("Unsupported image type: " + toString ());
-      }
+        m_aIIS = aImage;
     }
-  }
 
-  @Override
-  public String toString ()
-  {
-    return ToStringGenerator.getDerived (super.toString ()).append ("IIS", m_aIIS).getToString ();
-  }
+    @Override
+    @NonNull
+    @OverridingMethodsMustInvokeSuper
+    public PLStreamImage setBasicDataFrom(@NonNull final PLStreamImage aSource) {
+        super.setBasicDataFrom(aSource);
+        return this;
+    }
+
+    @Nullable
+    public IHasInputStream getIIS() {
+        return m_aIIS;
+    }
+
+    @Override
+    @NonNull
+    protected PDImageXObject getXObject(@NonNull final PagePreRenderContext aCtx) throws IOException {
+        // The input stream is only sometimes closed automatically
+        final InputStream aIS = m_aIIS.getInputStream();
+        if (aIS == null)
+            throw new IOException("Failed to open InputStream from " + m_aIIS);
+
+        try (final InputStream aRealIS = aIS) {
+            final byte[] aBytes = StreamHelper.getAllBytes(aRealIS);
+            switch (getImageType()) {
+                case CCITT:
+                    return CCITTFactory.createFromByteArray(aCtx.getDocument(), aBytes);
+                case JPEG:
+                    return JPEGFactory.createFromByteArray(aCtx.getDocument(), aBytes);
+                case LOSSLESS:
+                    // API does not support it
+                    throw new IllegalStateException("Lossless images cannot be read from Stream - use the version with BufferedImage!");
+                default:
+                    throw new IllegalStateException("Unsupported image type: " + toString());
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return ToStringGenerator.getDerived(super.toString()).append("IIS", m_aIIS).getToString();
+    }
 }

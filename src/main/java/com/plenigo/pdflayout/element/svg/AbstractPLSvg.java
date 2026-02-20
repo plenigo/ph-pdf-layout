@@ -1,8 +1,12 @@
 package com.plenigo.pdflayout.element.svg;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.state.EChange;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.base.state.EChange;
+import com.helger.base.tostring.ToStringGenerator;
+import org.jspecify.annotations.NonNull;
+import com.helger.annotation.Nonnegative;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.base.enforce.ValueEnforcer;
+
 import com.kitfox.svg.SVGException;
 import com.plenigo.pdflayout.base.AbstractPLInlineElement;
 import com.plenigo.pdflayout.pdfbox.PDPageContentStreamWithCache;
@@ -13,9 +17,7 @@ import com.plenigo.pdflayout.render.PreparationContext;
 import com.plenigo.pdflayout.spec.SizeSpec;
 import org.apache.pdfbox.pdmodel.graphics.form.PDFormXObject;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
+
 import java.io.IOException;
 
 /**
@@ -42,9 +44,9 @@ public abstract class AbstractPLSvg<IMPLTYPE extends AbstractPLSvg<IMPLTYPE>> ex
     }
 
     @Override
-    @Nonnull
+    @NonNull
     @OverridingMethodsMustInvokeSuper
-    public IMPLTYPE setBasicDataFrom(@Nonnull final IMPLTYPE aSource) {
+    public IMPLTYPE setBasicDataFrom(@NonNull final IMPLTYPE aSource) {
         super.setBasicDataFrom(aSource);
         return thisAsT();
     }
@@ -60,7 +62,7 @@ public abstract class AbstractPLSvg<IMPLTYPE extends AbstractPLSvg<IMPLTYPE>> ex
     }
 
     @Override
-    protected SizeSpec onPrepare(@Nonnull final PreparationContext aCtx) {
+    protected SizeSpec onPrepare(@NonNull final PreparationContext aCtx) {
         return new SizeSpec(m_fImageWidth, m_fImageHeight);
     }
 
@@ -78,12 +80,12 @@ public abstract class AbstractPLSvg<IMPLTYPE extends AbstractPLSvg<IMPLTYPE>> ex
      *
      * @throws IOException In case of error.
      */
-    @Nonnull
-    protected abstract PDFormXObject getXObject(@Nonnull final PagePreRenderContext aCtx) throws IOException, SVGException;
+    @NonNull
+    protected abstract PDFormXObject getXObject(@NonNull final PagePreRenderContext aCtx) throws IOException, SVGException;
 
     @Override
-    @Nonnull
-    public EChange beforeRender(@Nonnull final PagePreRenderContext aCtx) {
+    @NonNull
+    public EChange beforeRender(@NonNull final PagePreRenderContext aCtx) {
         try {
             m_aXObject = getXObject(aCtx);
             if (m_aXObject == null)
@@ -95,7 +97,7 @@ public abstract class AbstractPLSvg<IMPLTYPE extends AbstractPLSvg<IMPLTYPE>> ex
     }
 
     @Override
-    protected void onRender(@Nonnull final PageRenderContext aCtx) throws IOException {
+    protected void onRender(@NonNull final PageRenderContext aCtx) throws IOException {
         // Fill and border
         PLRenderHelper.fillAndRenderBorder(thisAsT(), aCtx, 0f, 0f);
 

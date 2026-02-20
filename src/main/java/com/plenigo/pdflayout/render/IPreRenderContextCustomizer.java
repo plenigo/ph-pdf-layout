@@ -16,21 +16,19 @@
  */
 package com.plenigo.pdflayout.render;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interface for customizing pre-rendering contexts.
  *
  * @author Philip Helger
  */
-public interface IPreRenderContextCustomizer
-{
-  /**
-   * Customize the passed pre-rendering context. This can e.g. be used to add
-   * placeholders.
-   *
-   * @param aCtx
-   *        The pre-rendering context to be modified.
-   */
-  void customizePreRenderContext (@Nonnull PagePreRenderContext aCtx);
+public interface IPreRenderContextCustomizer {
+    /**
+     * Customize the passed pre-rendering context. This can e.g. be used to add
+     * placeholders.
+     *
+     * @param aCtx The pre-rendering context to be modified.
+     */
+    void customizePreRenderContext(@NonNull PagePreRenderContext aCtx);
 }

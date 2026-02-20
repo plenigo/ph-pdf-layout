@@ -16,14 +16,12 @@
  */
 package com.plenigo.pdflayout;
 
-import javax.annotation.concurrent.Immutable;
-
+import com.helger.annotation.concurrent.Immutable;
+import com.helger.base.rt.NonBlockingProperties;
+import com.helger.base.rt.PropertiesHelper;
+import com.helger.io.resource.ClassPathResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.helger.commons.collection.impl.ICommonsMap;
-import com.helger.commons.io.resource.ClassPathResource;
-import com.helger.commons.lang.PropertiesHelper;
 
 /**
  * Contains global configuration constants.
@@ -36,7 +34,7 @@ public final class PLConfig
   /** Project name */
   public static final String PROJECT_NAME = "ph-pdf-layout";
   /** Project URL */
-  public static final String PROJECT_URL = "https://github.com/plenigo/ph-pdf-layout";
+  public static final String PROJECT_URL = "https://github.com/phax/ph-pdf-layout";
   /** Current version - from properties file */
   public static final String PROJECT_VERSION;
 
@@ -45,7 +43,8 @@ public final class PLConfig
   static
   {
     String sProjectVersion = null;
-    final ICommonsMap <String, String> p = PropertiesHelper.loadProperties (new ClassPathResource ("ph-pdf-layout-version.properties"));
+    final NonBlockingProperties p = PropertiesHelper.loadProperties (ClassPathResource.getInputStream ("ph-pdf-layout-version.properties",
+                                                                                                       PLConfig.class.getClassLoader ()));
     if (p != null)
       sProjectVersion = p.get ("version");
     if (sProjectVersion == null)

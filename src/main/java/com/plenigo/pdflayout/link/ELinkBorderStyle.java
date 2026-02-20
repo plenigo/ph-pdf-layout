@@ -16,55 +16,50 @@
  */
 package com.plenigo.pdflayout.link;
 
-import javax.annotation.Nonnull;
-
+import com.helger.annotation.Nonempty;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
-
-import com.helger.commons.annotation.Nonempty;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Contains the style for links and other interactive elements.
  *
  * @author Philip Helger
  */
-public enum ELinkBorderStyle
-{
-  /**
-   * Constant for the name of a solid style.
-   */
-  SOLID (PDBorderStyleDictionary.STYLE_SOLID),
+public enum ELinkBorderStyle {
+    /**
+     * Constant for the name of a solid style.
+     */
+    SOLID(PDBorderStyleDictionary.STYLE_SOLID),
 
-  /**
-   * Constant for the name of a dashed style.
-   */
-  DASHED (PDBorderStyleDictionary.STYLE_DASHED),
+    /**
+     * Constant for the name of a dashed style.
+     */
+    DASHED(PDBorderStyleDictionary.STYLE_DASHED),
 
-  /**
-   * Constant for the name of a beveled style.
-   */
-  BEVELED (PDBorderStyleDictionary.STYLE_BEVELED),
+    /**
+     * Constant for the name of a beveled style.
+     */
+    BEVELED(PDBorderStyleDictionary.STYLE_BEVELED),
 
-  /**
-   * Constant for the name of a inset style.
-   */
-  INSET (PDBorderStyleDictionary.STYLE_INSET),
+    /**
+     * Constant for the name of a inset style.
+     */
+    INSET(PDBorderStyleDictionary.STYLE_INSET),
 
-  /**
-   * Constant for the name of a underline style.
-   */
-  UNDERLINE (PDBorderStyleDictionary.STYLE_UNDERLINE);
+    /**
+     * Constant for the name of a underline style.
+     */
+    UNDERLINE(PDBorderStyleDictionary.STYLE_UNDERLINE);
 
-  private final String m_sID;
+    private final String m_sID;
 
-  ELinkBorderStyle (@Nonnull @Nonempty final String sID)
-  {
-    m_sID = sID;
-  }
+    ELinkBorderStyle(@NonNull @Nonempty final String sID) {
+        m_sID = sID;
+    }
 
-  @Nonnull
-  @Nonempty
-  public String getID ()
-  {
-    return m_sID;
-  }
+    @NonNull
+    @Nonempty
+    public String getID() {
+        return m_sID;
+    }
 }

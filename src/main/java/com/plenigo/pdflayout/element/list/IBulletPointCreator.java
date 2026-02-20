@@ -16,27 +16,24 @@
  */
 package com.plenigo.pdflayout.element.list;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-
+import com.helger.annotation.Nonnegative;
 import com.plenigo.pdflayout.base.IPLRenderableObject;
+import org.jspecify.annotations.NonNull;
 
 /**
- * Abstract bullet point creator to create e.g. constant dots or numbers or
- * characters.
+ * Abstract bullet point creator to create e.g. constant dots or numbers or characters.
  *
  * @author Philip Helger
  * @since 5.1.0
  */
-public interface IBulletPointCreator
-{
-  /**
-   * Get the bullet point text for the specified index.
-   *
-   * @param nBulletPointIndex
-   *        The 0-based index of the bullet point to be created.
-   * @return A non-<code>null</code> but maybe empty.
-   */
-  @Nonnull
-  IPLRenderableObject <?> getBulletPointElement (@Nonnegative int nBulletPointIndex);
+public interface IBulletPointCreator {
+    /**
+     * Get the bullet point text for the specified index.
+     *
+     * @param nBulletPointIndex The 0-based index of the bullet point to be created.
+     *
+     * @return A non-<code>null</code> bullet point element.
+     */
+    @NonNull
+    IPLRenderableObject<?> getBulletPointElement(@Nonnegative int nBulletPointIndex);
 }

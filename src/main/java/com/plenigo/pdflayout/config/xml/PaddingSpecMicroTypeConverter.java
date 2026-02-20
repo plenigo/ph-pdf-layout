@@ -16,12 +16,11 @@
  */
 package com.plenigo.pdflayout.config.xml;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.plenigo.pdflayout.spec.PaddingSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
+import com.plenigo.pdflayout.spec.PaddingSpec;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Micro type converter for class {@link PaddingSpec}.
@@ -29,22 +28,19 @@ import com.helger.xml.microdom.MicroElement;
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class PaddingSpecMicroTypeConverter extends AbstractRectSpecMicroTypeConverter <PaddingSpec>
-{
+public final class PaddingSpecMicroTypeConverter extends AbstractRectSpecMicroTypeConverter<PaddingSpec> {
 
-  @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final PaddingSpec aValue,
-                                              @Nullable final String sNamespaceURI,
-                                              @Nonnull final String sTagName)
-  {
-    final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
-    fillMicroElement (aValue, aElement);
-    return aElement;
-  }
+    @NonNull
+    public IMicroElement convertToMicroElement(@NonNull final PaddingSpec aValue,
+                                               @Nullable final String sNamespaceURI,
+                                               @NonNull final String sTagName) {
+        final IMicroElement aElement = new MicroElement(sNamespaceURI, sTagName);
+        fillMicroElement(aValue, aElement);
+        return aElement;
+    }
 
-  @Nonnull
-  public PaddingSpec convertToNative (@Nonnull final IMicroElement aElement)
-  {
-    return new PaddingSpec (convertToRectSpec (aElement));
-  }
+    @NonNull
+    public PaddingSpec convertToNative(@NonNull final IMicroElement aElement) {
+        return new PaddingSpec(convertToRectSpec(aElement));
+    }
 }

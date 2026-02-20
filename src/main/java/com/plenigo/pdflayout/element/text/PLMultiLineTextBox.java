@@ -16,7 +16,7 @@
  */
 package com.plenigo.pdflayout.element.text;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Horizontal box - groups several columns without having layout information
@@ -33,8 +33,8 @@ public class PLMultiLineTextBox extends AbstractPLMultiLineTextBox<PLMultiLineTe
   {}
 
   @Override
-  @Nonnull
-  public PLMultiLineTextBox internalCreateNewVertSplitObject (@Nonnull final PLMultiLineTextBox aBase)
+  @NonNull
+  public PLMultiLineTextBox internalCreateNewVertSplitObject (@NonNull final PLMultiLineTextBox aBase)
   {
     final PLMultiLineTextBox ret = new PLMultiLineTextBox();
     ret.setBasicDataFrom (aBase);

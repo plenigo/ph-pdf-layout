@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.helger.io.resource.ClassPathResource;
 import com.plenigo.pdflayout.PDFCreationException;
 import com.plenigo.pdflayout.PDFTestComparer;
 import com.plenigo.pdflayout.PLDebugTestRule;
@@ -39,7 +40,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
-import com.helger.commons.io.resource.ClassPathResource;
 
 /**
  * Test class for {@link PLImage} and {@link PLStreamImage}

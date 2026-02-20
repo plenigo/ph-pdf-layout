@@ -16,88 +16,135 @@
  */
 package com.plenigo.pdflayout.element.special;
 
-import java.io.IOException;
-
-import javax.annotation.Nonnull;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.base.tostring.ToStringGenerator;
 import com.plenigo.pdflayout.base.AbstractPLRenderableObject;
+import com.plenigo.pdflayout.base.IPLSplittableObject;
+import com.plenigo.pdflayout.base.PLElementWithSize;
+import com.plenigo.pdflayout.base.PLSplitResult;
+import com.plenigo.pdflayout.debug.PLDebugLog;
 import com.plenigo.pdflayout.render.PageRenderContext;
 import com.plenigo.pdflayout.render.PreparationContext;
 import com.plenigo.pdflayout.spec.SizeSpec;
+import org.jspecify.annotations.NonNull;
+
+import java.io.IOException;
 
 /**
  * A vertical spacer
  *
  * @author Philip Helger
  */
-public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY>
-{
-  private float m_fHeight = -1;
+public class PLSpacerY extends AbstractPLRenderableObject<PLSpacerY> implements
+        IPLSplittableObject<PLSpacerY, PLSpacerY> {
+    private static final float WIDTH_ZERO = 0f;
 
-  public PLSpacerY ()
-  {
-    this (0f);
-  }
+    private float m_fHeight = -1;
+    private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
 
-  public PLSpacerY (final float fHeight)
-  {
-    setHeight (fHeight);
-  }
+    private PLSpacerY() {
+    }
 
-  @Override
-  @Nonnull
-  @OverridingMethodsMustInvokeSuper
-  public PLSpacerY setBasicDataFrom (@Nonnull final PLSpacerY aSource)
-  {
-    super.setBasicDataFrom (aSource);
-    setHeight (aSource.m_fHeight);
-    return this;
-  }
+    public PLSpacerY(final float fHeight) {
+        setHeight(fHeight);
+    }
 
-  public final float getHeight ()
-  {
-    return m_fHeight;
-  }
+    @Override
+    @NonNull
+    @OverridingMethodsMustInvokeSuper
+    public PLSpacerY setBasicDataFrom(@NonNull final PLSpacerY aSource) {
+        super.setBasicDataFrom(aSource);
+        setHeight(aSource.m_fHeight);
+        setVertSplittable(aSource.m_bVertSplittable);
+        return this;
+    }
 
-  @Nonnull
-  public final PLSpacerY setHeight (final float fHeight)
-  {
-    m_fHeight = fHeight;
-    return this;
-  }
+    public final float getHeight() {
+        return m_fHeight;
+    }
 
-  @Override
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
-  {
-    final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();
+    @NonNull
+    public final PLSpacerY setHeight(final float fHeight) {
+        m_fHeight = fHeight;
+        return this;
+    }
 
-    // Use the fixed height
-    return new SizeSpec (0, m_fHeight > 0 ? m_fHeight : fElementHeight);
-  }
+    @Override
+    protected SizeSpec onPrepare(@NonNull final PreparationContext aCtx) {
+        final float fElementHeight = aCtx.getAvailableHeight() - getOutlineYSum();
 
-  @Override
-  protected void onMarkAsNotPrepared ()
-  {
-    // Nada
-  }
+        // Use the fixed height
+        return new SizeSpec(WIDTH_ZERO, m_fHeight > 0 ? m_fHeight : fElementHeight);
+    }
 
-  @Override
-  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
-  {}
+    @Override
+    protected void onMarkAsNotPrepared() {
+        // Nada
+    }
 
-  @Override
-  public String toString ()
-  {
-    return ToStringGenerator.getDerived (super.toString ()).append ("Height", m_fHeight).getToString ();
-  }
+    public final boolean isVertSplittable() {
+        return m_bVertSplittable;
+    }
 
-  @Nonnull
-  public static PLSpacerY createPrepared (final float fWidth, final float fHeight)
-  {
-    final PLSpacerY ret = new PLSpacerY (fHeight);
-    ret.prepare (new PreparationContext (null, fWidth, fHeight));
-    return ret;
-  }
+    @NonNull
+    public final PLSpacerY setVertSplittable(final boolean bVertSplittable) {
+        m_bVertSplittable = bVertSplittable;
+        return this;
+    }
+
+    @Override
+    @NonNull
+    public PLSpacerY internalCreateNewVertSplitObject(@NonNull final PLSpacerY aBase) {
+        final PLSpacerY ret = new PLSpacerY();
+        ret.setBasicDataFrom(aBase);
+        return ret;
+    }
+
+    @NonNull
+    public PLSplitResult splitElementVert(final float fAvailableWidth, final float fAvailableHeight) {
+        // Prepared height may be 0 as well
+        final float fPreparedHeight = getPreparedHeight();
+        if (fPreparedHeight <= fAvailableHeight) {
+            // Splitting makes no sense!
+            if (PLDebugLog.isDebugSplit())
+                PLDebugLog.debugSplit(this, "Splitting makes no sense, because part 2 would be empty");
+            return PLSplitResult.allOnFirst();
+        }
+
+        if (fAvailableHeight <= 0)
+            return PLSplitResult.allOnSecond();
+
+        // Splitting should take place, but the second part is always 0 height
+        final float fSpacer1Height = fAvailableHeight;
+        final float fSpacer2Height = 0;
+
+        final PLSpacerY aSpacer1 = new PLSpacerY(fSpacer1Height);
+        aSpacer1.internalMarkAsPrepared(new SizeSpec(WIDTH_ZERO, fSpacer1Height));
+
+        final PLSpacerY aSpacer2 = new PLSpacerY(fSpacer2Height);
+        aSpacer2.internalMarkAsPrepared(new SizeSpec(WIDTH_ZERO, fSpacer2Height));
+
+        return PLSplitResult.createSplit(new PLElementWithSize(aSpacer1, new SizeSpec(WIDTH_ZERO, fSpacer1Height)),
+                new PLElementWithSize(aSpacer2, new SizeSpec(WIDTH_ZERO, fSpacer2Height)));
+    }
+
+    @Override
+    protected void onRender(@NonNull final PageRenderContext aCtx) throws IOException {
+        // Empty
+    }
+
+    @Override
+    public String toString() {
+        return ToStringGenerator.getDerived(super.toString())
+                .append("Height", m_fHeight)
+                .append("VertSplittable", m_bVertSplittable)
+                .getToString();
+    }
+
+    @NonNull
+    public static PLSpacerY createPrepared(final float fHeight) {
+        final PLSpacerY ret = new PLSpacerY(fHeight);
+        ret.prepare(new PreparationContext(null, WIDTH_ZERO, fHeight));
+        return ret;
+    }
 }

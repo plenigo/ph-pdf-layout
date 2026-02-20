@@ -16,7 +16,7 @@
  */
 package com.plenigo.pdflayout.element.hbox;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Horizontal box - groups several columns without having layout information
@@ -24,20 +24,18 @@ import javax.annotation.Nonnull;
  *
  * @author Philip Helger
  */
-public class PLHBox extends AbstractPLHBox <PLHBox>
-{
-  /**
-   * Default constructor for an empty HBox.
-   */
-  public PLHBox ()
-  {}
+public class PLHBox extends AbstractPLHBox<PLHBox> {
+    /**
+     * Default constructor for an empty HBox.
+     */
+    public PLHBox() {
+    }
 
-  @Override
-  @Nonnull
-  public PLHBox internalCreateNewVertSplitObject (@Nonnull final PLHBox aBase)
-  {
-    final PLHBox ret = new PLHBox ();
-    ret.setBasicDataFrom (aBase);
-    return ret;
-  }
+    @Override
+    @NonNull
+    public PLHBox internalCreateNewVertSplitObject(@NonNull final PLHBox aBase) {
+        final PLHBox ret = new PLHBox();
+        ret.setBasicDataFrom(aBase);
+        return ret;
+    }
 }
