@@ -59,7 +59,7 @@
       <dependency>
         <groupId>com.helger.commons</groupId>
         <artifactId>ph-commons-parent-pom</artifactId>
-        <version>12.1.0</version>
+        <version>12.1.3</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -297,14 +297,14 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            <Automatic-Module-Name>com.helger.pdflayout</Automatic-Module-Name>
+            <Automatic-Module-Name>com.plenigo.pdflayout</Automatic-Module-Name>
             <Export-Package>org.apache.pdfbox.pdmodel.font;-split-package:=first,
               org.apache.pdfbox.pdmodel;-split-package:=first,
-              com.helger.pdflayout.*</Export-Package>
+              com.plenigo.pdflayout.*</Export-Package>
             <Private-Package>org.apache.pdfbox.pdmodel.font;-split-package:=first,
               org.apache.pdfbox.pdmodel;-split-package:=first,
-              com.helger.pdflayout.*</Private-Package>
-            <Import-Package>!org.jspecify.annotations.*,*</Import-Package>
+              com.plenigo.pdflayout.*</Private-Package>
+            <Import-Package>!javax.annotation.*,*</Import-Package>
             <Require-Capability>osgi.extender; filter:="(osgi.extender=osgi.serviceloader.registrar)"</Require-Capability>
             <Provide-Capability>osgi.serviceloader; osgi.serviceloader=com.plenigo.pdflayout.config.ThirdPartyModuleProvider_ph_pdf_layout</Provide-Capability>
           </instructions>
