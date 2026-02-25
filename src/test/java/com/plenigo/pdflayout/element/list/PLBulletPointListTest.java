@@ -18,6 +18,7 @@ package com.plenigo.pdflayout.element.list;
 
 import java.io.File;
 
+import com.helger.base.string.StringHelper;
 import com.plenigo.pdflayout.PDFCreationException;
 import com.plenigo.pdflayout.PDFTestComparer;
 import com.plenigo.pdflayout.PLDebugTestRule;
@@ -32,8 +33,6 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
-
-import com.helger.commons.string.StringHelper;
 
 /**
  * Test class for {@link PLBulletPointList}

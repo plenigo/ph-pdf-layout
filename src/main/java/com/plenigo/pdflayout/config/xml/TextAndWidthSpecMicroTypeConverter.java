@@ -16,46 +16,42 @@
  */
 package com.plenigo.pdflayout.config.xml;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.plenigo.pdflayout.spec.TextAndWidthSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
 import com.helger.xml.microdom.util.MicroHelper;
+import com.plenigo.pdflayout.spec.TextAndWidthSpec;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Micro type converter for class {@link TextAndWidthSpec}.
  *
  * @author Philip Helger
  */
-public final class TextAndWidthSpecMicroTypeConverter implements IMicroTypeConverter <TextAndWidthSpec>
-{
-  private static final String ELEMENT_TEXT = "text";
-  private static final String ATTR_WIDTH = "width";
-  private static final String ATTR_DISPLAY_AS_NEWLINE = "newline";
+public final class TextAndWidthSpecMicroTypeConverter implements IMicroTypeConverter<TextAndWidthSpec> {
+    private static final String ELEMENT_TEXT = "text";
+    private static final String ATTR_WIDTH = "width";
+    private static final String ATTR_DISPLAY_AS_NEWLINE = "newline";
 
-  @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final TextAndWidthSpec aValue,
-                                              @Nullable final String sNamespaceURI,
-                                              @Nonnull final String sTagName)
-  {
-    final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
+    @NonNull
+    public IMicroElement convertToMicroElement(@NonNull final TextAndWidthSpec aValue,
+                                               @Nullable final String sNamespaceURI,
+                                               @NonNull final String sTagName) {
+        final IMicroElement aElement = new MicroElement(sNamespaceURI, sTagName);
 
-    aElement.appendElement (sNamespaceURI, ELEMENT_TEXT).appendText (aValue.getText ());
-    aElement.setAttribute (ATTR_WIDTH, aValue.getWidth ());
-    aElement.setAttribute (ATTR_DISPLAY_AS_NEWLINE, aValue.isDisplayAsNewline ());
-    return aElement;
-  }
+        aElement.addElementNS(sNamespaceURI, ELEMENT_TEXT).addText(aValue.getText());
+        aElement.setAttribute(ATTR_WIDTH, aValue.getWidth());
+        aElement.setAttribute(ATTR_DISPLAY_AS_NEWLINE, aValue.isDisplayAsNewline());
+        return aElement;
+    }
 
-  @Nonnull
-  public TextAndWidthSpec convertToNative (@Nonnull final IMicroElement aElement)
-  {
-    final String sText = MicroHelper.getChildTextContent (aElement, ELEMENT_TEXT);
-    final float fWidth = aElement.getAttributeValueAsFloat (ATTR_WIDTH, Float.NaN);
-    final boolean bDisplayAsNewline = aElement.getAttributeValueAsBool (ATTR_DISPLAY_AS_NEWLINE, false);
+    @NonNull
+    public TextAndWidthSpec convertToNative(@NonNull final IMicroElement aElement) {
+        final String sText = MicroHelper.getChildTextContent(aElement, ELEMENT_TEXT);
+        final float fWidth = aElement.getAttributeValueAsFloat(ATTR_WIDTH, Float.NaN);
+        final boolean bDisplayAsNewline = aElement.getAttributeValueAsBool(ATTR_DISPLAY_AS_NEWLINE, false);
 
-    return new TextAndWidthSpec (sText, fWidth, bDisplayAsNewline);
-  }
+        return new TextAndWidthSpec(sText, fWidth, bDisplayAsNewline);
+    }
 }

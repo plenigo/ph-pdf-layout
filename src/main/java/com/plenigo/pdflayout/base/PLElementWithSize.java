@@ -16,126 +16,109 @@
  */
 package com.plenigo.pdflayout.base;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.concurrent.Immutable;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.tostring.ToStringGenerator;
 import com.plenigo.pdflayout.spec.SizeSpec;
+import org.jspecify.annotations.NonNull;
 
 /**
- * Wraps an {@link IPLRenderableObject} together with a size.
+ * Wraps an {@link com.plenigo.pdflayout.base.IPLRenderableObject} together with a size.
  *
  * @author Philip Helger
  */
 @Immutable
-public final class PLElementWithSize
-{
-  private final IPLRenderableObject <?> m_aElement;
-  private final SizeSpec m_aSize;
-  private final SizeSpec m_aSizeFull;
+public final class PLElementWithSize {
+    private final com.plenigo.pdflayout.base.IPLRenderableObject<?> m_aElement;
+    private final SizeSpec m_aSize;
+    private final SizeSpec m_aSizeFull;
 
-  /**
-   * Constructor
-   *
-   * @param aElement
-   *        Element itself.
-   * @param aSize
-   *        Size of the element without padding, border and margin
-   */
-  public PLElementWithSize (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final SizeSpec aSize)
-  {
-    this (aElement, aSize, aSize.plus (aElement.getOutlineXSum (), aElement.getOutlineYSum ()));
-  }
+    /**
+     * Constructor
+     *
+     * @param aElement Element itself.
+     * @param aSize    Size of the element without padding, border and margin
+     */
+    public PLElementWithSize(@NonNull final IPLRenderableObject<?> aElement, @NonNull final SizeSpec aSize) {
+        this(aElement, aSize, aSize.plus(aElement.getOutlineXSum(), aElement.getOutlineYSum()));
+    }
 
-  /**
-   * Constructor. This constructor is only present for the unlikely case that
-   * the full size differs from the raw size with all the outlines added.
-   *
-   * @param aElement
-   *        Element itself.
-   * @param aSize
-   *        Size of the element without padding and margin
-   * @param aSizeFull
-   *        Size of the element with padding, border and margin
-   */
-  public PLElementWithSize (@Nonnull final IPLRenderableObject <?> aElement,
-                            @Nonnull final SizeSpec aSize,
-                            @Nonnull final SizeSpec aSizeFull)
-  {
-    ValueEnforcer.notNull (aElement, "Element");
-    ValueEnforcer.notNull (aSize, "Size");
-    ValueEnforcer.notNull (aSizeFull, "SizeFull");
-    m_aElement = aElement;
-    m_aSize = aSize;
-    m_aSizeFull = aSizeFull;
-  }
+    /**
+     * Constructor. This constructor is only present for the unlikely case that the full size differs
+     * from the raw size with all the outlines added.
+     *
+     * @param aElement  Element itself.
+     * @param aSize     Size of the element without padding, border and margin
+     * @param aSizeFull Size of the element with padding, border and margin
+     */
+    public PLElementWithSize(@NonNull final IPLRenderableObject<?> aElement,
+                             @NonNull final SizeSpec aSize,
+                             @NonNull final SizeSpec aSizeFull) {
+        ValueEnforcer.notNull(aElement, "Element");
+        ValueEnforcer.notNull(aSize, "Size");
+        ValueEnforcer.notNull(aSizeFull, "SizeFull");
+        m_aElement = aElement;
+        m_aSize = aSize;
+        m_aSizeFull = aSizeFull;
+    }
 
-  /**
-   * @return The contained element.
-   */
-  @Nonnull
-  public IPLRenderableObject <?> getElement ()
-  {
-    return m_aElement;
-  }
+    /**
+     * @return The contained element.
+     */
+    @NonNull
+    public IPLRenderableObject<?> getElement() {
+        return m_aElement;
+    }
 
-  /**
-   * @return The size without padding or margin
-   */
-  @Nonnull
-  public SizeSpec getSize ()
-  {
-    return m_aSize;
-  }
+    /**
+     * @return The size without padding, border or margin
+     */
+    @NonNull
+    public SizeSpec getSize() {
+        return m_aSize;
+    }
 
-  /**
-   * @return The size with padding or margin
-   */
-  @Nonnull
-  public SizeSpec getSizeFull ()
-  {
-    return m_aSizeFull;
-  }
+    /**
+     * @return The size with padding, border or margin
+     */
+    @NonNull
+    public SizeSpec getSizeFull() {
+        return m_aSizeFull;
+    }
 
-  /**
-   * @return Width without padding or margin
-   */
-  public float getWidth ()
-  {
-    return m_aSize.getWidth ();
-  }
+    /**
+     * @return Width without padding, border or margin
+     */
+    public float getWidth() {
+        return m_aSize.getWidth();
+    }
 
-  /**
-   * @return Width with padding and margin
-   */
-  public float getWidthFull ()
-  {
-    return m_aSizeFull.getWidth ();
-  }
+    /**
+     * @return Width with padding, border and margin
+     */
+    public float getWidthFull() {
+        return m_aSizeFull.getWidth();
+    }
 
-  /**
-   * @return Height without padding or margin
-   */
-  public float getHeight ()
-  {
-    return m_aSize.getHeight ();
-  }
+    /**
+     * @return Height without padding, border or margin
+     */
+    public float getHeight() {
+        return m_aSize.getHeight();
+    }
 
-  /**
-   * @return Height with padding and margin
-   */
-  public float getHeightFull ()
-  {
-    return m_aSizeFull.getHeight ();
-  }
+    /**
+     * @return Height with padding, border and margin
+     */
+    public float getHeightFull() {
+        return m_aSizeFull.getHeight();
+    }
 
-  @Override
-  public String toString ()
-  {
-    return new ToStringGenerator (this).append ("element", m_aElement)
-                                       .append ("size", m_aSize)
-                                       .append ("sizeFull", m_aSizeFull)
-                                       .getToString ();
-  }
+    @Override
+    public String toString() {
+        return new ToStringGenerator(this).append("Element", m_aElement)
+                .append("Size", m_aSize)
+                .append("SizeFull", m_aSizeFull)
+                .getToString();
+    }
 }

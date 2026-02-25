@@ -16,26 +16,23 @@
  */
 package com.plenigo.pdflayout.config;
 
-import javax.annotation.Nonnull;
-
-import com.helger.commons.annotation.IsSPIImplementation;
-import com.plenigo.pdflayout.spec.PreloadFontManager;
+import com.helger.annotation.style.IsSPIImplementation;
 import com.helger.xml.microdom.convert.IMicroTypeConverterRegistrarSPI;
 import com.helger.xml.microdom.convert.IMicroTypeConverterRegistry;
+import com.plenigo.pdflayout.spec.PreloadFontManager;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Mock SPI implementation
- * 
+ *
  * @author Philip Helger
  */
 @IsSPIImplementation
-public final class MockPDFLayoutMicroTypeConverterRegistrySPI implements IMicroTypeConverterRegistrarSPI
-{
-  public static final PreloadFontManager PRELOAD_FONT_MANAGER = new PreloadFontManager ();
+public final class MockPDFLayoutMicroTypeConverterRegistrySPI implements IMicroTypeConverterRegistrarSPI {
+    public static final PreloadFontManager PRELOAD_FONT_MANAGER = new PreloadFontManager();
 
-  @Override
-  public void registerMicroTypeConverter (@Nonnull final IMicroTypeConverterRegistry aRegistry)
-  {
-    PDFMicroTypeConverterRegistry.registerMicroTypeConverter (aRegistry, PRELOAD_FONT_MANAGER);
-  }
+    @Override
+    public void registerMicroTypeConverter(@NonNull final IMicroTypeConverterRegistry aRegistry) {
+        PDFMicroTypeConverterRegistry.registerMicroTypeConverter(aRegistry, PRELOAD_FONT_MANAGER);
+    }
 }

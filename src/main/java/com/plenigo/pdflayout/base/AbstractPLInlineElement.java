@@ -16,29 +16,27 @@
  */
 package com.plenigo.pdflayout.base;
 
-import javax.annotation.Nonnull;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Abstract implementation of {@link IPLInlineElement}
  *
+ * @param <IMPLTYPE> The implementation type of this class.
+ *
  * @author Philip Helger
- * @param <IMPLTYPE>
- *        The implementation type of this class.
  */
-public abstract class AbstractPLInlineElement <IMPLTYPE extends AbstractPLInlineElement <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
-                                              implements
-                                              IPLInlineElement <IMPLTYPE>
-{
-  public AbstractPLInlineElement ()
-  {}
+public abstract class AbstractPLInlineElement<IMPLTYPE extends AbstractPLInlineElement<IMPLTYPE>> extends AbstractPLElement<IMPLTYPE>
+        implements
+        IPLInlineElement<IMPLTYPE> {
+    public AbstractPLInlineElement() {
+    }
 
-  @Override
-  @Nonnull
-  @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
-  {
-    super.setBasicDataFrom (aSource);
-    return thisAsT ();
-  }
+    @Override
+    @NonNull
+    @OverridingMethodsMustInvokeSuper
+    public IMPLTYPE setBasicDataFrom(@NonNull final IMPLTYPE aSource) {
+        super.setBasicDataFrom(aSource);
+        return thisAsT();
+    }
 }

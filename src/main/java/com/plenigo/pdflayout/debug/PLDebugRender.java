@@ -16,17 +16,16 @@
  */
 package com.plenigo.pdflayout.debug;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.NotThreadSafe;
-
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.callback.IThrowingRunnable;
+import com.helger.annotation.concurrent.NotThreadSafe;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.iface.IThrowingRunnable;
 import com.plenigo.pdflayout.base.IPLBlockElement;
 import com.plenigo.pdflayout.base.IPLInlineElement;
 import com.plenigo.pdflayout.base.PLColor;
 import com.plenigo.pdflayout.base.PLPageSet;
 import com.plenigo.pdflayout.spec.BorderStyleSpec;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This class defines stuff for debug rendering.
@@ -35,158 +34,145 @@ import com.plenigo.pdflayout.spec.BorderStyleSpec;
  * @since 4.0.0-b3
  */
 @NotThreadSafe
-public final class PLDebugRender
-{
-  public static final boolean DEFAULT_DEBUG_RENDER = false;
+public final class PLDebugRender {
+    public static final boolean DEFAULT_DEBUG_RENDER = false;
 
-  public static final PLColor DEFAULT_COLOR_OUTLINE_PAGESET = new PLColor (0x80, 0x80, 0x80);
-  public static final PLColor DEFAULT_COLOR_OUTLINE_BLOCK_ELEMENT = new PLColor (0xa0, 0xa0, 0xa0);
-  public static final PLColor DEFAULT_COLOR_OUTLINE_INLINE_ELEMENT = new PLColor (0xc0, 0xc0, 0xc0);
+    public static final PLColor DEFAULT_COLOR_OUTLINE_PAGESET = new PLColor(0x80, 0x80, 0x80);
+    public static final PLColor DEFAULT_COLOR_OUTLINE_BLOCK_ELEMENT = new PLColor(0xa0, 0xa0, 0xa0);
+    public static final PLColor DEFAULT_COLOR_OUTLINE_INLINE_ELEMENT = new PLColor(0xc0, 0xc0, 0xc0);
 
-  /** red */
-  public static final BorderStyleSpec DEFAULT_BORDER_PAGESET = new BorderStyleSpec (PLColor.RED);
+    /**
+     * red
+     */
+    public static final BorderStyleSpec DEFAULT_BORDER_PAGESET = new BorderStyleSpec(PLColor.RED);
 
-  /** green */
-  public static final BorderStyleSpec DEFAULT_BORDER_BLOCK_ELEMENT = new BorderStyleSpec (PLColor.BLUE);
+    /**
+     * green
+     */
+    public static final BorderStyleSpec DEFAULT_BORDER_BLOCK_ELEMENT = new BorderStyleSpec(PLColor.BLUE);
 
-  /** blue */
-  public static final BorderStyleSpec DEFAULT_BORDER_INLINE_ELEMENT = new BorderStyleSpec (PLColor.GREEN);
+    /**
+     * blue
+     */
+    public static final BorderStyleSpec DEFAULT_BORDER_INLINE_ELEMENT = new BorderStyleSpec(PLColor.GREEN);
 
-  /**
-   * Provide the debug color for elements.
-   *
-   * @author Philip Helger
-   */
-  @FunctionalInterface
-  public interface IDebugColorProvider
-  {
+    /**
+     * Provide the debug color for elements.
+     *
+     * @author Philip Helger
+     */
+    @FunctionalInterface
+    public interface IDebugColorProvider {
+        @Nullable
+        PLColor getDebugColor(@NonNull Object aObject);
+
+        @NonNull
+        static IDebugColorProvider getDefaultOutlineProvider() {
+            return aObj -> {
+                if (aObj instanceof PLPageSet)
+                    return DEFAULT_COLOR_OUTLINE_PAGESET;
+                if (aObj instanceof IPLBlockElement<?>)
+                    return DEFAULT_COLOR_OUTLINE_BLOCK_ELEMENT;
+                if (aObj instanceof IPLInlineElement<?>)
+                    return DEFAULT_COLOR_OUTLINE_INLINE_ELEMENT;
+                return null;
+            };
+        }
+    }
+
+    /**
+     * Provide the debug borders for elements.
+     *
+     * @author Philip Helger
+     */
+    @FunctionalInterface
+    public interface IDebugBorderProvider {
+        @Nullable
+        BorderStyleSpec getDebugBorder(@NonNull Object aObject);
+
+        @NonNull
+        static IDebugBorderProvider getDefaultBorderProvider() {
+            return aObj -> {
+                if (aObj instanceof PLPageSet)
+                    return DEFAULT_BORDER_PAGESET;
+                if (aObj instanceof IPLBlockElement<?>)
+                    return DEFAULT_BORDER_BLOCK_ELEMENT;
+                if (aObj instanceof IPLInlineElement<?>)
+                    return DEFAULT_BORDER_INLINE_ELEMENT;
+                return null;
+            };
+        }
+    }
+
+    private static boolean s_bDebugRender;
+    private static IDebugColorProvider s_aDebugOutlineColorProvider;
+    private static IDebugBorderProvider s_aDebugBorderProvider;
+
+    static {
+        resetToDefault();
+    }
+
+    private PLDebugRender() {
+    }
+
+    /**
+     * Reset all debug rendering stuff to defaults. This includes disabling of
+     * debug rendering.
+     */
+    public static void resetToDefault() {
+        s_bDebugRender = DEFAULT_DEBUG_RENDER;
+        s_aDebugOutlineColorProvider = IDebugColorProvider.getDefaultOutlineProvider();
+        s_aDebugBorderProvider = IDebugBorderProvider.getDefaultBorderProvider();
+    }
+
+    /**
+     * @return <code>true</code> if debug rendering is enabled, <code>false</code>
+     * if not.
+     */
+    public static boolean isDebugRender() {
+        return s_bDebugRender;
+    }
+
+    /**
+     * Enable or disable debug rendering globally.
+     *
+     * @param bDebugRender <code>true</code> to enable it, <code>false</code> to disable it.
+     */
+    public static void setDebugRender(final boolean bDebugRender) {
+        s_bDebugRender = bDebugRender;
+    }
+
+    public static void setDebugOutlineColorProvider(@NonNull final IDebugColorProvider aDebugOutlineColorProvider) {
+        ValueEnforcer.notNull(aDebugOutlineColorProvider, "DebugOutlineColorProvider");
+        s_aDebugOutlineColorProvider = aDebugOutlineColorProvider;
+    }
+
     @Nullable
-    PLColor getDebugColor (@Nonnull Object aObject);
-
-    @Nonnull
-    static IDebugColorProvider getDefaultOutlineProvider ()
-    {
-      return aObj -> {
-        if (aObj instanceof PLPageSet)
-          return DEFAULT_COLOR_OUTLINE_PAGESET;
-        if (aObj instanceof IPLBlockElement <?>)
-          return DEFAULT_COLOR_OUTLINE_BLOCK_ELEMENT;
-        if (aObj instanceof IPLInlineElement <?>)
-          return DEFAULT_COLOR_OUTLINE_INLINE_ELEMENT;
-        return null;
-      };
+    public static PLColor getDebugOutlineColor(@NonNull final Object aObject) {
+        return s_aDebugOutlineColorProvider.getDebugColor(aObject);
     }
-  }
 
-  /**
-   * Provide the debug borders for elements.
-   *
-   * @author Philip Helger
-   */
-  @FunctionalInterface
-  public interface IDebugBorderProvider
-  {
+    public static void setDebugBorderProvider(@NonNull final IDebugBorderProvider aDebugBorderProvider) {
+        ValueEnforcer.notNull(aDebugBorderProvider, "DebugBorderProvider");
+        s_aDebugBorderProvider = aDebugBorderProvider;
+    }
+
     @Nullable
-    BorderStyleSpec getDebugBorder (@Nonnull Object aObject);
-
-    @Nonnull
-    static IDebugBorderProvider getDefaultBorderProvider ()
-    {
-      return aObj -> {
-        if (aObj instanceof PLPageSet)
-          return DEFAULT_BORDER_PAGESET;
-        if (aObj instanceof IPLBlockElement <?>)
-          return DEFAULT_BORDER_BLOCK_ELEMENT;
-        if (aObj instanceof IPLInlineElement <?>)
-          return DEFAULT_BORDER_INLINE_ELEMENT;
-        return null;
-      };
+    public static BorderStyleSpec getDebugBorder(@NonNull final Object aObject) {
+        return s_aDebugBorderProvider.getDebugBorder(aObject);
     }
-  }
 
-  private static boolean s_bDebugRender;
-  private static IDebugColorProvider s_aDebugOutlineColorProvider;
-  private static IDebugBorderProvider s_aDebugBorderProvider;
-
-  static
-  {
-    resetToDefault ();
-  }
-
-  private PLDebugRender ()
-  {}
-
-  /**
-   * Reset all debug rendering stuff to defaults. This includes disabling of
-   * debug rendering.
-   */
-  public static void resetToDefault ()
-  {
-    s_bDebugRender = DEFAULT_DEBUG_RENDER;
-    s_aDebugOutlineColorProvider = IDebugColorProvider.getDefaultOutlineProvider ();
-    s_aDebugBorderProvider = IDebugBorderProvider.getDefaultBorderProvider ();
-  }
-
-  /**
-   * @return <code>true</code> if debug rendering is enabled, <code>false</code>
-   *         if not.
-   */
-  public static boolean isDebugRender ()
-  {
-    return s_bDebugRender;
-  }
-
-  /**
-   * Enable or disable debug rendering globally.
-   *
-   * @param bDebugRender
-   *        <code>true</code> to enable it, <code>false</code> to disable it.
-   */
-  public static void setDebugRender (final boolean bDebugRender)
-  {
-    s_bDebugRender = bDebugRender;
-  }
-
-  public static void setDebugOutlineColorProvider (@Nonnull final IDebugColorProvider aDebugOutlineColorProvider)
-  {
-    ValueEnforcer.notNull (aDebugOutlineColorProvider, "DebugOutlineColorProvider");
-    s_aDebugOutlineColorProvider = aDebugOutlineColorProvider;
-  }
-
-  @Nullable
-  public static PLColor getDebugOutlineColor (@Nonnull final Object aObject)
-  {
-    return s_aDebugOutlineColorProvider.getDebugColor (aObject);
-  }
-
-  public static void setDebugBorderProvider (@Nonnull final IDebugBorderProvider aDebugBorderProvider)
-  {
-    ValueEnforcer.notNull (aDebugBorderProvider, "DebugBorderProvider");
-    s_aDebugBorderProvider = aDebugBorderProvider;
-  }
-
-  @Nullable
-  public static BorderStyleSpec getDebugBorder (@Nonnull final Object aObject)
-  {
-    return s_aDebugBorderProvider.getDebugBorder (aObject);
-  }
-
-  public static <EXTYPE extends Throwable> void withDebugRender (@Nonnull final IThrowingRunnable <EXTYPE> aRunnable) throws EXTYPE
-  {
-    withDebugRender (true, aRunnable);
-  }
-
-  public static <EXTYPE extends Throwable> void withDebugRender (final boolean bDebug,
-                                                                 @Nonnull final IThrowingRunnable <EXTYPE> aRunnable) throws EXTYPE
-  {
-    setDebugRender (bDebug);
-    try
-    {
-      aRunnable.run ();
+    public static <EXTYPE extends Throwable> void withDebugRender(@NonNull final IThrowingRunnable<EXTYPE> aRunnable) throws EXTYPE {
+        withDebugRender(true, aRunnable);
     }
-    finally
-    {
-      resetToDefault ();
+
+    public static <EXTYPE extends Throwable> void withDebugRender(final boolean bDebug,
+                                                                  @NonNull final IThrowingRunnable<EXTYPE> aRunnable) throws EXTYPE {
+        setDebugRender(bDebug);
+        try {
+            aRunnable.run();
+        } finally {
+            resetToDefault();
+        }
     }
-  }
 }

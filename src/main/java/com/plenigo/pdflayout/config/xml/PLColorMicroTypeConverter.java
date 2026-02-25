@@ -16,14 +16,13 @@
  */
 package com.plenigo.pdflayout.config.xml;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.helger.commons.string.StringParser;
-import com.plenigo.pdflayout.base.PLColor;
+import com.helger.base.string.StringParser;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
+import com.plenigo.pdflayout.base.PLColor;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Micro type converter for class {@link PLColor}.
@@ -31,32 +30,29 @@ import com.helger.xml.microdom.convert.IMicroTypeConverter;
  * @author Philip Helger
  * @since 7.2.0
  */
-public final class PLColorMicroTypeConverter implements IMicroTypeConverter <PLColor>
-{
-  private static final String ATTR_RED = "red";
-  private static final String ATTR_GREEN = "green";
-  private static final String ATTR_BLUE = "blue";
+public final class PLColorMicroTypeConverter implements IMicroTypeConverter<PLColor> {
+    private static final String ATTR_RED = "red";
+    private static final String ATTR_GREEN = "green";
+    private static final String ATTR_BLUE = "blue";
 
-  @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final PLColor aObject,
-                                              @Nullable final String sNamespaceURI,
-                                              @Nonnull final String sTagName)
-  {
-    final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
+    @NonNull
+    public IMicroElement convertToMicroElement(@NonNull final PLColor aObject,
+                                               @Nullable final String sNamespaceURI,
+                                               @NonNull final String sTagName) {
+        final IMicroElement aElement = new MicroElement(sNamespaceURI, sTagName);
 
-    aElement.setAttribute (ATTR_RED, aObject.getRed ());
-    aElement.setAttribute (ATTR_GREEN, aObject.getGreen ());
-    aElement.setAttribute (ATTR_BLUE, aObject.getBlue ());
+        aElement.setAttribute(ATTR_RED, aObject.getRed());
+        aElement.setAttribute(ATTR_GREEN, aObject.getGreen());
+        aElement.setAttribute(ATTR_BLUE, aObject.getBlue());
 
-    return aElement;
-  }
+        return aElement;
+    }
 
-  @Nonnull
-  public PLColor convertToNative (@Nonnull final IMicroElement aElement)
-  {
-    final int nRed = StringParser.parseInt (aElement.getAttributeValue (ATTR_RED), 0);
-    final int nGreen = StringParser.parseInt (aElement.getAttributeValue (ATTR_GREEN), 0);
-    final int nBlue = StringParser.parseInt (aElement.getAttributeValue (ATTR_BLUE), 0);
-    return new PLColor (nRed, nGreen, nBlue);
-  }
+    @NonNull
+    public PLColor convertToNative(@NonNull final IMicroElement aElement) {
+        final int nRed = StringParser.parseInt(aElement.getAttributeValue(ATTR_RED), 0);
+        final int nGreen = StringParser.parseInt(aElement.getAttributeValue(ATTR_GREEN), 0);
+        final int nBlue = StringParser.parseInt(aElement.getAttributeValue(ATTR_BLUE), 0);
+        return new PLColor(nRed, nGreen, nBlue);
+    }
 }

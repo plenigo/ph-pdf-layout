@@ -19,11 +19,10 @@ package com.plenigo.pdflayout.spec;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
+import com.helger.base.mock.CommonsAssert;
+import com.helger.unittest.support.TestHelper;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Test;
-
-import com.helger.commons.mock.CommonsAssert;
-import com.helger.commons.mock.CommonsTestHelper;
 
 /**
  * Test class for class {@link PaddingSpec}.
@@ -70,8 +69,8 @@ public final class PaddingSpecTest
     CommonsAssert.assertEquals (0, p.getBottom ());
     CommonsAssert.assertEquals (F1, p.getLeft ());
 
-    CommonsTestHelper.testDefaultImplementationWithEqualContentObject (p, new PaddingSpec (p));
-    CommonsTestHelper.testDefaultSerialization (p);
+    TestHelper.testDefaultImplementationWithEqualContentObject (p, new PaddingSpec (p));
+    TestHelper.testDefaultSerialization (p);
   }
 
   @Test

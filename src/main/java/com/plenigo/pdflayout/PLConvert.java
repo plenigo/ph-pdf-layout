@@ -16,11 +16,10 @@
  */
 package com.plenigo.pdflayout;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.concurrent.Immutable;
-
-import com.helger.commons.CGlobal;
-import com.helger.commons.annotation.PresentForCodeCoverage;
+import com.helger.annotation.Nonnegative;
+import com.helger.annotation.concurrent.Immutable;
+import com.helger.annotation.style.PresentForCodeCoverage;
+import com.helger.base.CGlobal;
 
 /**
  * Conversion utility methods for this project.
@@ -145,12 +144,6 @@ public final class PLConvert
   public static float units2cm (final float fUnits, @Nonnegative final int nDPI)
   {
     return fUnits * CGlobal.CM_PER_INCH / nDPI;
-  }
-
-  @Deprecated (forRemoval = true, since = "7.3.7")
-  public static float getWidthForFontSize (final float fWidth, final float fFontSize)
-  {
-    return getForFontSize (fWidth, fFontSize);
   }
 
   public static float getForFontSize (final float fWidth, final float fFontSize)

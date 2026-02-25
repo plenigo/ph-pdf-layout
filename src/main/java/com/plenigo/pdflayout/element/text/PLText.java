@@ -16,29 +16,25 @@
  */
 package com.plenigo.pdflayout.element.text;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.plenigo.pdflayout.spec.FontSpec;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Render text
  *
  * @author Philip Helger
  */
-public class PLText extends AbstractPLText <PLText>
-{
-  public PLText (@Nullable final String sText, @Nonnull final FontSpec aFontSpec)
-  {
-    super (sText, aFontSpec);
-  }
+public class PLText extends AbstractPLText<PLText> {
+    public PLText(@Nullable final String sText, @NonNull final FontSpec aFontSpec) {
+        super(sText, aFontSpec);
+    }
 
-  @Override
-  @Nonnull
-  public PLText internalCreateNewVertSplitObject (@Nonnull final PLText aBase)
-  {
-    final PLText ret = new PLText (null, aBase.getFontSpec ());
-    ret.setBasicDataFrom (aBase);
-    return ret;
-  }
+    @Override
+    @NonNull
+    public PLText internalCreateNewVertSplitObject(@NonNull final PLText aBase) {
+        final PLText ret = new PLText(null, aBase.getFontSpec());
+        ret.setBasicDataFrom(aBase);
+        return ret;
+    }
 }

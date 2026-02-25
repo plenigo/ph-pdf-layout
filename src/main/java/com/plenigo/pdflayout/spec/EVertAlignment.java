@@ -16,48 +16,49 @@
  */
 package com.plenigo.pdflayout.spec;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.id.IHasID;
-import com.helger.commons.lang.EnumHelper;
+import com.helger.annotation.Nonempty;
+import com.helger.base.id.IHasID;
+import com.helger.base.lang.EnumHelper;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents the possible vertical alignments.
  *
  * @author Philip Helger
  */
-public enum EVertAlignment implements IHasID <String>
-{
-  /** Align top */
-  TOP ("top"),
+public enum EVertAlignment implements IHasID<String> {
+    /**
+     * Align top
+     */
+    TOP("top"),
 
-  /** Align middle */
-  MIDDLE ("middle"),
+    /**
+     * Align middle
+     */
+    MIDDLE("middle"),
 
-  /** Align bottom */
-  BOTTOM ("bottom");
+    /**
+     * Align bottom
+     */
+    BOTTOM("bottom");
 
-  public static final EVertAlignment DEFAULT = TOP;
+    public static final EVertAlignment DEFAULT = TOP;
 
-  private final String m_sID;
+    private final String m_sID;
 
-  EVertAlignment (@Nonnull @Nonempty final String sID)
-  {
-    m_sID = sID;
-  }
+    EVertAlignment(@NonNull @Nonempty final String sID) {
+        m_sID = sID;
+    }
 
-  @Nonnull
-  @Nonempty
-  public String getID ()
-  {
-    return m_sID;
-  }
+    @NonNull
+    @Nonempty
+    public String getID() {
+        return m_sID;
+    }
 
-  @Nullable
-  public static EVertAlignment getFromIDOrNull (@Nullable final String sID)
-  {
-    return EnumHelper.getFromIDOrNull (EVertAlignment.class, sID);
-  }
+    @Nullable
+    public static EVertAlignment getFromIDOrNull(@Nullable final String sID) {
+        return EnumHelper.getFromIDOrNull(EVertAlignment.class, sID);
+    }
 }

@@ -16,163 +16,147 @@
  */
 package com.plenigo.pdflayout.base;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.tostring.ToStringGenerator;
 import com.plenigo.pdflayout.spec.BorderSpec;
 import com.plenigo.pdflayout.spec.MarginSpec;
 import com.plenigo.pdflayout.spec.PaddingSpec;
 import com.plenigo.pdflayout.spec.SizeSpec;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
- * Abstract renderable PL element having a minimum size, a maximum size, margin,
- * border, padding and a fill color.
+ * Abstract renderable PL element having a minimum size, a maximum size, margin, border, padding and
+ * a fill color.
+ *
+ * @param <IMPLTYPE> The implementation type of this class.
  *
  * @author Philip Helger
- * @param <IMPLTYPE>
- *        The implementation type of this class.
  */
-public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>> extends
-                                        AbstractPLRenderableObject <IMPLTYPE> implements
-                                        IPLElement <IMPLTYPE>
-{
-  private SizeSpec m_aMinSize = DEFAULT_MIN_SIZE;
-  private SizeSpec m_aMaxSize = DEFAULT_MAX_SIZE;
-  private MarginSpec m_aMargin = DEFAULT_MARGIN;
-  private BorderSpec m_aBorder = DEFAULT_BORDER;
-  private PaddingSpec m_aPadding = DEFAULT_PADDING;
-  private PLColor m_aFillColor = DEFAULT_FILL_COLOR;
+public abstract class AbstractPLElement<IMPLTYPE extends AbstractPLElement<IMPLTYPE>> extends
+        AbstractPLRenderableObject<IMPLTYPE> implements
+        IPLElement<IMPLTYPE> {
+    private SizeSpec m_aMinSize = DEFAULT_MIN_SIZE;
+    private SizeSpec m_aMaxSize = DEFAULT_MAX_SIZE;
+    private MarginSpec m_aMargin = DEFAULT_MARGIN;
+    private BorderSpec m_aBorder = DEFAULT_BORDER;
+    private PaddingSpec m_aPadding = DEFAULT_PADDING;
+    private PLColor m_aFillColor = DEFAULT_FILL_COLOR;
 
-  public AbstractPLElement ()
-  {}
+    public AbstractPLElement() {
+    }
 
-  @Override
-  @Nonnull
-  @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
-  {
-    super.setBasicDataFrom (aSource);
-    setMargin (aSource.getMargin ());
-    setBorder (aSource.getBorder ());
-    setPadding (aSource.getPadding ());
-    setFillColor (aSource.getFillColor ());
-    return thisAsT ();
-  }
+    @Override
+    @NonNull
+    @OverridingMethodsMustInvokeSuper
+    public IMPLTYPE setBasicDataFrom(@NonNull final IMPLTYPE aSource) {
+        super.setBasicDataFrom(aSource);
+        // Min size and max size is not set on purpose
+        setMargin(aSource.getMargin());
+        setBorder(aSource.getBorder());
+        setPadding(aSource.getPadding());
+        setFillColor(aSource.getFillColor());
+        return thisAsT();
+    }
 
-  @Nonnull
-  public final SizeSpec getMinSize ()
-  {
-    return m_aMinSize;
-  }
+    @NonNull
+    public final SizeSpec getMinSize() {
+        return m_aMinSize;
+    }
 
-  @Nonnull
-  public final IMPLTYPE setMinSize (@Nonnull final SizeSpec aMinSize)
-  {
-    m_aMinSize = ValueEnforcer.notNull (aMinSize, "MinSize");
-    onRenderSizeChange ();
-    return thisAsT ();
-  }
+    @NonNull
+    public final IMPLTYPE setMinSize(@NonNull final SizeSpec aMinSize) {
+        m_aMinSize = ValueEnforcer.notNull(aMinSize, "MinSize");
+        onRenderSizeChange();
+        return thisAsT();
+    }
 
-  @Nonnull
-  public final SizeSpec getMaxSize ()
-  {
-    return m_aMaxSize;
-  }
+    @NonNull
+    public final SizeSpec getMaxSize() {
+        return m_aMaxSize;
+    }
 
-  @Nonnull
-  public final IMPLTYPE setMaxSize (@Nonnull final SizeSpec aMaxSize)
-  {
-    m_aMaxSize = ValueEnforcer.notNull (aMaxSize, "MaxSize");
-    onRenderSizeChange ();
-    return thisAsT ();
-  }
+    @NonNull
+    public final IMPLTYPE setMaxSize(@NonNull final SizeSpec aMaxSize) {
+        m_aMaxSize = ValueEnforcer.notNull(aMaxSize, "MaxSize");
+        onRenderSizeChange();
+        return thisAsT();
+    }
 
-  @Nonnull
-  public final MarginSpec getMargin ()
-  {
-    return m_aMargin;
-  }
+    @NonNull
+    public final MarginSpec getMargin() {
+        return m_aMargin;
+    }
 
-  @Nonnull
-  public final IMPLTYPE setMargin (@Nonnull final MarginSpec aMargin)
-  {
-    ValueEnforcer.notNull (aMargin, "Mergin");
-    m_aMargin = aMargin;
-    return thisAsT ();
-  }
+    @NonNull
+    public final IMPLTYPE setMargin(@NonNull final MarginSpec aMargin) {
+        ValueEnforcer.notNull(aMargin, "Mergin");
+        m_aMargin = aMargin;
+        return thisAsT();
+    }
 
-  @Nonnull
-  public final BorderSpec getBorder ()
-  {
-    return m_aBorder;
-  }
+    @NonNull
+    public final BorderSpec getBorder() {
+        return m_aBorder;
+    }
 
-  @Nonnull
-  public final IMPLTYPE setBorder (@Nonnull final BorderSpec aBorder)
-  {
-    ValueEnforcer.notNull (aBorder, "Border");
-    m_aBorder = aBorder;
-    return thisAsT ();
-  }
+    @NonNull
+    public final IMPLTYPE setBorder(@NonNull final BorderSpec aBorder) {
+        ValueEnforcer.notNull(aBorder, "Border");
+        m_aBorder = aBorder;
+        return thisAsT();
+    }
 
-  @Nonnull
-  public final PaddingSpec getPadding ()
-  {
-    return m_aPadding;
-  }
+    @NonNull
+    public final PaddingSpec getPadding() {
+        return m_aPadding;
+    }
 
-  @Nonnull
-  public final IMPLTYPE setPadding (@Nonnull final PaddingSpec aPadding)
-  {
-    ValueEnforcer.notNull (aPadding, "Padding");
-    m_aPadding = aPadding;
-    return thisAsT ();
-  }
+    @NonNull
+    public final IMPLTYPE setPadding(@NonNull final PaddingSpec aPadding) {
+        ValueEnforcer.notNull(aPadding, "Padding");
+        m_aPadding = aPadding;
+        return thisAsT();
+    }
 
-  @Nullable
-  public final PLColor getFillColor ()
-  {
-    return m_aFillColor;
-  }
+    @Nullable
+    public final PLColor getFillColor() {
+        return m_aFillColor;
+    }
 
-  @Nonnull
-  public final IMPLTYPE setFillColor (@Nullable final PLColor aFillColor)
-  {
-    m_aFillColor = aFillColor;
-    return thisAsT ();
-  }
+    @NonNull
+    public final IMPLTYPE setFillColor(@Nullable final PLColor aFillColor) {
+        m_aFillColor = aFillColor;
+        return thisAsT();
+    }
 
-  @Override
-  @Nonnull
-  @OverridingMethodsMustInvokeSuper
-  protected SizeSpec getRenderSize (@Nonnull final SizeSpec aPreparedSize)
-  {
-    ValueEnforcer.notNull (aPreparedSize, "Size");
+    @Override
+    @NonNull
+    @OverridingMethodsMustInvokeSuper
+    protected SizeSpec getRenderSize(@NonNull final SizeSpec aPreparedSize) {
+        ValueEnforcer.notNull(aPreparedSize, "Size");
 
-    // Consider min size here
-    float fRealWidth = Math.max (m_aMinSize.getWidth (), aPreparedSize.getWidth ());
-    float fRealHeight = Math.max (m_aMinSize.getHeight (), aPreparedSize.getHeight ());
+        // Consider min size here
+        float fRealWidth = Math.max(m_aMinSize.getWidth(), aPreparedSize.getWidth());
+        float fRealHeight = Math.max(m_aMinSize.getHeight(), aPreparedSize.getHeight());
 
-    // Consider max size here
-    fRealWidth = Math.min (m_aMaxSize.getWidth (), fRealWidth);
-    fRealHeight = Math.min (m_aMaxSize.getHeight (), fRealHeight);
+        // Consider max size here
+        fRealWidth = Math.min(m_aMaxSize.getWidth(), fRealWidth);
+        fRealHeight = Math.min(m_aMaxSize.getHeight(), fRealHeight);
 
-    return new SizeSpec (fRealWidth, fRealHeight);
-  }
+        return new SizeSpec(fRealWidth, fRealHeight);
+    }
 
-  @Override
-  public String toString ()
-  {
-    return ToStringGenerator.getDerived (super.toString ())
-                            .append ("MinSize", m_aMinSize)
-                            .append ("MaxSize", m_aMaxSize)
-                            .append ("Margin", m_aMargin)
-                            .append ("Border", m_aBorder)
-                            .append ("Padding", m_aPadding)
-                            .appendIfNotNull ("FillColor", m_aFillColor)
-                            .getToString ();
-  }
+    @Override
+    public String toString() {
+        return ToStringGenerator.getDerived(super.toString())
+                .append("MinSize", m_aMinSize)
+                .append("MaxSize", m_aMaxSize)
+                .append("Margin", m_aMargin)
+                .append("Border", m_aBorder)
+                .append("Padding", m_aPadding)
+                .appendIfNotNull("FillColor", m_aFillColor)
+                .getToString();
+    }
 }

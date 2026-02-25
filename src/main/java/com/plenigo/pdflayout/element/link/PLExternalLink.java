@@ -16,10 +16,9 @@
  */
 package com.plenigo.pdflayout.element.link;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.plenigo.pdflayout.base.IPLRenderableObject;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An external link that references to an external URI. Use
@@ -28,24 +27,20 @@ import com.plenigo.pdflayout.base.IPLRenderableObject;
  * @author Philip Helger
  * @since 6.0.1
  */
-public class PLExternalLink extends AbstractPLExternalLink <PLExternalLink>
-{
-  public PLExternalLink ()
-  {
-    super (null);
-  }
+public class PLExternalLink extends AbstractPLExternalLink<PLExternalLink> {
+    public PLExternalLink() {
+        super(null);
+    }
 
-  public PLExternalLink (@Nullable final IPLRenderableObject <?> aElement)
-  {
-    super (aElement);
-  }
+    public PLExternalLink(@Nullable final IPLRenderableObject<?> aElement) {
+        super(aElement);
+    }
 
-  @Override
-  @Nonnull
-  public PLExternalLink internalCreateNewVertSplitObject (@Nonnull final PLExternalLink aBase)
-  {
-    final PLExternalLink ret = new PLExternalLink ();
-    ret.setBasicDataFrom (aBase);
-    return ret;
-  }
+    @Override
+    @NonNull
+    public PLExternalLink internalCreateNewVertSplitObject(@NonNull final PLExternalLink aBase) {
+        final PLExternalLink ret = new PLExternalLink();
+        ret.setBasicDataFrom(aBase);
+        return ret;
+    }
 }

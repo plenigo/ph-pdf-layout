@@ -16,50 +16,45 @@
  */
 package com.plenigo.pdflayout.link;
 
-import javax.annotation.Nonnull;
-
+import com.helger.annotation.Nonempty;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
-
-import com.helger.commons.annotation.Nonempty;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Contains the highlight mode for links.
  *
  * @author Philip Helger
  */
-public enum ELinkHighlightMode
-{
-  /**
-   * Constant values of the Text as defined in the PDF 1.6 reference Table 8.19.
-   */
-  NONE (PDAnnotationLink.HIGHLIGHT_MODE_NONE),
-  /**
-   * Constant values of the Text as defined in the PDF 1.6 reference Table 8.19.
-   */
-  INVERT (PDAnnotationLink.HIGHLIGHT_MODE_INVERT),
-  /**
-   * Constant values of the Text as defined in the PDF 1.6 reference Table 8.19.
-   */
-  OUTLINE (PDAnnotationLink.HIGHLIGHT_MODE_OUTLINE),
-  /**
-   * Constant values of the Text as defined in the PDF 1.6 reference Table 8.19.
-   */
-  PUSH (PDAnnotationLink.HIGHLIGHT_MODE_PUSH);
+public enum ELinkHighlightMode {
+    /**
+     * Constant values of the Text as defined in the PDF 1.6 reference Table 8.19.
+     */
+    NONE(PDAnnotationLink.HIGHLIGHT_MODE_NONE),
+    /**
+     * Constant values of the Text as defined in the PDF 1.6 reference Table 8.19.
+     */
+    INVERT(PDAnnotationLink.HIGHLIGHT_MODE_INVERT),
+    /**
+     * Constant values of the Text as defined in the PDF 1.6 reference Table 8.19.
+     */
+    OUTLINE(PDAnnotationLink.HIGHLIGHT_MODE_OUTLINE),
+    /**
+     * Constant values of the Text as defined in the PDF 1.6 reference Table 8.19.
+     */
+    PUSH(PDAnnotationLink.HIGHLIGHT_MODE_PUSH);
 
-  // Default in PDFBox
-  public static final ELinkHighlightMode DEFAULT = INVERT;
+    // Default in PDFBox
+    public static final ELinkHighlightMode DEFAULT = INVERT;
 
-  private final String m_sID;
+    private final String m_sID;
 
-  ELinkHighlightMode (@Nonnull @Nonempty final String sID)
-  {
-    m_sID = sID;
-  }
+    ELinkHighlightMode(@NonNull @Nonempty final String sID) {
+        m_sID = sID;
+    }
 
-  @Nonnull
-  @Nonempty
-  public String getID ()
-  {
-    return m_sID;
-  }
+    @NonNull
+    @Nonempty
+    public String getID() {
+        return m_sID;
+    }
 }

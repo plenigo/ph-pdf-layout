@@ -16,16 +16,16 @@
  */
 package com.plenigo.pdflayout.spec;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.equals.EqualsHelper;
-import com.helger.commons.hashcode.HashCodeGenerator;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.Nonempty;
+import com.helger.annotation.Nonnegative;
+import com.helger.annotation.concurrent.Immutable;
+import com.helger.annotation.style.MustImplementEqualsAndHashcode;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.equals.EqualsHelper;
+import com.helger.base.hashcode.HashCodeGenerator;
+import com.helger.base.tostring.ToStringGenerator;
+import org.jspecify.annotations.NonNull;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 import java.io.Serializable;
 
 /**
@@ -44,10 +44,10 @@ import java.io.Serializable;
 @Immutable
 @MustImplementEqualsAndHashcode
 public class WidthSpec implements Serializable {
-    private final EValueUOMType m_eType;
+    private final com.plenigo.pdflayout.spec.EValueUOMType m_eType;
     private final float m_fValue;
 
-    public WidthSpec(@Nonnull final EValueUOMType eType, final float fValue) {
+    public WidthSpec(@NonNull final EValueUOMType eType, final float fValue) {
         ValueEnforcer.notNull(eType, "WidthType");
         m_eType = eType;
         m_fValue = fValue;
@@ -56,7 +56,7 @@ public class WidthSpec implements Serializable {
     /**
      * @return The width type. Never <code>null</code>.
      */
-    @Nonnull
+    @NonNull
     public final EValueUOMType getType() {
         return m_eType;
     }
@@ -64,7 +64,7 @@ public class WidthSpec implements Serializable {
     /**
      * @return The ID of the width type. Never <code>null</code>.
      */
-    @Nonnull
+    @NonNull
     @Nonempty
     public final String getTypeID() {
         return m_eType.getID();
@@ -82,14 +82,14 @@ public class WidthSpec implements Serializable {
      * @return <code>true</code> if type is 'star'.
      */
     public final boolean isStar() {
-        return m_eType == EValueUOMType.STAR;
+        return m_eType == com.plenigo.pdflayout.spec.EValueUOMType.STAR;
     }
 
     /**
      * @return <code>true</code> if type is 'auto'.
      */
     public final boolean isAuto() {
-        return m_eType == EValueUOMType.AUTO;
+        return m_eType == com.plenigo.pdflayout.spec.EValueUOMType.AUTO;
     }
 
     /**
@@ -153,10 +153,10 @@ public class WidthSpec implements Serializable {
      *
      * @return Never <code>null</code>.
      */
-    @Nonnull
+    @NonNull
     public static WidthSpec abs(@Nonnegative final float fValue) {
         ValueEnforcer.isGT0(fValue, "Value");
-        return new WidthSpec(EValueUOMType.ABSOLUTE, fValue);
+        return new WidthSpec(com.plenigo.pdflayout.spec.EValueUOMType.ABSOLUTE, fValue);
     }
 
     /**
@@ -166,10 +166,10 @@ public class WidthSpec implements Serializable {
      *
      * @return Never <code>null</code>.
      */
-    @Nonnull
+    @NonNull
     public static WidthSpec perc(@Nonnegative final float fPerc) {
         ValueEnforcer.isGT0(fPerc, "Perc");
-        return new WidthSpec(EValueUOMType.PERCENTAGE, fPerc);
+        return new WidthSpec(com.plenigo.pdflayout.spec.EValueUOMType.PERCENTAGE, fPerc);
     }
 
     /**
@@ -177,9 +177,9 @@ public class WidthSpec implements Serializable {
      *
      * @return Never <code>null</code>.
      */
-    @Nonnull
+    @NonNull
     public static WidthSpec star() {
-        return new WidthSpec(EValueUOMType.STAR, 0);
+        return new WidthSpec(com.plenigo.pdflayout.spec.EValueUOMType.STAR, 0);
     }
 
     /**
@@ -187,7 +187,7 @@ public class WidthSpec implements Serializable {
      *
      * @return Never <code>null</code>.
      */
-    @Nonnull
+    @NonNull
     public static WidthSpec auto() {
         return new WidthSpec(EValueUOMType.AUTO, 0);
     }

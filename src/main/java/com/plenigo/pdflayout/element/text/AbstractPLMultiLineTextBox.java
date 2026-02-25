@@ -32,12 +32,15 @@
  */
 package com.plenigo.pdflayout.element.text;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.collection.ArrayHelper;
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.state.EChange;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.CheckForSigned;
+import com.helger.annotation.Nonnegative;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.base.array.ArrayHelper;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.state.EChange;
+import com.helger.base.tostring.ToStringGenerator;
+import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.ICommonsList;
 import com.plenigo.pdflayout.base.AbstractPLElement;
 import com.plenigo.pdflayout.base.AbstractPLRenderableObject;
 import com.plenigo.pdflayout.base.IPLRenderableObject;
@@ -62,14 +65,11 @@ import com.plenigo.pdflayout.spec.LoadedFont;
 import com.plenigo.pdflayout.spec.SizeSpec;
 import com.plenigo.pdflayout.spec.TextAndWidthSpec;
 import com.plenigo.pdflayout.spec.WidthSpec;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.CheckForSigned;
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -109,29 +109,29 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
     public AbstractPLMultiLineTextBox() {
     }
 
-    @Nonnull
+    @NonNull
     public final EHorzAlignment getHorzAlign() {
         return m_eHorzAlign;
     }
 
-    @Nonnull
-    public final IMPLTYPE setHorzAlign(@Nonnull final EHorzAlignment eHorzAlign) {
+    @NonNull
+    public final IMPLTYPE setHorzAlign(@NonNull final EHorzAlignment eHorzAlign) {
         m_eHorzAlign = ValueEnforcer.notNull(eHorzAlign, "HorzAlign");
         return thisAsT();
     }
 
     @Override
-    @Nonnull
+    @NonNull
     @OverridingMethodsMustInvokeSuper
-    public IMPLTYPE setBasicDataFrom(@Nonnull final IMPLTYPE aSource) {
+    public IMPLTYPE setBasicDataFrom(@NonNull final IMPLTYPE aSource) {
         super.setBasicDataFrom(aSource);
         setVertSplittable(aSource.isVertSplittable());
         setFullWidth(aSource.isFullWidth());
         return thisAsT();
     }
 
-    @Nonnull
-    public IMPLTYPE addMultiLineText(@Nonnull final PLMultiLineText aElement) {
+    @NonNull
+    public IMPLTYPE addMultiLineText(@NonNull final PLMultiLineText aElement) {
         m_aTextList.add(aElement);
         return thisAsT();
     }
@@ -147,7 +147,7 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
     /**
      * @return All rows. Never <code>null</code>.
      */
-    @Nonnull
+    @NonNull
     public Iterable<PLVBoxRow> getRows() {
         return m_aRows;
     }
@@ -181,7 +181,7 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
      * @return The default height to be used for rows if none is provided. May not
      * be <code>null</code>.
      */
-    @Nonnull
+    @NonNull
     public HeightSpec getDefaultHeight() {
         return HeightSpec.auto();
     }
@@ -190,7 +190,7 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
         return m_bVertSplittable;
     }
 
-    @Nonnull
+    @NonNull
     public final IMPLTYPE setVertSplittable(final boolean bVertSplittable) {
         m_bVertSplittable = bVertSplittable;
         return thisAsT();
@@ -216,15 +216,15 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
      *
      * @return this for chaining
      */
-    @Nonnull
+    @NonNull
     public final IMPLTYPE setFullWidth(final boolean bFullWidth) {
         m_bFullWidth = bFullWidth;
         return thisAsT();
     }
 
     @Override
-    @Nonnull
-    public EChange visit(@Nonnull final IPLVisitor aVisitor) throws IOException {
+    @NonNull
+    public EChange visit(@NonNull final IPLVisitor aVisitor) throws IOException {
         EChange ret = EChange.UNCHANGED;
         for (final PLVBoxRow aRow : m_aRows)
             ret = ret.or(aRow.getElement().visit(aVisitor));
@@ -233,7 +233,7 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
 
     @Override
     @OverridingMethodsMustInvokeSuper
-    public SizeSpec onPrepare(@Nonnull final PreparationContext aCtx) {
+    public SizeSpec onPrepare(@NonNull final PreparationContext aCtx) {
         final float fElementWidth = aCtx.getAvailableWidth() - getOutlineXSum();
         final float fElementHeight = aCtx.getAvailableHeight() - getOutlineYSum();
 
@@ -785,19 +785,19 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
 
         // Excluding padding/margin
         aVBox1.internalMarkAsPrepared(new SizeSpec(fAvailableWidth, fUsedVBox1RowHeight));
-        aVBox1.m_aPreparedRowSize = ArrayHelper.newArray(aVBox1RowSize, SizeSpec.class);
-        aVBox1.m_aPreparedElementSize = ArrayHelper.newArray(aVBox1ElementSize, SizeSpec.class);
+        aVBox1.m_aPreparedRowSize = ArrayHelper.createArray(aVBox1RowSize, SizeSpec.class);
+        aVBox1.m_aPreparedElementSize = ArrayHelper.createArray(aVBox1ElementSize, SizeSpec.class);
 
         aVBox2.internalMarkAsPrepared(new SizeSpec(fAvailableWidth, fUsedVBox2RowHeight));
-        aVBox2.m_aPreparedRowSize = ArrayHelper.newArray(aVBox2RowSize, SizeSpec.class);
-        aVBox2.m_aPreparedElementSize = ArrayHelper.newArray(aVBox2ElementSize, SizeSpec.class);
+        aVBox2.m_aPreparedRowSize = ArrayHelper.createArray(aVBox2RowSize, SizeSpec.class);
+        aVBox2.m_aPreparedElementSize = ArrayHelper.createArray(aVBox2ElementSize, SizeSpec.class);
 
-        return new PLSplitResult(new PLElementWithSize(aVBox1, new SizeSpec(fAvailableWidth, fUsedVBox1RowHeight)),
+        return PLSplitResult.createSplit(new PLElementWithSize(aVBox1, new SizeSpec(fAvailableWidth, fUsedVBox1RowHeight)),
                 new PLElementWithSize(aVBox2, new SizeSpec(fAvailableWidth, fUsedVBox2RowHeight)));
     }
 
     @Override
-    protected void onRender(@Nonnull final PageRenderContext aCtx) throws IOException {
+    protected void onRender(@NonNull final PageRenderContext aCtx) throws IOException {
         final float fCurX = aCtx.getStartLeft() + getOutlineLeft();
         float fCurY = aCtx.getStartTop() - getOutlineTop();
 
@@ -824,11 +824,10 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
      *
      * @return this
      */
-    @Nonnull
-    private IMPLTYPE addRow(@Nonnull final IPLRenderableObject<?> aElement) {
+    @NonNull
+    private IMPLTYPE addRow(@NonNull final IPLRenderableObject<?> aElement) {
         return addRow(aElement, getDefaultHeight());
     }
-
 
     /**
      * Add a row to this VBox.
@@ -838,8 +837,8 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
      *
      * @return this for chaining
      */
-    @Nonnull
-    private final IMPLTYPE addRow(@Nonnull final IPLRenderableObject<?> aElement, @Nonnull final HeightSpec aHeight) {
+    @NonNull
+    private final IMPLTYPE addRow(@NonNull final IPLRenderableObject<?> aElement, @NonNull final HeightSpec aHeight) {
         addAndReturnRow(aElement, aHeight);
         return thisAsT();
     }
@@ -852,8 +851,8 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
      *
      * @return the created row
      */
-    @Nonnull
-    private final PLVBoxRow addAndReturnRow(@Nonnull final IPLRenderableObject<?> aElement, @Nonnull final HeightSpec aHeight) {
+    @NonNull
+    private final PLVBoxRow addAndReturnRow(@NonNull final IPLRenderableObject<?> aElement, @NonNull final HeightSpec aHeight) {
         internalCheckNotPrepared();
         return _addAndReturnRow(-1, aElement, aHeight);
     }
@@ -867,19 +866,19 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
      *
      * @return the created row. Never <code>null</code>.
      */
-    @Nonnull
+    @NonNull
     private PLVBoxRow addAndReturnRow(@Nonnegative final int nIndex,
-                                      @Nonnull final IPLRenderableObject<?> aElement,
-                                      @Nonnull final HeightSpec aHeight) {
+                                      @NonNull final IPLRenderableObject<?> aElement,
+                                      @NonNull final HeightSpec aHeight) {
         ValueEnforcer.isGE0(nIndex, "Index");
         internalCheckNotPrepared();
         return _addAndReturnRow(nIndex, aElement, aHeight);
     }
 
-    @Nonnull
+    @NonNull
     private PLVBoxRow _addAndReturnRow(@CheckForSigned final int nIndex,
-                                       @Nonnull final IPLRenderableObject<?> aElement,
-                                       @Nonnull final HeightSpec aHeight) {
+                                       @NonNull final IPLRenderableObject<?> aElement,
+                                       @NonNull final HeightSpec aHeight) {
         final PLVBoxRow aItem = new PLVBoxRow(aElement, aHeight);
         if (nIndex < 0 || nIndex >= m_aRows.size())
             m_aRows.add(aItem);
@@ -891,7 +890,7 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
     /**
      * Instantiates a new Get font height.
      */
-    private FontHeightSpec getFontHeight(@Nonnull final PreparationContext aCtx, @Nonnull final FontSpec fontSpec) {
+    private FontHeightSpec getFontHeight(@NonNull final PreparationContext aCtx, @NonNull final FontSpec fontSpec) {
         // Load font into document
         try {
             LoadedFont font = aCtx.getGlobalContext().getLoadedFont(fontSpec);

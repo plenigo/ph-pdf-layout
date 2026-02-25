@@ -19,48 +19,41 @@ package com.plenigo.pdflayout.base;
 /**
  * Base interface for objects having a margin, a border and a padding
  *
+ * @param <IMPLTYPE> Implementation type
+ *
  * @author Philip Helger
- * @param <IMPLTYPE>
- *        Implementation type
  */
-public interface IPLHasMarginBorderPadding <IMPLTYPE extends IPLHasMarginBorderPadding <IMPLTYPE>> extends
-                                           IPLHasMargin <IMPLTYPE>,
-                                           IPLHasPadding <IMPLTYPE>,
-                                           IPLHasBorder <IMPLTYPE>
-{
-  @Override
-  default float getOutlineTop ()
-  {
-    return getMarginTop () + getBorderTopWidth () + getPaddingTop ();
-  }
+public interface IPLHasMarginBorderPadding<IMPLTYPE extends IPLHasMarginBorderPadding<IMPLTYPE>> extends
+        IPLHasMargin<IMPLTYPE>,
+        IPLHasPadding<IMPLTYPE>,
+        IPLHasBorder<IMPLTYPE> {
+    @Override
+    default float getOutlineTop() {
+        return getMarginTop() + getBorderTopWidth() + getPaddingTop();
+    }
 
-  @Override
-  default float getOutlineRight ()
-  {
-    return getMarginRight () + getBorderRightWidth () + getPaddingRight ();
-  }
+    @Override
+    default float getOutlineRight() {
+        return getMarginRight() + getBorderRightWidth() + getPaddingRight();
+    }
 
-  @Override
-  default float getOutlineBottom ()
-  {
-    return getMarginBottom () + getBorderBottomWidth () + getPaddingBottom ();
-  }
+    @Override
+    default float getOutlineBottom() {
+        return getMarginBottom() + getBorderBottomWidth() + getPaddingBottom();
+    }
 
-  @Override
-  default float getOutlineLeft ()
-  {
-    return getMarginLeft () + getBorderLeftWidth () + getPaddingLeft ();
-  }
+    @Override
+    default float getOutlineLeft() {
+        return getMarginLeft() + getBorderLeftWidth() + getPaddingLeft();
+    }
 
-  @Override
-  default float getOutlineXSum ()
-  {
-    return getMarginXSum () + getBorderXSumWidth () + getPaddingXSum ();
-  }
+    @Override
+    default float getOutlineXSum() {
+        return getMarginXSum() + getBorderXSumWidth() + getPaddingXSum();
+    }
 
-  @Override
-  default float getOutlineYSum ()
-  {
-    return getMarginYSum () + getBorderYSumWidth () + getPaddingYSum ();
-  }
+    @Override
+    default float getOutlineYSum() {
+        return getMarginYSum() + getBorderYSumWidth() + getPaddingYSum();
+    }
 }

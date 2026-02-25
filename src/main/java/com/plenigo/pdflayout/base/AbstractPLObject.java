@@ -16,110 +16,100 @@
  */
 package com.plenigo.pdflayout.base;
 
-import javax.annotation.Nonnull;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.annotation.OverrideOnDemand;
-import com.helger.commons.id.factory.GlobalIDFactory;
-import com.helger.commons.lang.ClassHelper;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.Nonempty;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.annotation.style.OverrideOnDemand;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.id.factory.GlobalIDFactory;
+import com.helger.base.lang.clazz.ClassHelper;
+import com.helger.base.tostring.ToStringGenerator;
+import com.plenigo.pdflayout.debug.PLDebugLog;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Abstract PL object
  *
+ * @param <IMPLTYPE> The implementation type of this class.
+ *
  * @author Philip Helger
- * @param <IMPLTYPE>
- *        The implementation type of this class.
  */
-public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLTYPE>> implements IPLObject <IMPLTYPE>
-{
-  private static final Logger LOGGER = LoggerFactory.getLogger (AbstractPLObject.class);
+public abstract class AbstractPLObject<IMPLTYPE extends AbstractPLObject<IMPLTYPE>> implements IPLObject<IMPLTYPE> {
+    private String m_sElementID;
 
-  private String m_sElementID;
+    // Status variable
+    private transient String m_sDebugID;
 
-  // Status variable
-  private transient String m_sDebugID;
-
-  public AbstractPLObject ()
-  {
-    // Assign a default ID
-    m_sElementID = GlobalIDFactory.getNewStringID ();
-  }
-
-  /**
-   * @return The unique element ID. Never <code>null</code>. By default this ID
-   *         is automatically generated, by it might be overridden by
-   *         {@link #setID(String)}.
-   */
-  public final String getID ()
-  {
-    return m_sElementID;
-  }
-
-  /**
-   * Callback invoked after an ID change. Overwrite this method to do local
-   * actions (if needed)
-   */
-  @OverrideOnDemand
-  protected void onAfterSetID ()
-  {}
-
-  /**
-   * Set the ID of this element. This methods calls <code>onAfterSetID</code>
-   * after any change, even if the values were the same.
-   *
-   * @param sID
-   *        The new ID to use. May neither be <code>null</code> nor empty.
-   * @return this for chaining
-   */
-  @Nonnull
-  public final IMPLTYPE setID (@Nonnull @Nonempty final String sID)
-  {
-    ValueEnforcer.notEmpty (sID, "ID");
-
-    // String sOldElementID = m_sElementID;
-
-    // If debug ID is set, it means that the ID was most likely already "used"
-    // or "displayed", so we're using this as a usage indicator
-    if (m_sDebugID != null)
-    {
-      LOGGER.warn ("Overwriting ID '" + m_sElementID + "' with ID '" + sID + "'");
-      // Clear cached value
-      m_sDebugID = null;
+    public AbstractPLObject() {
+        // Assign a default ID
+        m_sElementID = GlobalIDFactory.getNewStringID();
     }
-    m_sElementID = sID;
 
-    // Call callback afterwards
-    onAfterSetID ();
-    return thisAsT ();
-  }
+    /**
+     * @return The unique element ID. Never <code>null</code>. By default this ID is automatically
+     * generated, by it might be overridden by {@link #setID(String)}.
+     */
+    public final String getID() {
+        return m_sElementID;
+    }
 
-  @Nonnull
-  @Nonempty
-  public final String getDebugID ()
-  {
-    String ret = m_sDebugID;
-    if (ret == null)
-      m_sDebugID = ret = "<" + ClassHelper.getClassLocalName (this) + "-" + getID () + ">";
-    return ret;
-  }
+    /**
+     * Callback invoked after an ID change. Overwrite this method to do local actions (if needed)
+     *
+     * @param sOldElementID the previous element ID. May be <code>null</code>.
+     */
+    @OverrideOnDemand
+    protected void onAfterSetID(@Nullable final String sOldElementID) {
+    }
 
-  @Nonnull
-  @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
-  {
-    // Nothing to do here
-    return thisAsT ();
-  }
+    /**
+     * Set the ID of this element. This methods calls <code>onAfterSetID</code> after any change, even
+     * if the values were the same.
+     *
+     * @param sID The new ID to use. May neither be <code>null</code> nor empty.
+     *
+     * @return this for chaining
+     */
+    @NonNull
+    public final IMPLTYPE setID(@NonNull @Nonempty final String sID) {
+        ValueEnforcer.notEmpty(sID, "ID");
 
-  @Override
-  public String toString ()
-  {
-    return new ToStringGenerator (this).append ("ElementID", m_sElementID).getToString ();
-  }
+        final String sOldElementID = m_sElementID;
+
+        // If debug ID is set, it means that the ID was most likely already "used"
+        // or "displayed", so we're using this as a usage indicator
+        if (m_sDebugID != null) {
+            if (PLDebugLog.isDebugConsistency())
+                PLDebugLog.debugConsistency(this, "Overwriting ID '" + m_sElementID + "' with ID '" + sID + "'");
+
+            // Clear cached value
+            m_sDebugID = null;
+        }
+        m_sElementID = sID;
+
+        // Call callback afterwards
+        onAfterSetID(sOldElementID);
+        return thisAsT();
+    }
+
+    @NonNull
+    @Nonempty
+    public final String getDebugID() {
+        String ret = m_sDebugID;
+        if (ret == null)
+            m_sDebugID = ret = "<" + ClassHelper.getClassLocalName(this) + "-" + getID() + ">";
+        return ret;
+    }
+
+    @NonNull
+    @OverridingMethodsMustInvokeSuper
+    public IMPLTYPE setBasicDataFrom(@NonNull final IMPLTYPE aSource) {
+        // Nothing to do here
+        return thisAsT();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringGenerator(this).append("ElementID", m_sElementID).getToString();
+    }
 }

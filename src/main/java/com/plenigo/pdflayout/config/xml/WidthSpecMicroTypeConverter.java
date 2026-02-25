@@ -16,14 +16,13 @@
  */
 package com.plenigo.pdflayout.config.xml;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.plenigo.pdflayout.spec.EValueUOMType;
-import com.plenigo.pdflayout.spec.WidthSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
+import com.plenigo.pdflayout.spec.EValueUOMType;
+import com.plenigo.pdflayout.spec.WidthSpec;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Micro type converter for class {@link WidthSpec}.
@@ -31,33 +30,30 @@ import com.helger.xml.microdom.convert.IMicroTypeConverter;
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class WidthSpecMicroTypeConverter implements IMicroTypeConverter <WidthSpec>
-{
-  private static final String ATTR_TYPE = "type";
-  private static final String ATTR_VALUE = "value";
+public final class WidthSpecMicroTypeConverter implements IMicroTypeConverter<WidthSpec> {
+    private static final String ATTR_TYPE = "type";
+    private static final String ATTR_VALUE = "value";
 
-  @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final WidthSpec aValue,
-                                              @Nullable final String sNamespaceURI,
-                                              @Nonnull final String sTagName)
-  {
-    final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
+    @NonNull
+    public IMicroElement convertToMicroElement(@NonNull final WidthSpec aValue,
+                                               @Nullable final String sNamespaceURI,
+                                               @NonNull final String sTagName) {
+        final IMicroElement aElement = new MicroElement(sNamespaceURI, sTagName);
 
-    aElement.setAttribute (ATTR_TYPE, aValue.getTypeID ());
-    if (aValue.isAbsolute ())
-      aElement.setAttribute (ATTR_VALUE, aValue.getValue ());
-    return aElement;
-  }
+        aElement.setAttribute(ATTR_TYPE, aValue.getTypeID());
+        if (aValue.isAbsolute())
+            aElement.setAttribute(ATTR_VALUE, aValue.getValue());
+        return aElement;
+    }
 
-  @Nonnull
-  public WidthSpec convertToNative (@Nonnull final IMicroElement aElement)
-  {
-    final String sTypeID = aElement.getAttributeValue (ATTR_TYPE);
-    final EValueUOMType eWidthType = EValueUOMType.getFromIDOrNull (sTypeID);
-    if (eWidthType == null)
-      throw new IllegalStateException ("Failed to resolve width type with ID '" + sTypeID + "!");
+    @NonNull
+    public WidthSpec convertToNative(@NonNull final IMicroElement aElement) {
+        final String sTypeID = aElement.getAttributeValue(ATTR_TYPE);
+        final EValueUOMType eWidthType = EValueUOMType.getFromIDOrNull(sTypeID);
+        if (eWidthType == null)
+            throw new IllegalStateException("Failed to resolve width type with ID '" + sTypeID + "!");
 
-    final float fValue = eWidthType.isValueRequired () ? aElement.getAttributeValueAsFloat (ATTR_VALUE, Float.NaN) : 0;
-    return new WidthSpec (eWidthType, fValue);
-  }
+        final float fValue = eWidthType.isValueRequired() ? aElement.getAttributeValueAsFloat(ATTR_VALUE, Float.NaN) : 0;
+        return new WidthSpec(eWidthType, fValue);
+    }
 }

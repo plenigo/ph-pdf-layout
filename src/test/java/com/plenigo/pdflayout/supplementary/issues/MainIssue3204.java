@@ -16,7 +16,7 @@
  */
 package com.plenigo.pdflayout.supplementary.issues;
 
-import com.helger.commons.io.file.FileSystemRecursiveIterator;
+import com.helger.io.file.FileSystemRecursiveIterator;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;

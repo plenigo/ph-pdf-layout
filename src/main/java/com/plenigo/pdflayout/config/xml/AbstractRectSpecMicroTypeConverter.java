@@ -16,43 +16,39 @@
  */
 package com.plenigo.pdflayout.config.xml;
 
-import javax.annotation.Nonnull;
-
-import com.plenigo.pdflayout.spec.AbstractRectSpec;
-import com.plenigo.pdflayout.spec.MarginSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
+import com.plenigo.pdflayout.spec.AbstractRectSpec;
+import com.plenigo.pdflayout.spec.MarginSpec;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Micro type converter for classes based on {@link AbstractRectSpec}.
  *
+ * @param <T> Data type to convert
+ *
  * @author Saskia Reimerth
  * @author Philip Helger
- * @param <T>
- *        Data type to convert
  */
-public abstract class AbstractRectSpecMicroTypeConverter <T> implements IMicroTypeConverter <T>
-{
-  private static final String ATTR_TOP = "top";
-  private static final String ATTR_RIGHT = "right";
-  private static final String ATTR_BOTTOM = "bottom";
-  private static final String ATTR_LEFT = "left";
+public abstract class AbstractRectSpecMicroTypeConverter<T> implements IMicroTypeConverter<T> {
+    private static final String ATTR_TOP = "top";
+    private static final String ATTR_RIGHT = "right";
+    private static final String ATTR_BOTTOM = "bottom";
+    private static final String ATTR_LEFT = "left";
 
-  public final void fillMicroElement (@Nonnull final AbstractRectSpec aValue, @Nonnull final IMicroElement aElement)
-  {
-    aElement.setAttribute (ATTR_TOP, aValue.getTop ());
-    aElement.setAttribute (ATTR_RIGHT, aValue.getRight ());
-    aElement.setAttribute (ATTR_BOTTOM, aValue.getBottom ());
-    aElement.setAttribute (ATTR_LEFT, aValue.getLeft ());
-  }
+    public final void fillMicroElement(@NonNull final AbstractRectSpec aValue, @NonNull final IMicroElement aElement) {
+        aElement.setAttribute(ATTR_TOP, aValue.getTop());
+        aElement.setAttribute(ATTR_RIGHT, aValue.getRight());
+        aElement.setAttribute(ATTR_BOTTOM, aValue.getBottom());
+        aElement.setAttribute(ATTR_LEFT, aValue.getLeft());
+    }
 
-  @Nonnull
-  public AbstractRectSpec convertToRectSpec (@Nonnull final IMicroElement aElement)
-  {
-    final float fTop = aElement.getAttributeValueAsFloat (ATTR_TOP, Float.NaN);
-    final float fRight = aElement.getAttributeValueAsFloat (ATTR_RIGHT, Float.NaN);
-    final float fBottom = aElement.getAttributeValueAsFloat (ATTR_BOTTOM, Float.NaN);
-    final float fLeft = aElement.getAttributeValueAsFloat (ATTR_LEFT, Float.NaN);
-    return new MarginSpec(fTop, fRight, fBottom, fLeft);
-  }
+    @NonNull
+    public AbstractRectSpec convertToRectSpec(@NonNull final IMicroElement aElement) {
+        final float fTop = aElement.getAttributeValueAsFloat(ATTR_TOP, Float.NaN);
+        final float fRight = aElement.getAttributeValueAsFloat(ATTR_RIGHT, Float.NaN);
+        final float fBottom = aElement.getAttributeValueAsFloat(ATTR_BOTTOM, Float.NaN);
+        final float fLeft = aElement.getAttributeValueAsFloat(ATTR_LEFT, Float.NaN);
+        return new MarginSpec(fTop, fRight, fBottom, fLeft);
+    }
 }

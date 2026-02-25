@@ -24,9 +24,13 @@ import java.io.IOException;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 
-import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 
+import com.helger.annotation.style.ReturnsMutableCopy;
+import com.helger.base.string.StringHelper;
+import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.ICommonsList;
+import com.helger.io.resource.FileSystemResource;
 import com.plenigo.pdflayout.PDFCreationException;
 import com.plenigo.pdflayout.PDFTestComparer;
 import com.plenigo.pdflayout.PLDebugTestRule;
@@ -53,15 +57,10 @@ import com.plenigo.pdflayout.spec.PaddingSpec;
 import com.plenigo.pdflayout.spec.PreloadFont;
 import com.plenigo.pdflayout.spec.WidthSpec;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.jspecify.annotations.NonNull;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
-
-import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.io.resource.FileSystemResource;
-import com.helger.commons.string.StringHelper;
 
 /**
  * Test class for class {@link PLTable}.
@@ -143,11 +142,11 @@ public final class PLTableTest
     PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/basic.pdf"));
   }
 
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
-  public static <T> ICommonsList <T> createList (final int nCount, final IntFunction <T> aSupplier)
+  public static <T> ICommonsList<T> createList (final int nCount, final IntFunction <T> aSupplier)
   {
-    final ICommonsList <T> ret = new CommonsArrayList <> (nCount);
+    final ICommonsList <T> ret = new CommonsArrayList<>(nCount);
     for (int i = 0; i < nCount; ++i)
       ret.add (aSupplier.apply (i));
     return ret;
@@ -425,14 +424,14 @@ public final class PLTableTest
     PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/grid-types-colspan.pdf"));
   }
 
-  @Nonnull
-  private static PLTable _createNestedTable (@Nonnull final FontSpec r10)
+  @NonNull
+  private static PLTable _createNestedTable (@NonNull final FontSpec r10)
   {
     return _createNestedTable (r10, EPLTableGridType.FULL);
   }
 
-  @Nonnull
-  private static PLTable _createNestedTable (@Nonnull final FontSpec r10, @Nonnull final IPLTableGridType aGT)
+  @NonNull
+  private static PLTable _createNestedTable (@NonNull final FontSpec r10, @NonNull final IPLTableGridType aGT)
   {
     final PLTable aTable = PLTable.createWithEvenlySizedColumns (4);
     // Test colspan
@@ -752,7 +751,7 @@ public final class PLTableTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     // Source image has 33x33 pixels
-    final BufferedImage aImg = ImageIO.read (new FileSystemResource ("src/test/resources/images/test1.jpg").getInputStream ());
+    final BufferedImage aImg = ImageIO.read (new FileSystemResource("src/test/resources/images/test1.jpg").getInputStream ());
     assertNotNull (aImg);
 
     // Start table

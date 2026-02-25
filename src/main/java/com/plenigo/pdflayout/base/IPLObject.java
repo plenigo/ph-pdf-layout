@@ -16,76 +16,71 @@
  */
 package com.plenigo.pdflayout.base;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.id.IHasID;
-import com.helger.commons.traits.IGenericImplTrait;
+import com.helger.annotation.Nonempty;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.base.id.IHasID;
+import com.helger.base.trait.IGenericImplTrait;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Base interface for a PDF layout object. It contains a user-assigned ID as
  * well as a unique "Debug ID".
  *
+ * @param <IMPLTYPE> Implementation type
+ *
  * @author Philip Helger
- * @param <IMPLTYPE>
- *        Implementation type
  */
-public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends
-                           IHasID <String>,
-                           IGenericImplTrait <IMPLTYPE>,
-                           IPLVisitable
-{
-  /**
-   * Check if this object has the provided ID
-   *
-   * @param sID
-   *        The ID to check. May be <code>null</code>.
-   * @return <code>true</code> if the provided ID matches this objects ID,
-   *         <code>false</code> otherwise.
-   */
-  default boolean hasID (@Nullable final String sID)
-  {
-    return getID ().equals (sID);
-  }
+public interface IPLObject<IMPLTYPE extends IPLObject<IMPLTYPE>> extends
+        IHasID<String>,
+        IGenericImplTrait<IMPLTYPE>,
+        IPLVisitable {
+    /**
+     * Check if this object has the provided ID
+     *
+     * @param sID The ID to check. May be <code>null</code>.
+     *
+     * @return <code>true</code> if the provided ID matches this objects ID,
+     * <code>false</code> otherwise.
+     */
+    default boolean hasID(@Nullable final String sID) {
+        return getID().equals(sID);
+    }
 
-  /**
-   * @return The debug ID of this element. Neither <code>null</code> nor empty.
-   *         The debug ID is a combination of the real class and the user
-   *         provided ID.
-   */
-  @Nonnull
-  @Nonempty
-  String getDebugID ();
+    /**
+     * @return The debug ID of this element. Neither <code>null</code> nor empty.
+     * The debug ID is a combination of the real class and the user
+     * provided ID.
+     */
+    @NonNull
+    @Nonempty
+    String getDebugID();
 
-  /**
-   * @return <code>true</code> if this element is splittable, <code>false</code>
-   *         otherwise.
-   */
-  default boolean isVertSplittable ()
-  {
-    return this instanceof IPLSplittableObject <?, ?>;
-  }
+    /**
+     * @return <code>true</code> if this element is splittable, <code>false</code>
+     * otherwise.
+     */
+    default boolean isVertSplittable() {
+        return this instanceof com.plenigo.pdflayout.base.IPLSplittableObject<?, ?>;
+    }
 
-  /**
-   * @return this as an {@link IPLSplittableObject} - ensure to call it only if
-   *         {@link #isVertSplittable()} returns <code>true</code>.
-   */
-  @Nonnull
-  default IPLSplittableObject <?, ?> getAsSplittable ()
-  {
-    return (IPLSplittableObject <?, ?>) this;
-  }
+    /**
+     * @return this as an {@link com.plenigo.pdflayout.base.IPLSplittableObject} - ensure to call it only if
+     * {@link #isVertSplittable()} returns <code>true</code>.
+     */
+    @NonNull
+    default IPLSplittableObject<?, ?> getAsSplittable() {
+        return (IPLSplittableObject<?, ?>) this;
+    }
 
-  /**
-   * For copying stuff internally. Must always call super method
-   *
-   * @param aSource
-   *        Source object to copy from. May not be <code>null</code>.
-   * @return this for chaining
-   */
-  @Nonnull
-  @OverridingMethodsMustInvokeSuper
-  IMPLTYPE setBasicDataFrom (@Nonnull IMPLTYPE aSource);
+    /**
+     * For copying stuff internally. Must always call super method
+     *
+     * @param aSource Source object to copy from. May not be <code>null</code>.
+     *
+     * @return this for chaining
+     */
+    @NonNull
+    @OverridingMethodsMustInvokeSuper
+    IMPLTYPE setBasicDataFrom(@NonNull IMPLTYPE aSource);
 }

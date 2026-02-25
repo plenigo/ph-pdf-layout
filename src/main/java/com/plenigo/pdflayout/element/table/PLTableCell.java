@@ -16,19 +16,18 @@
  */
 package com.plenigo.pdflayout.element.table;
 
-import java.io.IOException;
-
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-import javax.annotation.concurrent.NotThreadSafe;
-
-import com.helger.commons.ValueEnforcer;
+import com.helger.annotation.Nonnegative;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.annotation.concurrent.NotThreadSafe;
+import com.helger.base.enforce.ValueEnforcer;
 import com.plenigo.pdflayout.base.IPLRenderableObject;
 import com.plenigo.pdflayout.element.box.AbstractPLBox;
 import com.plenigo.pdflayout.element.special.PLSpacerX;
 import com.plenigo.pdflayout.render.PageRenderContext;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
+import java.io.IOException;
 
 /**
  * This class represents a single table cell within a table row.
@@ -36,103 +35,94 @@ import com.plenigo.pdflayout.render.PageRenderContext;
  * @author Philip Helger
  */
 @NotThreadSafe
-public class PLTableCell extends AbstractPLBox <PLTableCell>
-{
-  public static final int DEFAULT_COL_SPAN = 1;
+public class PLTableCell extends AbstractPLBox<PLTableCell> {
+    public static final int DEFAULT_COL_SPAN = 1;
 
-  private int m_nColSpan;
+    private int m_nColSpan;
 
-  public PLTableCell (@Nullable final IPLRenderableObject <?> aElement)
-  {
-    this (aElement, DEFAULT_COL_SPAN);
-  }
+    public PLTableCell(@Nullable final IPLRenderableObject<?> aElement) {
+        this(aElement, DEFAULT_COL_SPAN);
+    }
 
-  public PLTableCell (@Nullable final IPLRenderableObject <?> aElement, @Nonnegative final int nColSpan)
-  {
-    super (aElement);
-    _setColSpan (nColSpan);
-    setVertSplittable (true);
-  }
+    public PLTableCell(@Nullable final IPLRenderableObject<?> aElement, @Nonnegative final int nColSpan) {
+        super(aElement);
+        _setColSpan(nColSpan);
+    }
 
-  @Override
-  @Nonnull
-  @OverridingMethodsMustInvokeSuper
-  public PLTableCell setBasicDataFrom (@Nonnull final PLTableCell aSource)
-  {
-    super.setBasicDataFrom (aSource);
-    _setColSpan (aSource.getColSpan ());
-    return this;
-  }
+    @Override
+    @NonNull
+    @OverridingMethodsMustInvokeSuper
+    public PLTableCell setBasicDataFrom(@NonNull final PLTableCell aSource) {
+        super.setBasicDataFrom(aSource);
+        _setColSpan(aSource.getColSpan());
+        return this;
+    }
 
-  @Nonnegative
-  public int getColSpan ()
-  {
-    return m_nColSpan;
-  }
+    @Nonnegative
+    public int getColSpan() {
+        return m_nColSpan;
+    }
 
-  private void _setColSpan (@Nonnegative final int nColSpan)
-  {
-    ValueEnforcer.isGT0 (nColSpan, "ColSpan");
-    m_nColSpan = nColSpan;
-  }
+    private void _setColSpan(@Nonnegative final int nColSpan) {
+        ValueEnforcer.isGT0(nColSpan, "ColSpan");
+        m_nColSpan = nColSpan;
+    }
 
-  @Override
-  @Nonnull
-  public PLTableCell internalCreateNewVertSplitObject (@Nonnull final PLTableCell aBase)
-  {
-    final PLTableCell ret = new PLTableCell (null, aBase.getColSpan ());
-    ret.setBasicDataFrom (aBase);
-    return ret;
-  }
+    @Override
+    @NonNull
+    public PLTableCell internalCreateNewVertSplitObject(@NonNull final PLTableCell aBase) {
+        final PLTableCell ret = new PLTableCell(null, aBase.getColSpan());
+        ret.setBasicDataFrom(aBase);
+        return ret;
+    }
 
-  @Override
-  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
-  {
-    // No further ado
-    super.onRender (aCtx);
-  }
+    @Override
+    protected void onRender(@NonNull final PageRenderContext aCtx) throws IOException {
+        // No further ado
+        super.onRender(aCtx);
+    }
 
-  /**
-   * Utility method to create an empty cell.
-   *
-   * @return The new empty table cell.
-   * @since 5.1.3
-   */
-  @Nonnull
-  public static PLTableCell createEmptyCell ()
-  {
-    return new PLTableCell (new PLSpacerX ());
-  }
+    /**
+     * Utility method to create an empty cell.
+     *
+     * @return The new empty table cell.
+     *
+     * @since 5.1.3
+     */
+    @NonNull
+    public static PLTableCell createEmptyCell() {
+        return new PLTableCell(new PLSpacerX());
+    }
 
-  /**
-   * Utility method to create an empty cell with a colspan.
-   *
-   * @param nColSpan
-   *        The column span to use. Must be &gt; 0.
-   * @return The new empty table cell.
-   * @since 7.0.1
-   */
-  @Nonnull
-  public static PLTableCell createEmptyCell (@Nonnegative final int nColSpan)
-  {
-    return new PLTableCell (new PLSpacerX (), nColSpan);
-  }
+    /**
+     * Utility method to create an empty cell with a colspan.
+     *
+     * @param nColSpan The column span to use. Must be &gt; 0.
+     *
+     * @return The new empty table cell.
+     *
+     * @since 7.0.1
+     */
+    @NonNull
+    public static PLTableCell createEmptyCell(@Nonnegative final int nColSpan) {
+        return new PLTableCell(new PLSpacerX(), nColSpan);
+    }
 
-  /**
-   * Utility method to create an array of empty cells.
-   *
-   * @param nCellCount
-   *        The number of cells to create. Must be &ge; 0.
-   * @return The new empty table cell.
-   * @since 7.0.1
-   */
-  @Nonnull
-  public static PLTableCell [] createEmptyCells (@Nonnegative final int nCellCount)
-  {
-    ValueEnforcer.isGE0 (nCellCount, "CellCount");
-    final PLTableCell [] ret = new PLTableCell [nCellCount];
-    for (int i = 0; i < nCellCount; ++i)
-      ret[i] = createEmptyCell ();
-    return ret;
-  }
+    /**
+     * Utility method to create an array of empty cells.
+     *
+     * @param nCellCount The number of cells to create. Must be &ge; 0.
+     *
+     * @return The new empty table cell.
+     *
+     * @since 7.0.1
+     */
+    @NonNull
+    public static PLTableCell[] createEmptyCells(@Nonnegative final int nCellCount) {
+        ValueEnforcer.isGE0(nCellCount, "CellCount");
+        final PLTableCell[] ret = new PLTableCell[nCellCount];
+        for (int i = 0; i < nCellCount; ++i)
+            ret[i] = createEmptyCell();
+        return ret;
+    }
 }

@@ -16,50 +16,49 @@
  */
 package com.plenigo.pdflayout.element.list;
 
-import java.util.function.IntFunction;
-
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-
-import com.helger.commons.ValueEnforcer;
-import com.plenigo.pdflayout.base.IPLRenderableObject;
+import com.helger.annotation.Nonnegative;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.tostring.ToStringGenerator;
 import com.plenigo.pdflayout.element.text.PLText;
 import com.plenigo.pdflayout.spec.FontSpec;
+import org.jspecify.annotations.NonNull;
+
+import java.util.function.IntFunction;
 
 /**
- * An implementation of {@link IBulletPointCreator} that uses a custom
- * {@link IntFunction} to create a custom formatted text.
+ * An implementation of {@link IBulletPointCreator} that uses a custom {@link IntFunction} to create
+ * a custom formatted text.
  *
  * @author Philip Helger
  * @since 5.1.0
  */
-public class BulletPointCreatorNumeric extends AbstractBulletPointCreatorFontBased <BulletPointCreatorNumeric>
-{
-  private final IntFunction <String> m_aFormatter;
+public class BulletPointCreatorNumeric extends AbstractBulletPointCreatorFontBased<BulletPointCreatorNumeric> {
+    private final IntFunction<String> m_aFormatter;
 
-  public BulletPointCreatorNumeric (@Nonnull final IntFunction <String> aFormatter, @Nonnull final FontSpec aFontSpec)
-  {
-    super (aFontSpec);
-    ValueEnforcer.notNull (aFormatter, "Formatter");
-    m_aFormatter = aFormatter;
-  }
+    public BulletPointCreatorNumeric(@NonNull final IntFunction<String> aFormatter, @NonNull final FontSpec aFontSpec) {
+        super(aFontSpec);
+        ValueEnforcer.notNull(aFormatter, "Formatter");
+        m_aFormatter = aFormatter;
+    }
 
-  @Nonnull
-  public final IntFunction <String> getFormatter ()
-  {
-    return m_aFormatter;
-  }
+    @NonNull
+    public final IntFunction<String> getFormatter() {
+        return m_aFormatter;
+    }
 
-  @Nonnull
-  public String getBulletPointText (@Nonnegative final int nBulletPointIndex)
-  {
-    // Use 0-based index
-    return m_aFormatter.apply (nBulletPointIndex);
-  }
+    @NonNull
+    public String getBulletPointText(@Nonnegative final int nBulletPointIndex) {
+        // Use 0-based index
+        return m_aFormatter.apply(nBulletPointIndex);
+    }
 
-  @Nonnull
-  public IPLRenderableObject <?> getBulletPointElement (@Nonnegative final int nBulletPointIndex)
-  {
-    return new PLText(getBulletPointText (nBulletPointIndex), getFontSpec ()).setVertSplittable (false).setPadding (getPadding ());
-  }
+    @NonNull
+    public PLText getBulletPointElement(@Nonnegative final int nBulletPointIndex) {
+        return new PLText(getBulletPointText(nBulletPointIndex), getFontSpec()).setPadding(getPadding());
+    }
+
+    @Override
+    public String toString() {
+        return ToStringGenerator.getDerived(super.toString()).append("Formatter", m_aFormatter).getToString();
+    }
 }

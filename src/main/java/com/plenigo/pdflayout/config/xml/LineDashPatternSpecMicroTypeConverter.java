@@ -16,15 +16,14 @@
  */
 package com.plenigo.pdflayout.config.xml;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.string.StringParser;
-import com.plenigo.pdflayout.spec.LineDashPatternSpec;
+import com.helger.base.string.StringParser;
+import com.helger.collection.commons.ICommonsList;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
+import com.plenigo.pdflayout.spec.LineDashPatternSpec;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Micro type converter for class {@link LineDashPatternSpec}.
@@ -32,41 +31,37 @@ import com.helger.xml.microdom.convert.IMicroTypeConverter;
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class LineDashPatternSpecMicroTypeConverter implements IMicroTypeConverter <LineDashPatternSpec>
-{
-  private static final String ATTR_PHASE = "phase";
-  private static final String ELEMENT_PATTERN = "pattern";
-  private static final String ATTR_ITEM = "item";
+public final class LineDashPatternSpecMicroTypeConverter implements IMicroTypeConverter<LineDashPatternSpec> {
+    private static final String ATTR_PHASE = "phase";
+    private static final String ELEMENT_PATTERN = "pattern";
+    private static final String ATTR_ITEM = "item";
 
-  @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final LineDashPatternSpec aValue,
-                                              @Nullable final String sNamespaceURI,
-                                              @Nonnull final String sTagName)
-  {
-    final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
+    @NonNull
+    public IMicroElement convertToMicroElement(@NonNull final LineDashPatternSpec aValue,
+                                               @Nullable final String sNamespaceURI,
+                                               @NonNull final String sTagName) {
+        final IMicroElement aElement = new MicroElement(sNamespaceURI, sTagName);
 
-    aElement.setAttribute (ATTR_PHASE, aValue.getPhase ());
-    for (final float fPattern : aValue.getPattern ())
-      aElement.appendElement (sNamespaceURI, ELEMENT_PATTERN).setAttribute (ATTR_ITEM, fPattern);
+        aElement.setAttribute(ATTR_PHASE, aValue.getPhase());
+        for (final float fPattern : aValue.getPattern())
+            aElement.addElementNS(sNamespaceURI, ELEMENT_PATTERN).setAttribute(ATTR_ITEM, fPattern);
 
-    return aElement;
-  }
-
-  @Nonnull
-  public LineDashPatternSpec convertToNative (@Nonnull final IMicroElement aElement)
-  {
-    final float fPhase = StringParser.parseFloat (aElement.getAttributeValue (ATTR_PHASE), Float.NaN);
-    final ICommonsList <IMicroElement> aChildren = aElement.getAllChildElements (ELEMENT_PATTERN);
-    final float [] aPattern = new float [aChildren.size ()];
-    int nIndex = 0;
-    for (final IMicroElement ePattern : aChildren)
-    {
-      aPattern[nIndex] = ePattern.getAttributeValueAsFloat (ATTR_ITEM, Float.NaN);
-      if (Float.isNaN (aPattern[nIndex]))
-        aPattern[nIndex] = ePattern.getAttributeValueAsFloat ("patternitem", Float.NaN);
-      nIndex++;
+        return aElement;
     }
 
-    return new LineDashPatternSpec (aPattern, fPhase);
-  }
+    @NonNull
+    public LineDashPatternSpec convertToNative(@NonNull final IMicroElement aElement) {
+        final float fPhase = StringParser.parseFloat(aElement.getAttributeValue(ATTR_PHASE), Float.NaN);
+        final ICommonsList<IMicroElement> aChildren = aElement.getAllChildElements(ELEMENT_PATTERN);
+        final float[] aPattern = new float[aChildren.size()];
+        int nIndex = 0;
+        for (final IMicroElement ePattern : aChildren) {
+            aPattern[nIndex] = ePattern.getAttributeValueAsFloat(ATTR_ITEM, Float.NaN);
+            if (Float.isNaN(aPattern[nIndex]))
+                aPattern[nIndex] = ePattern.getAttributeValueAsFloat("patternitem", Float.NaN);
+            nIndex++;
+        }
+
+        return new LineDashPatternSpec(aPattern, fPhase);
+    }
 }

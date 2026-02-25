@@ -16,47 +16,69 @@
  */
 package com.plenigo.pdflayout.base;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.concurrent.Immutable;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.tostring.ToStringGenerator;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
- * This class represents the result of splitting as defined in
- * {@link IPLSplittableObject}.
+ * This class represents the result of splitting as defined in {@link IPLSplittableObject}.
  *
  * @author Philip Helger
  */
 @Immutable
-public class PLSplitResult
-{
-  private final PLElementWithSize m_aFirstElement;
-  private final PLElementWithSize m_aSecondElement;
+public class PLSplitResult {
+    private final EPLSplitResultType m_eSplitResultType;
+    private final PLElementWithSize m_aFirstElement;
+    private final PLElementWithSize m_aSecondElement;
 
-  public PLSplitResult (@Nonnull final PLElementWithSize aFirstElement, @Nonnull final PLElementWithSize aSecondElement)
-  {
-    ValueEnforcer.notNull (aFirstElement, "FirstElement");
-    ValueEnforcer.notNull (aSecondElement, "SecondElement");
-    m_aFirstElement = aFirstElement;
-    m_aSecondElement = aSecondElement;
-  }
+    private PLSplitResult(@NonNull final EPLSplitResultType eSplitResultType,
+                          @Nullable final PLElementWithSize aFirstElement,
+                          @Nullable final PLElementWithSize aSecondElement) {
+        ValueEnforcer.notNull(eSplitResultType, "SplitResultType");
+        m_eSplitResultType = eSplitResultType;
+        m_aFirstElement = aFirstElement;
+        m_aSecondElement = aSecondElement;
+    }
 
-  @Nonnull
-  public PLElementWithSize getFirstElement ()
-  {
-    return m_aFirstElement;
-  }
+    @NonNull
+    public EPLSplitResultType getSplitResultType() {
+        return m_eSplitResultType;
+    }
 
-  @Nonnull
-  public PLElementWithSize getSecondElement ()
-  {
-    return m_aSecondElement;
-  }
+    @Nullable
+    public PLElementWithSize getFirstElement() {
+        return m_aFirstElement;
+    }
 
-  @Override
-  public String toString ()
-  {
-    return new ToStringGenerator (this).append ("firstElement", m_aFirstElement).append ("secondElement", m_aSecondElement).getToString ();
-  }
+    @Nullable
+    public PLElementWithSize getSecondElement() {
+        return m_aSecondElement;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringGenerator(this).append("FirstElement", m_aFirstElement)
+                .append("SecondElement", m_aSecondElement)
+                .getToString();
+    }
+
+    @NonNull
+    public static PLSplitResult createSplit(@NonNull final PLElementWithSize aFirstElement,
+                                            @NonNull final PLElementWithSize aSecondElement) {
+        ValueEnforcer.notNull(aFirstElement, "FirstElement");
+        ValueEnforcer.notNull(aSecondElement, "SecondElement");
+        return new PLSplitResult(EPLSplitResultType.SPLIT_SUCCESS, aFirstElement, aSecondElement);
+    }
+
+    @NonNull
+    public static PLSplitResult allOnFirst() {
+        return new PLSplitResult(EPLSplitResultType.SPLIT_ALL_ON_FIRST, null, null);
+    }
+
+    @NonNull
+    public static PLSplitResult allOnSecond() {
+        return new PLSplitResult(EPLSplitResultType.SPLIT_ALL_ON_SECOND, null, null);
+    }
 }

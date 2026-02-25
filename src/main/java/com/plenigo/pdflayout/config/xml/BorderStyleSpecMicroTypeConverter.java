@@ -16,16 +16,15 @@
  */
 package com.plenigo.pdflayout.config.xml;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.plenigo.pdflayout.base.PLColor;
-import com.plenigo.pdflayout.spec.BorderStyleSpec;
-import com.plenigo.pdflayout.spec.LineDashPatternSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
 import com.helger.xml.microdom.convert.MicroTypeConverter;
+import com.plenigo.pdflayout.base.PLColor;
+import com.plenigo.pdflayout.spec.BorderStyleSpec;
+import com.plenigo.pdflayout.spec.LineDashPatternSpec;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Micro type converter for class {@link BorderStyleSpec}.
@@ -33,44 +32,39 @@ import com.helger.xml.microdom.convert.MicroTypeConverter;
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class BorderStyleSpecMicroTypeConverter implements IMicroTypeConverter <BorderStyleSpec>
-{
-  private static final String ELEMENT_COLOR = "color";
-  private static final String ELEMENT_LINE_DASH_PATTERN = "linedashpattern";
-  private static final String ATTR_LINE_WIDTH = "linewidth";
+public final class BorderStyleSpecMicroTypeConverter implements IMicroTypeConverter<BorderStyleSpec> {
+    private static final String ELEMENT_COLOR = "color";
+    private static final String ELEMENT_LINE_DASH_PATTERN = "linedashpattern";
+    private static final String ATTR_LINE_WIDTH = "linewidth";
 
-  @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final BorderStyleSpec aValue,
-                                              @Nullable final String sNamespaceURI,
-                                              @Nonnull final String sTagName)
-  {
-    final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
+    @NonNull
+    public IMicroElement convertToMicroElement(@NonNull final BorderStyleSpec aValue,
+                                               @Nullable final String sNamespaceURI,
+                                               @NonNull final String sTagName) {
+        final IMicroElement aElement = new MicroElement(sNamespaceURI, sTagName);
 
-    final PLColor aColor = aValue.getColor ();
-    if (aColor != BorderStyleSpec.DEFAULT_COLOR)
-      aElement.appendChild (MicroTypeConverter.convertToMicroElement (aColor, sNamespaceURI, ELEMENT_COLOR));
+        final PLColor aColor = aValue.getColor();
+        if (aColor != BorderStyleSpec.DEFAULT_COLOR)
+            aElement.addChild(MicroTypeConverter.convertToMicroElement(aColor, sNamespaceURI, ELEMENT_COLOR));
 
-    final LineDashPatternSpec aLDPSpec = aValue.getLineDashPattern ();
-    if (aLDPSpec != BorderStyleSpec.DEFAULT_LINE_DASH_PATTERN)
-      aElement.appendChild (MicroTypeConverter.convertToMicroElement (aLDPSpec,
-                                                                      sNamespaceURI,
-                                                                      ELEMENT_LINE_DASH_PATTERN));
+        final LineDashPatternSpec aLDPSpec = aValue.getLineDashPattern();
+        if (aLDPSpec != BorderStyleSpec.DEFAULT_LINE_DASH_PATTERN)
+            aElement.addChild(MicroTypeConverter.convertToMicroElement(aLDPSpec, sNamespaceURI, ELEMENT_LINE_DASH_PATTERN));
 
-    aElement.setAttribute (ATTR_LINE_WIDTH, aValue.getLineWidth ());
+        aElement.setAttribute(ATTR_LINE_WIDTH, aValue.getLineWidth());
 
-    return aElement;
-  }
+        return aElement;
+    }
 
-  @Nonnull
-  public BorderStyleSpec convertToNative (@Nonnull final IMicroElement aElement)
-  {
-    final PLColor aColor = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_COLOR),
-                                                               PLColor.class,
-                                                               BorderStyleSpec.DEFAULT_COLOR);
-    final LineDashPatternSpec aLDPSpec = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_LINE_DASH_PATTERN),
-                                                                             LineDashPatternSpec.class,
-                                                                             BorderStyleSpec.DEFAULT_LINE_DASH_PATTERN);
-    final float fLineWidth = aElement.getAttributeValueAsFloat (ATTR_LINE_WIDTH, BorderStyleSpec.DEFAULT_LINE_WIDTH);
-    return new BorderStyleSpec (aColor, aLDPSpec, fLineWidth);
-  }
+    @NonNull
+    public BorderStyleSpec convertToNative(@NonNull final IMicroElement aElement) {
+        final PLColor aColor = MicroTypeConverter.convertToNative(aElement.getFirstChildElement(ELEMENT_COLOR),
+                PLColor.class,
+                BorderStyleSpec.DEFAULT_COLOR);
+        final LineDashPatternSpec aLDPSpec = MicroTypeConverter.convertToNative(aElement.getFirstChildElement(ELEMENT_LINE_DASH_PATTERN),
+                LineDashPatternSpec.class,
+                BorderStyleSpec.DEFAULT_LINE_DASH_PATTERN);
+        final float fLineWidth = aElement.getAttributeValueAsFloat(ATTR_LINE_WIDTH, BorderStyleSpec.DEFAULT_LINE_WIDTH);
+        return new BorderStyleSpec(aColor, aLDPSpec, fLineWidth);
+    }
 }

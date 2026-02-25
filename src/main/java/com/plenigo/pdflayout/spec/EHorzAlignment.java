@@ -16,64 +16,65 @@
  */
 package com.plenigo.pdflayout.spec;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.annotation.Since;
-import com.helger.commons.id.IHasID;
-import com.helger.commons.lang.EnumHelper;
+import com.helger.annotation.Nonempty;
+import com.helger.annotation.misc.Since;
+import com.helger.base.id.IHasID;
+import com.helger.base.lang.EnumHelper;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents the possible horizontal alignments.
  *
  * @author Philip Helger
  */
-public enum EHorzAlignment implements IHasID <String>
-{
-  /** Align left */
-  LEFT ("left"),
+public enum EHorzAlignment implements IHasID<String> {
+    /**
+     * Align left
+     */
+    LEFT("left"),
 
-  /** Align center */
-  CENTER ("center"),
+    /**
+     * Align center
+     */
+    CENTER("center"),
 
-  /** Align right */
-  RIGHT ("right"),
+    /**
+     * Align right
+     */
+    RIGHT("right"),
 
-  /**
-   * Justify all text. This alignment has no effect for boxes, it only works on
-   * PLText!
-   */
-  @Since ("5.0.3")
-  JUSTIFY("justify"),
+    /**
+     * Justify all text. This alignment has no effect for boxes, it only works on
+     * PLText!
+     */
+    @Since("5.0.3")
+    JUSTIFY("justify"),
 
-  /**
-   * This is a special case for justifying text, but without justifying explicit
-   * newlines and not the last line. This alignment has no effect for boxes, it
-   * only works on PLText!
-   */
-  @Since ("7.3.3")
-  BLOCK("block");
+    /**
+     * This is a special case for justifying text, but without justifying explicit
+     * newlines and not the last line. This alignment has no effect for boxes, it
+     * only works on PLText!
+     */
+    @Since("7.3.3")
+    BLOCK("block");
 
-  public static final EHorzAlignment DEFAULT = LEFT;
+    public static final EHorzAlignment DEFAULT = LEFT;
 
-  private final String m_sID;
+    private final String m_sID;
 
-  EHorzAlignment (@Nonnull @Nonempty final String sID)
-  {
-    m_sID = sID;
-  }
+    EHorzAlignment(@NonNull @Nonempty final String sID) {
+        m_sID = sID;
+    }
 
-  @Nonnull
-  @Nonempty
-  public String getID ()
-  {
-    return m_sID;
-  }
+    @NonNull
+    @Nonempty
+    public String getID() {
+        return m_sID;
+    }
 
-  @Nullable
-  public static EHorzAlignment getFromIDOrNull (@Nullable final String sID)
-  {
-    return EnumHelper.getFromIDOrNull (EHorzAlignment.class, sID);
-  }
+    @Nullable
+    public static EHorzAlignment getFromIDOrNull(@Nullable final String sID) {
+        return EnumHelper.getFromIDOrNull(EHorzAlignment.class, sID);
+    }
 }

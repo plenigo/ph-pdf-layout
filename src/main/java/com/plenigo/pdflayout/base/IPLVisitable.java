@@ -16,28 +16,26 @@
  */
 package com.plenigo.pdflayout.base;
 
+import com.helger.base.state.EChange;
+import org.jspecify.annotations.NonNull;
+
 import java.io.IOException;
-
-import javax.annotation.Nonnull;
-
-import com.helger.commons.state.EChange;
 
 /**
  * Base interface for visitable objects.
  *
  * @author Philip Helger
  */
-public interface IPLVisitable
-{
-  /**
-   * Visit this object and all descendants
-   *
-   * @param aVisitor
-   *        The visitor to use. May not be <code>null</code>.
-   * @return {@link EChange#CHANGED} if something changed internally.
-   * @throws IOException
-   *         on PDFBox error
-   */
-  @Nonnull
-  EChange visit (@Nonnull IPLVisitor aVisitor) throws IOException;
+public interface IPLVisitable {
+    /**
+     * Visit this object and all descendants
+     *
+     * @param aVisitor The visitor to use. May not be <code>null</code>.
+     *
+     * @return {@link EChange#CHANGED} if something changed internally.
+     *
+     * @throws IOException on PDFBox error
+     */
+    @NonNull
+    EChange visit(@NonNull IPLVisitor aVisitor) throws IOException;
 }

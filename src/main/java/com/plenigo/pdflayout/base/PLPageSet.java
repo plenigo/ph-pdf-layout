@@ -16,13 +16,16 @@
  */
 package com.plenigo.pdflayout.base;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.state.EChange;
-import com.helger.commons.string.StringHelper;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.Nonnegative;
+import com.helger.annotation.concurrent.NotThreadSafe;
+import com.helger.annotation.style.ReturnsMutableCopy;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.state.EChange;
+import com.helger.base.string.StringHelper;
+import com.helger.base.string.StringImplode;
+import com.helger.base.tostring.ToStringGenerator;
+import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.ICommonsList;
 import com.helger.font.open_sans.EFontResourceOpenSans;
 import com.plenigo.pdflayout.PLConvert;
 import com.plenigo.pdflayout.debug.PLDebugLog;
@@ -49,20 +52,18 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.graphics.blend.BlendMode;
 import org.apache.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState;
 import org.apache.pdfbox.util.Matrix;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.NotThreadSafe;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.function.Consumer;
 
 /**
- * Represents a single page layout as element. It consists of a page size, a
- * page header and footer as well as a set of page body elements.
+ * Represents a single page layout as element. It consists of a page size, a page header and footer
+ * as well as a set of page body elements.
  *
  * @author Philip Helger
  */
@@ -110,7 +111,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
     private final PreloadFont m_FontExtraBold;
     private final PreloadFont m_FontExtraBoldItalic;
 
-    public PLPageSet(@Nonnull final PDRectangle aPageRect) {
+    public PLPageSet(@NonNull final PDRectangle aPageRect) {
         this(SizeSpec.create(aPageRect));
     }
 
@@ -118,7 +119,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
         this(new SizeSpec(fWidth, fHeight));
     }
 
-    public PLPageSet(@Nonnull final SizeSpec aPageSize) {
+    public PLPageSet(@NonNull final SizeSpec aPageSize) {
         m_aPageSize = ValueEnforcer.notNull(aPageSize, "PageSize");
         m_FontLight = PreloadFont.createEmbedding(EFontResourceOpenSans.OPEN_SANS_LIGHT.getFontResource());
         m_FontLightItalic = PreloadFont.createEmbedding(EFontResourceOpenSans.OPEN_SANS_LIGHT_ITALIC.getFontResource());
@@ -133,20 +134,18 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
     }
 
     /**
-     * @return The page size as specified in the constructor. Never
-     * <code>null</code>.
+     * @return The page size as specified in the constructor. Never <code>null</code>.
      *
      * @see #getPageWidth()
      * @see #getPageHeight()
      */
-    @Nonnull
+    @NonNull
     public final SizeSpec getPageSize() {
         return m_aPageSize;
     }
 
     /**
-     * @return The page width as specified in the constructor. Never
-     * <code>null</code>.
+     * @return The page width as specified in the constructor. Never <code>null</code>.
      *
      * @see #getPageSize()
      * @see #getPageHeight()
@@ -156,8 +155,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
     }
 
     /**
-     * @return The page height as specified in the constructor. Never
-     * <code>null</code>.
+     * @return The page height as specified in the constructor. Never <code>null</code>.
      *
      * @see #getPageSize()
      * @see #getPageWidth()
@@ -177,39 +175,39 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
                     " PageSet is already prepared - cannot modify it or prepare it again");
     }
 
-    @Nonnull
+    @NonNull
     public final MarginSpec getMargin() {
         return m_aMargin;
     }
 
-    @Nonnull
-    public final PLPageSet setMargin(@Nonnull final MarginSpec aMargin) {
+    @NonNull
+    public final PLPageSet setMargin(@NonNull final MarginSpec aMargin) {
         ValueEnforcer.notNull(aMargin, "Mergin");
         internalCheckNoPrepared();
         m_aMargin = aMargin;
         return this;
     }
 
-    @Nonnull
+    @NonNull
     public final PaddingSpec getPadding() {
         return m_aPadding;
     }
 
-    @Nonnull
-    public final PLPageSet setPadding(@Nonnull final PaddingSpec aPadding) {
+    @NonNull
+    public final PLPageSet setPadding(@NonNull final PaddingSpec aPadding) {
         ValueEnforcer.notNull(aPadding, "Padding");
         internalCheckNoPrepared();
         m_aPadding = aPadding;
         return this;
     }
 
-    @Nonnull
+    @NonNull
     public final BorderSpec getBorder() {
         return m_aBorder;
     }
 
-    @Nonnull
-    public final PLPageSet setBorder(@Nonnull final BorderSpec aBorder) {
+    @NonNull
+    public final PLPageSet setBorder(@NonNull final BorderSpec aBorder) {
         ValueEnforcer.notNull(aBorder, "Border");
         internalCheckNoPrepared();
         m_aBorder = aBorder;
@@ -221,7 +219,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
         return m_aFillColor;
     }
 
-    @Nonnull
+    @NonNull
     public final PLPageSet setFillColor(@Nullable final PLColor aFillColor) {
         internalCheckNoPrepared();
         m_aFillColor = aFillColor;
@@ -233,7 +231,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
         return m_aPRCCustomizer;
     }
 
-    @Nonnull
+    @NonNull
     public final PLPageSet setPreRenderContextCustomizer(@Nullable final IPreRenderContextCustomizer aPRCCustomizer) {
         m_aPRCCustomizer = aPRCCustomizer;
         return this;
@@ -244,7 +242,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
         return m_aRCCustomizer;
     }
 
-    @Nonnull
+    @NonNull
     public final PLPageSet setRenderContextCustomizer(@Nullable final IRenderContextCustomizer aRCCustomizer) {
         m_aRCCustomizer = aRCCustomizer;
         return this;
@@ -253,17 +251,15 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
     /**
      * @param aObj The object of which the outline should be subtracted.
      *
-     * @return The usable page width without the x-paddings, x-borders and
-     * x-margins
+     * @return The usable page width without the x-paddings, x-borders and x-margins
      */
     @Nonnegative
-    private float _getAvailableWidth(@Nonnull final IPLHasMarginBorderPadding<?> aObj) {
+    private float _getAvailableWidth(@NonNull final IPLHasMarginBorderPadding<?> aObj) {
         return m_aPageSize.getWidth() - aObj.getOutlineXSum();
     }
 
     /**
-     * @return The usable page width without the x-paddings, x-borders and
-     * x-margins
+     * @return The usable page width without the x-paddings, x-borders and x-margins
      */
     @Nonnegative
     public float getAvailableWidth() {
@@ -273,17 +269,15 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
     /**
      * @param aObj The object of which the outline should be subtracted.
      *
-     * @return The usable page height without the y-paddings, y-borders and
-     * y-margins
+     * @return The usable page height without the y-paddings, y-borders and y-margins
      */
     @Nonnegative
-    private float _getAvailableHeight(@Nonnull final IPLHasMarginBorderPadding<?> aObj) {
+    private float _getAvailableHeight(@NonNull final IPLHasMarginBorderPadding<?> aObj) {
         return m_aPageSize.getHeight() - aObj.getOutlineYSum();
     }
 
     /**
-     * @return The usable page height without the y-paddings, y-borders and
-     * y-margins
+     * @return The usable page height without the y-paddings, y-borders and y-margins
      */
     @Nonnegative
     public float getAvailableHeight() {
@@ -291,8 +285,8 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
     }
 
     /**
-     * @return <code>true</code> if a special page header should be used on the
-     * first page, <code>false</code> if the same header should be used.
+     * @return <code>true</code> if a special page header should be used on the first page,
+     * <code>false</code> if the same header should be used.
      *
      * @since 5.0.2
      */
@@ -301,17 +295,17 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
     }
 
     /**
-     * Enable/disable usage of special header on the first page. To have an
-     * effect, {@link #setFirstPageHeader(IPLRenderableObject)} must be called
+     * Enable/disable usage of special header on the first page. To have an effect,
+     * {@link #setFirstPageHeader(com.plenigo.pdflayout.base.IPLRenderableObject)} must be called
      *
      * @param bDifferentFirstPageHeader <code>true</code> for special page header on the first page
      *
      * @return this for chaining
      *
-     * @see #setFirstPageHeader(IPLRenderableObject)
+     * @see #setFirstPageHeader(com.plenigo.pdflayout.base.IPLRenderableObject)
      * @since 5.0.2
      */
-    @Nonnull
+    @NonNull
     public PLPageSet setDifferentFirstPageHeader(final boolean bDifferentFirstPageHeader) {
         internalCheckNoPrepared();
         m_bDifferentFirstPageHeader = bDifferentFirstPageHeader;
@@ -329,8 +323,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
     }
 
     /**
-     * @return <code>true</code> if a global first page header is present,
-     * <code>false</code> if not.
+     * @return <code>true</code> if a global first page header is present, <code>false</code> if not.
      *
      * @since 5.0.2
      */
@@ -349,7 +342,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
      * @see #setDifferentFirstPageHeader(boolean)
      * @since 5.0.2
      */
-    @Nonnull
+    @NonNull
     public PLPageSet setFirstPageHeader(@Nullable final IPLRenderableObject<?> aPageHeader) {
         internalCheckNoPrepared();
         m_aFirstPageHeader = aPageHeader;
@@ -365,8 +358,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
     }
 
     /**
-     * @return <code>true</code> if a global page header is present,
-     * <code>false</code> if not.
+     * @return <code>true</code> if a global page header is present, <code>false</code> if not.
      */
     public boolean hasPageHeader() {
         return m_aPageHeader != null;
@@ -379,14 +371,14 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
      *
      * @return this
      */
-    @Nonnull
+    @NonNull
     public PLPageSet setPageHeader(@Nullable final IPLRenderableObject<?> aPageHeader) {
         internalCheckNoPrepared();
         m_aPageHeader = aPageHeader;
         return this;
     }
 
-    @Nonnull
+    @NonNull
     @ReturnsMutableCopy
     public ICommonsList<? extends IPLRenderableObject<?>> getAllElements() {
         return m_aElements.getClone();
@@ -397,7 +389,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
         return m_aElements.size();
     }
 
-    public void forEachElement(@Nonnull final Consumer<? super IPLRenderableObject<?>> aConsumer) {
+    public void forEachElement(@NonNull final Consumer<? super IPLRenderableObject<?>> aConsumer) {
         m_aElements.forEach(aConsumer);
     }
 
@@ -408,8 +400,8 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
      *
      * @return this for chaining.
      */
-    @Nonnull
-    public PLPageSet addElement(@Nonnull final IPLRenderableObject<?> aElement) {
+    @NonNull
+    public PLPageSet addElement(@NonNull final IPLRenderableObject<?> aElement) {
         ValueEnforcer.notNull(aElement, "Element");
         internalCheckNoPrepared();
         m_aElements.add(aElement);
@@ -417,8 +409,8 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
     }
 
     /**
-     * @return <code>true</code> if a special page footer should be used on the
-     * first page, <code>false</code> if the same footer should be used.
+     * @return <code>true</code> if a special page footer should be used on the first page,
+     * <code>false</code> if the same footer should be used.
      *
      * @since 5.0.2
      */
@@ -427,8 +419,8 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
     }
 
     /**
-     * Enable/disable usage of special footer on the first page. To have an
-     * effect, {@link #setFirstPageFooter(IPLRenderableObject)} must be called.
+     * Enable/disable usage of special footer on the first page. To have an effect,
+     * {@link #setFirstPageFooter(IPLRenderableObject)} must be called.
      *
      * @param bDifferentFirstPageFooter <code>true</code> for special page footer on the first page
      *
@@ -437,7 +429,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
      * @see #setFirstPageFooter(IPLRenderableObject)
      * @since 5.0.2
      */
-    @Nonnull
+    @NonNull
     public PLPageSet setDifferentFirstPageFooter(final boolean bDifferentFirstPageFooter) {
         internalCheckNoPrepared();
         m_bDifferentFirstPageFooter = bDifferentFirstPageFooter;
@@ -455,8 +447,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
     }
 
     /**
-     * @return <code>true</code> if a global first page footer is present,
-     * <code>false</code> if not.
+     * @return <code>true</code> if a global first page footer is present, <code>false</code> if not.
      *
      * @since 5.0.2
      */
@@ -475,7 +466,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
      * @see #setDifferentFirstPageFooter(boolean)
      * @since 5.0.2
      */
-    @Nonnull
+    @NonNull
     public PLPageSet setFirstPageFooter(@Nullable final IPLRenderableObject<?> aFirstPageFooter) {
         internalCheckNoPrepared();
         m_aFirstPageFooter = aFirstPageFooter;
@@ -491,8 +482,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
     }
 
     /**
-     * @return <code>true</code> if a global page footer is present,
-     * <code>false</code> if not.
+     * @return <code>true</code> if a global page footer is present, <code>false</code> if not.
      */
     public boolean hasPageFooter() {
         return m_aPageFooter != null;
@@ -505,7 +495,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
      *
      * @return this
      */
-    @Nonnull
+    @NonNull
     public PLPageSet setPageFooter(@Nullable final IPLRenderableObject<?> aPageFooter) {
         internalCheckNoPrepared();
         m_aPageFooter = aPageFooter;
@@ -539,7 +529,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
      *
      * @since 6.0.4
      */
-    @Nonnull
+    @NonNull
     public PLPageSet setFirstPageBackgroundHeader(@Nullable final IPLRenderableObject<?> aPageHeader) {
         m_aFirstPageBackgroundHeader = aPageHeader;
         return this;
@@ -560,7 +550,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
      *
      * @return this for chaining
      */
-    @Nonnull
+    @NonNull
     public PLPageSet setFoldMark(final boolean m_bFoldMark) {
         this.m_bFoldMark = m_bFoldMark;
         return this;
@@ -675,20 +665,19 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
         return m_FontExtraBoldItalic;
     }
 
-    private float _getYTop(@Nonnull final IPLHasMarginBorderPadding<?> aObj) {
+    private float _getYTop(@NonNull final IPLHasMarginBorderPadding<?> aObj) {
         return m_aPageSize.getHeight() - aObj.getOutlineTop();
     }
 
     /**
-     * @return The y-top of the page excluding top padding, top-border and
-     * top-margin
+     * @return The y-top of the page excluding top padding, top-border and top-margin
      */
     public float getYTop() {
         return _getYTop(this);
     }
 
-    @Nonnull
-    public EChange visit(@Nonnull final IPLVisitor aVisitor) throws IOException {
+    @NonNull
+    public EChange visit(@NonNull final IPLVisitor aVisitor) throws IOException {
         EChange ret = EChange.UNCHANGED;
         aVisitor.onPageSetStart(this);
         if (m_bDifferentFirstPageHeader && m_aFirstPageHeader != null)
@@ -716,8 +705,8 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
         return m_aPrepareResult;
     }
 
-    @Nonnull
-    public PLPageSetPrepareResult prepareAllPages(@Nonnull final PreparationContextGlobal aGlobalCtx) {
+    @NonNull
+    public PLPageSetPrepareResult prepareAllPages(@NonNull final PreparationContextGlobal aGlobalCtx) {
         // Prepare only once!
         internalCheckNoPrepared();
 
@@ -954,18 +943,16 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
                                 PLDebugLog.debugSplit(this,
                                         "Trying to split " +
                                                 aElement.getDebugID() +
-                                                " into pieces for available width " +
-                                                fElementPreparedWidth +
-                                                " and height " +
-                                                fSplitHeight);
+                                                " into pieces for available size " +
+                                                PLDebugLog.getWH(fElementPreparedWidth, fSplitHeight));
 
                             final PLSplitResult aSplitResult = aElement.getAsSplittable()
                                     .splitElementVert(fElementPreparedWidth, fSplitHeight);
-                            if (aSplitResult != null)
+                            if (aSplitResult.getSplitResultType().isSplit())
                                 assert fSplitHeight > 0;
                             if (fSplitHeight <= 0)
-                                assert aSplitResult == null;
-                            if (aSplitResult != null) {
+                                assert !aSplitResult.getSplitResultType().isSplit();
+                            if (aSplitResult.getSplitResultType().isSplit()) {
                                 // Re-add them to the list and try again (they may be splitted
                                 // recursively)
                                 aElementsWithSize.add(0, aSplitResult.getFirstElement());
@@ -1031,7 +1018,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
                                     "Finished page " +
                                             ret.getPageNumber() +
                                             " with: " +
-                                            StringHelper.getImploded(aLastPageContent));
+                                            StringImplode.getImploded(aLastPageContent));
                         }
                         // Something on the current page -> start a new page
                         ret.addPerPageElements(aCurPageElements);
@@ -1063,7 +1050,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
                             "Finished last page " +
                                     ret.getPageNumber() +
                                     " with: " +
-                                    StringHelper.getImploded(", ", aLastPageContent));
+                                    StringImplode.getImploded(", ", aLastPageContent));
                 }
                 if (LOGGER.isDebugEnabled())
                     LOGGER.debug("Adding " + aCurPageElements.size() + " elements to page " + ret.getPageNumber());
@@ -1093,8 +1080,8 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
      *
      * @throws IOException In case of render errors
      */
-    public void renderAllPages(@Nonnull final PLPageSetPrepareResult aPrepareResult,
-                               @Nonnull final PDDocument aDoc,
+    public void renderAllPages(@NonNull final PLPageSetPrepareResult aPrepareResult,
+                               @NonNull final PDDocument aDoc,
                                final boolean bCompressPDF,
                                @Nonnegative final int nPageSetIndex,
                                @Nonnegative final int nPageSetCount,
@@ -1115,7 +1102,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements
                 PLDebugLog.debugRender(this,
                         "Start rendering page index " +
                                 nPageIndex +
-                                " (" +
+                                " (total " +
                                 (nTotalPageStartIndex + nPageIndex) +
                                 ") with page size " +
                                 PLDebugLog.getWH(getPageWidth(), getPageHeight()) +

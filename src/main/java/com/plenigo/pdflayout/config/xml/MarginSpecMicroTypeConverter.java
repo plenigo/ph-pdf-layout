@@ -16,12 +16,11 @@
  */
 package com.plenigo.pdflayout.config.xml;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.plenigo.pdflayout.spec.MarginSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
+import com.plenigo.pdflayout.spec.MarginSpec;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Micro type converter for class {@link MarginSpec}.
@@ -29,22 +28,19 @@ import com.helger.xml.microdom.MicroElement;
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class MarginSpecMicroTypeConverter extends AbstractRectSpecMicroTypeConverter <MarginSpec>
-{
-  @Override
-  @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final MarginSpec aValue,
-                                              @Nullable final String sNamespaceURI,
-                                              @Nonnull final String sTagName)
-  {
-    final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
-    fillMicroElement (aValue, aElement);
-    return aElement;
-  }
+public final class MarginSpecMicroTypeConverter extends AbstractRectSpecMicroTypeConverter<MarginSpec> {
+    @Override
+    @NonNull
+    public IMicroElement convertToMicroElement(@NonNull final MarginSpec aValue,
+                                               @Nullable final String sNamespaceURI,
+                                               @NonNull final String sTagName) {
+        final IMicroElement aElement = new MicroElement(sNamespaceURI, sTagName);
+        fillMicroElement(aValue, aElement);
+        return aElement;
+    }
 
-  @Nonnull
-  public MarginSpec convertToNative (@Nonnull final IMicroElement aElement)
-  {
-    return new MarginSpec (convertToRectSpec (aElement));
-  }
+    @NonNull
+    public MarginSpec convertToNative(@NonNull final IMicroElement aElement) {
+        return new MarginSpec(convertToRectSpec(aElement));
+    }
 }
