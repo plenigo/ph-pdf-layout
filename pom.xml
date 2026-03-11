@@ -21,7 +21,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.plenigo</groupId>
   <artifactId>ph-pdf-layout</artifactId>
-  <version>8.1.0</version>
+  <version>8.1.1</version>
   <packaging>bundle</packaging>
   <name>ph-pdf-layout</name>
   <description>Library for creating nicely layouted PDF documents based on PDFBox</description>
