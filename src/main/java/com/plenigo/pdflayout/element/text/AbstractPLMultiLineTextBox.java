@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2023 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,6 +35,7 @@ package com.plenigo.pdflayout.element.text;
 import com.helger.annotation.CheckForSigned;
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.annotation.style.ReturnsMutableCopy;
 import com.helger.base.array.ArrayHelper;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.state.EChange;
@@ -72,6 +73,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.function.Consumer;
+import java.util.function.ObjIntConsumer;
 
 /**
  * Vertical box - groups several rows.
@@ -82,6 +85,7 @@ import java.util.Iterator;
  */
 public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMultiLineTextBox<IMPLTYPE>> extends AbstractPLRenderableObject<IMPLTYPE> implements
         IPLSplittableObject<IMPLTYPE, IMPLTYPE> {
+    public static final int DEFAULT_HEADER_ROW_COUNT = 0;
     public static final boolean DEFAULT_FULL_WIDTH = true;
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPLMultiLineTextBox.class);
 
@@ -91,19 +95,15 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
     // Vertical splittable?
     private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
     // Header rows to be repeated after a split
-    private int m_nHeaderRowCount = 0;
+    private int m_nHeaderRowCount = DEFAULT_HEADER_ROW_COUNT;
     // Always use the full width?
     private boolean m_bFullWidth = DEFAULT_FULL_WIDTH;
     private EHorzAlignment m_eHorzAlign = EHorzAlignment.DEFAULT;
 
     // Status vars
-    /**
-     * prepared row size (with outline of contained element)
-     */
+    /** prepared row size (with outline of contained element) */
     private SizeSpec[] m_aPreparedRowSize;
-    /**
-     * prepared element size (without outline)
-     */
+    /** prepared element size (without outline) */
     private SizeSpec[] m_aPreparedElementSize;
 
     public AbstractPLMultiLineTextBox() {
@@ -126,6 +126,7 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
     public IMPLTYPE setBasicDataFrom(@NonNull final IMPLTYPE aSource) {
         super.setBasicDataFrom(aSource);
         setVertSplittable(aSource.isVertSplittable());
+        setHeaderRowCount(aSource.getHeaderRowCount());
         setFullWidth(aSource.isFullWidth());
         return thisAsT();
     }
@@ -148,15 +149,32 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
      * @return All rows. Never <code>null</code>.
      */
     @NonNull
+    @ReturnsMutableCopy
+    public ICommonsList<PLVBoxRow> getAllRows() {
+        return m_aRows.getClone();
+    }
+
+    /**
+     * @return All rows. Never <code>null</code>.
+     */
+    @NonNull
     public Iterable<PLVBoxRow> getRows() {
         return m_aRows;
+    }
+
+    public void forEachRow(@NonNull final Consumer<? super PLVBoxRow> aConsumer) {
+        m_aRows.forEach(aConsumer);
+    }
+
+    public void forEachRowByIndex(@NonNull final ObjIntConsumer<? super PLVBoxRow> aConsumer) {
+        m_aRows.forEachByIndex(aConsumer);
     }
 
     /**
      * Get the row at the specified index.
      *
-     * @param nIndex The index to use. Should be &ge; 0.
-     *
+     * @param nIndex
+     *        The index to use. Should be &ge; 0.
      * @return <code>null</code> if an invalid index was provided.
      */
     @Nullable
@@ -165,10 +183,26 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
     }
 
     /**
+     * @return The first row or <code>null</code> if no row is present.
+     */
+    @Nullable
+    public PLVBoxRow getFirstRow() {
+        return m_aRows.getFirstOrNull();
+    }
+
+    /**
+     * @return The last row or <code>null</code> if no row is present.
+     */
+    @Nullable
+    public PLVBoxRow getLastRow() {
+        return m_aRows.getLastOrNull();
+    }
+
+    /**
      * Get the element in the row at the specified index.
      *
-     * @param nIndex The index to use. Should be &ge; 0.
-     *
+     * @param nIndex
+     *        The index to use. Should be &ge; 0.
      * @return <code>null</code> if an invalid index was provided.
      */
     @Nullable
@@ -178,8 +212,26 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
     }
 
     /**
-     * @return The default height to be used for rows if none is provided. May not
-     * be <code>null</code>.
+     * @return The element in the first row or <code>null</code> if no row is present.
+     */
+    @Nullable
+    public IPLRenderableObject<?> getFirstRowElement() {
+        final PLVBoxRow aRow = getFirstRow();
+        return aRow == null ? null : aRow.getElement();
+    }
+
+    /**
+     * @return The element in the last row or <code>null</code> if no row is present.
+     */
+    @Nullable
+    public IPLRenderableObject<?> getLastRowElement() {
+        final PLVBoxRow aRow = getLastRow();
+        return aRow == null ? null : aRow.getElement();
+    }
+
+    /**
+     * @return The default height to be used for rows if none is provided. May not be
+     *         <code>null</code>.
      */
     @NonNull
     public HeightSpec getDefaultHeight() {
@@ -196,13 +248,36 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
         return thisAsT();
     }
 
+    /**
+     * @return The number of header rows. By default 0. Always &ge; 0.
+     */
+    @Nonnegative
+    public final int getHeaderRowCount() {
+        return m_nHeaderRowCount;
+    }
+
+    /**
+     * Set the number of header rows in this table. Header rows get repeated on every page upon
+     * rendering.
+     *
+     * @param nHeaderRowCount
+     *        The number of header rows, to be repeated by page. Must be &ge; 0.
+     * @return this
+     */
+    @NonNull
+    public final IMPLTYPE setHeaderRowCount(@Nonnegative final int nHeaderRowCount) {
+        ValueEnforcer.isGE0(nHeaderRowCount, "HeaderRowCount");
+
+        m_nHeaderRowCount = nHeaderRowCount;
+        return thisAsT();
+    }
+
     public boolean containsAnyVertSplittableElement() {
         return m_aRows.containsAny(x -> x.getElement().isVertSplittable());
     }
 
     /**
-     * @return Should the VBox occupy the full width? The default is
-     * {@link #DEFAULT_FULL_WIDTH}.
+     * @return Should the VBox occupy the full width? The default is {@link #DEFAULT_FULL_WIDTH}.
      */
     public final boolean isFullWidth() {
         return m_bFullWidth;
@@ -211,9 +286,9 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
     /**
      * Set usage of full width.
      *
-     * @param bFullWidth <code>true</code> to enable full width, <code>false</code> to use
-     *                   only what is available.
-     *
+     * @param bFullWidth
+     *        <code>true</code> to enable full width, <code>false</code> to use only what is
+     *        available.
      * @return this for chaining
      */
     @NonNull
@@ -233,7 +308,7 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
 
     @Override
     @OverridingMethodsMustInvokeSuper
-    public SizeSpec onPrepare(@NonNull final PreparationContext aCtx) {
+    protected SizeSpec onPrepare(@NonNull final PreparationContext aCtx) {
         final float fElementWidth = aCtx.getAvailableWidth() - getOutlineXSum();
         final float fElementHeight = aCtx.getAvailableHeight() - getOutlineYSum();
 
@@ -403,7 +478,6 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
             }
             ++nIndex;
         }
-
         // 2. prepare all auto widths items (2-pass)
         float fUsedAutoHeightFullForStar = fUsedHeightFull;
         {
@@ -431,7 +505,6 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
 
                     // Use the used size of the element as the row height
                     final float fRowHeightFull = aElementPreparedSize.getHeight() + aElement.getOutlineYSum();
-
                     if (fRowHeightFull <= fAvailableAutoRowHeight) {
                         // Update used height
                         fUsedHeightFull += fRowHeightFull;
@@ -461,7 +534,6 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
                 }
                 ++nIndex;
             }
-
             // Second pass: split all too high auto rows on fRemainingHeightAuto
             nIndex = 0;
             for (final PLVBoxRow aRow : m_aRows) {
@@ -515,19 +587,15 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
                                         " and is NOT vertical splittable!");
                     } else
                         fUsedAutoHeightFullForStar += fRowHeightFull;
-
                     // Without padding and margin
                     m_aPreparedRowSize[nIndex] = new SizeSpec(m_bFullWidth ? fElementWidth : fRowWidthFull, fRowHeightFull);
                     m_aPreparedElementSize[nIndex] = aElementPreparedSize;
-
                 }
                 ++nIndex;
             }
-
             // remaining unused parts of auto rows is automatically available to
             // star height rows (based on fUsedHeightFull)
         }
-
         // 3. prepare all star height items
         {
             fRestHeight = fElementHeight - fUsedAutoHeightFullForStar;
@@ -571,7 +639,6 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
                 ++nIndex;
             }
         }
-
         // Set min size for block elements
         {
             nIndex = 0;
@@ -586,7 +653,6 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
                 ++nIndex;
             }
         }
-
         // Small consistency check (with rounding included)
         if (PLDebugLog.isDebugPrepare()) {
             if (fMaxRowWidthFull - fElementWidth > 0.01)
@@ -626,7 +692,7 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
     }
 
     @Override
-    public void onMarkAsNotPrepared() {
+    protected void onMarkAsNotPrepared() {
         m_aPreparedRowSize = null;
         m_aPreparedElementSize = null;
         for (final PLVBoxRow aRow : m_aRows)
@@ -634,16 +700,16 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
                 ((AbstractPLRenderableObject<?>) aRow.getElement()).internalMarkAsNotPrepared();
     }
 
-    @Nullable
-    public PLSplitResult splitElementVert(final float fAvailableWidth, final float fAvailableHeight) {
+    @NonNull
+    public final PLSplitResult splitElementVert(final float fAvailableWidth, final float fAvailableHeight) {
         if (fAvailableHeight <= 0)
-            return null;
+            return PLSplitResult.allOnSecond();
 
         if (!containsAnyVertSplittableElement()) {
             // Splitting makes no sense
             if (PLDebugLog.isDebugSplit())
                 PLDebugLog.debugSplit(this, "Cannot split because no vertical splittable elements are contained");
-            return null;
+            return PLSplitResult.allOnSecond();
         }
 
         // Create resulting VBoxes - the first one is not splittable again!
@@ -655,7 +721,7 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
         final ICommonsList<SizeSpec> aVBox1ElementSize = new CommonsArrayList<>(nTotalRows);
         float fUsedVBox1RowHeight = 0;
 
-        // Copy all header rows to both boxes
+        // Copy all header rows to both new VBoxes
         for (int nRow = 0; nRow < m_nHeaderRowCount; ++nRow) {
             final IPLRenderableObject<?> aHeaderRowElement = getRowElementAtIndex(nRow);
             aVBox1.addRow(aHeaderRowElement);
@@ -676,7 +742,6 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
         for (int nRow = m_nHeaderRowCount; nRow < nTotalRows; ++nRow) {
             final IPLRenderableObject<?> aRowElement = getRowElementAtIndex(nRow);
             final float fRowHeight = m_aPreparedRowSize[nRow].getHeight();
-
             if (bOnVBox1) {
                 if (fUsedVBox1RowHeight + fRowHeight <= fAvailableHeight) {
                     // Row fits in first VBox without a change
@@ -701,8 +766,9 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
                                             PLDebugLog.getWH(fSplitWidth, fSplitHeight));
 
                         // Try to split the element contained in the row
-                        final PLSplitResult aSplitResult = aRowElement.getAsSplittable().splitElementVert(fSplitWidth, fSplitHeight);
-                        if (aSplitResult != null) {
+                        final PLSplitResult aSplitResult = aRowElement.getAsSplittable()
+                                .splitElementVert(fSplitWidth, fSplitHeight);
+                        if (aSplitResult.getSplitResultType().isSplit()) {
                             final IPLRenderableObject<?> aVBox1RowElement = aSplitResult.getFirstElement().getElement();
                             aVBox1.addRow(aVBox1RowElement);
                             fUsedVBox1RowHeight += aSplitResult.getFirstElement().getHeightFull();
@@ -725,31 +791,34 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
                                                 aVBox1RowElement.getDebugID() +
                                                 " (" +
                                                 aSplitResult.getFirstElement().getWidth() +
-                                                "+" +
+                                                " + " +
                                                 aVBox1RowElement.getOutlineXSum() +
                                                 " & " +
                                                 aSplitResult.getFirstElement().getHeight() +
-                                                "+" +
+                                                " + " +
                                                 aVBox1RowElement.getOutlineYSum() +
                                                 ") and " +
                                                 aVBox2RowElement.getDebugID() +
                                                 " (" +
                                                 aSplitResult.getSecondElement().getWidth() +
-                                                "+" +
+                                                " + " +
                                                 aVBox2RowElement.getOutlineXSum() +
                                                 " & " +
                                                 aSplitResult.getSecondElement().getHeight() +
-                                                "+" +
+                                                " + " +
                                                 aVBox2RowElement.getOutlineYSum() +
                                                 ")");
                             bSplittedRow = true;
                         } else {
                             if (PLDebugLog.isDebugSplit())
                                 PLDebugLog.debugSplit(this,
-                                        "Failed to split row element " + aRowElement.getDebugID() + " (Row " + nRow + ") into pieces");
+                                        "Failed to split row element " +
+                                                aRowElement.getDebugID() +
+                                                " (Row " +
+                                                nRow +
+                                                ") into pieces");
                         }
                     }
-
                     if (!bSplittedRow) {
                         // just add the full row to the second VBox since the row does not
                         // fit on first page
@@ -768,19 +837,17 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
                 aVBox2ElementSize.add(m_aPreparedElementSize[nRow]);
             }
         }
-
         if (aVBox1.getRowCount() == m_nHeaderRowCount) {
             // Splitting makes no sense!
             if (PLDebugLog.isDebugSplit())
                 PLDebugLog.debugSplit(this, "Splitting makes no sense, because VBox 1 would be empty");
-            return null;
+            return PLSplitResult.allOnSecond();
         }
-
         if (aVBox2.getRowCount() == m_nHeaderRowCount) {
             // Splitting makes no sense!
             if (PLDebugLog.isDebugSplit())
                 PLDebugLog.debugSplit(this, "Splitting makes no sense, because VBox 2 would be empty");
-            return null;
+            return PLSplitResult.allOnFirst();
         }
 
         // Excluding padding/margin
@@ -792,8 +859,10 @@ public abstract class AbstractPLMultiLineTextBox<IMPLTYPE extends AbstractPLMult
         aVBox2.m_aPreparedRowSize = ArrayHelper.createArray(aVBox2RowSize, SizeSpec.class);
         aVBox2.m_aPreparedElementSize = ArrayHelper.createArray(aVBox2ElementSize, SizeSpec.class);
 
-        return PLSplitResult.createSplit(new PLElementWithSize(aVBox1, new SizeSpec(fAvailableWidth, fUsedVBox1RowHeight)),
-                new PLElementWithSize(aVBox2, new SizeSpec(fAvailableWidth, fUsedVBox2RowHeight)));
+        return PLSplitResult.createSplit(new PLElementWithSize(aVBox1,
+                        new SizeSpec(fAvailableWidth, fUsedVBox1RowHeight)),
+                new PLElementWithSize(aVBox2,
+                        new SizeSpec(fAvailableWidth, fUsedVBox2RowHeight)));
     }
 
     @Override

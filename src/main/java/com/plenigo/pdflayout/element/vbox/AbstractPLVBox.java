@@ -78,7 +78,7 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPLVBox.class);
 
     // All the rows of this VBox
-    private final ICommonsList<com.plenigo.pdflayout.element.vbox.PLVBoxRow> m_aRows = new CommonsArrayList<>();
+    private final ICommonsList<PLVBoxRow> m_aRows = new CommonsArrayList<>();
     // Vertical splittable?
     private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
     // Header rows to be repeated after a split
@@ -119,7 +119,7 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
      */
     @NonNull
     @ReturnsMutableCopy
-    public ICommonsList<com.plenigo.pdflayout.element.vbox.PLVBoxRow> getAllRows() {
+    public ICommonsList<PLVBoxRow> getAllRows() {
         return m_aRows.getClone();
     }
 
@@ -127,15 +127,15 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
      * @return All rows. Never <code>null</code>.
      */
     @NonNull
-    public Iterable<com.plenigo.pdflayout.element.vbox.PLVBoxRow> getRows() {
+    public Iterable<PLVBoxRow> getRows() {
         return m_aRows;
     }
 
-    public void forEachRow(@NonNull final Consumer<? super com.plenigo.pdflayout.element.vbox.PLVBoxRow> aConsumer) {
+    public void forEachRow(@NonNull final Consumer<? super PLVBoxRow> aConsumer) {
         m_aRows.forEach(aConsumer);
     }
 
-    public void forEachRowByIndex(@NonNull final ObjIntConsumer<? super com.plenigo.pdflayout.element.vbox.PLVBoxRow> aConsumer) {
+    public void forEachRowByIndex(@NonNull final ObjIntConsumer<? super PLVBoxRow> aConsumer) {
         m_aRows.forEachByIndex(aConsumer);
     }
 
@@ -176,7 +176,7 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
      */
     @Nullable
     public IPLRenderableObject<?> getRowElementAtIndex(@Nonnegative final int nIndex) {
-        final com.plenigo.pdflayout.element.vbox.PLVBoxRow aRow = getRowAtIndex(nIndex);
+        final PLVBoxRow aRow = getRowAtIndex(nIndex);
         return aRow == null ? null : aRow.getElement();
     }
 
@@ -185,7 +185,7 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
      */
     @Nullable
     public IPLRenderableObject<?> getFirstRowElement() {
-        final com.plenigo.pdflayout.element.vbox.PLVBoxRow aRow = getFirstRow();
+        final PLVBoxRow aRow = getFirstRow();
         return aRow == null ? null : aRow.getElement();
     }
 
@@ -391,7 +391,7 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
     @NonNull
     public EChange visit(@NonNull final IPLVisitor aVisitor) throws IOException {
         EChange ret = EChange.UNCHANGED;
-        for (final com.plenigo.pdflayout.element.vbox.PLVBoxRow aRow : m_aRows)
+        for (final PLVBoxRow aRow : m_aRows)
             ret = ret.or(aRow.getElement().visit(aVisitor));
         return ret;
     }
@@ -410,7 +410,7 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
 
         int nStarRows = 0;
         int nAutoRows = 0;
-        for (final com.plenigo.pdflayout.element.vbox.PLVBoxRow aRow : m_aRows)
+        for (final PLVBoxRow aRow : m_aRows)
             switch (aRow.getHeight().getType()) {
                 case STAR:
                     ++nStarRows;
@@ -424,7 +424,7 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
         float fRestHeight = fElementHeight;
 
         // 1. prepare all absolute height items (absolute or percentage)
-        for (final com.plenigo.pdflayout.element.vbox.PLVBoxRow aRow : m_aRows) {
+        for (final PLVBoxRow aRow : m_aRows) {
             if (aRow.getHeight().isAbsolute()) {
                 final IPLRenderableObject<?> aElement = aRow.getElement();
 
@@ -468,7 +468,7 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
             final SizeSpec[] aTooHighAutoRows = new SizeSpec[m_aRows.size()];
 
             nIndex = 0;
-            for (final com.plenigo.pdflayout.element.vbox.PLVBoxRow aRow : m_aRows) {
+            for (final PLVBoxRow aRow : m_aRows) {
                 if (aRow.getHeight().isAuto()) {
                     final IPLRenderableObject<?> aElement = aRow.getElement();
 
@@ -510,7 +510,7 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
             }
             // Second pass: split all too high auto rows on fRemainingHeightAuto
             nIndex = 0;
-            for (final com.plenigo.pdflayout.element.vbox.PLVBoxRow aRow : m_aRows) {
+            for (final PLVBoxRow aRow : m_aRows) {
                 // Only consider too-high auto rows
                 if (aRow.getHeight().isAuto() && aTooHighAutoRows[nIndex] != null) {
                     final IPLRenderableObject<?> aElement = aRow.getElement();
@@ -578,7 +578,7 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
             // more than the available height
             final boolean bTooSmallRestHeight = fRestHeight <= 0;
             nIndex = 0;
-            for (final com.plenigo.pdflayout.element.vbox.PLVBoxRow aRow : m_aRows) {
+            for (final PLVBoxRow aRow : m_aRows) {
                 if (aRow.getHeight().isStar()) {
                     final IPLRenderableObject<?> aElement = aRow.getElement();
 
@@ -617,7 +617,7 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
         // Set min size for block elements
         {
             nIndex = 0;
-            for (final com.plenigo.pdflayout.element.vbox.PLVBoxRow aRow : m_aRows) {
+            for (final PLVBoxRow aRow : m_aRows) {
                 final IPLRenderableObject<?> aElement = aRow.getElement();
                 if (aElement instanceof AbstractPLElement<?>) {
                     final AbstractPLElement<?> aRealElement = (AbstractPLElement<?>) aElement;
@@ -644,7 +644,7 @@ public abstract class AbstractPLVBox<IMPLTYPE extends AbstractPLVBox<IMPLTYPE>> 
     protected void onMarkAsNotPrepared() {
         m_aPreparedRowSize = null;
         m_aPreparedElementSize = null;
-        for (final com.plenigo.pdflayout.element.vbox.PLVBoxRow aRow : m_aRows)
+        for (final PLVBoxRow aRow : m_aRows)
             if (aRow.getElement() instanceof AbstractPLRenderableObject<?>)
                 ((AbstractPLRenderableObject<?>) aRow.getElement()).internalMarkAsNotPrepared();
     }
