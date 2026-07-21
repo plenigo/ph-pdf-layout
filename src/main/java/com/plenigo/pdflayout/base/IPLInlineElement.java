@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,10 +20,11 @@ package com.plenigo.pdflayout.base;
  * Base interface for inline elements. They currently have no further
  * properties.
  *
- * @param <IMPLTYPE> Implementation type
- *
  * @author Philip Helger
+ * @param <IMPLTYPE>
+ *        Implementation type
  */
-public interface IPLInlineElement<IMPLTYPE extends IPLInlineElement<IMPLTYPE>> extends IPLElement<IMPLTYPE> {
-    /* empty */
+public interface IPLInlineElement <IMPLTYPE extends IPLInlineElement <IMPLTYPE>> extends IPLElement <IMPLTYPE>
+{
+  /* empty */
 }

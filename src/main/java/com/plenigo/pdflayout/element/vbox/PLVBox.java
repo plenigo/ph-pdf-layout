@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,44 +26,49 @@ import org.jspecify.annotations.Nullable;
  *
  * @author Philip Helger
  */
-public class PLVBox extends AbstractPLVBox<PLVBox> {
-    /**
-     * Default constructor for an empty VBox.
-     */
-    public PLVBox() {
-    }
+public class PLVBox extends AbstractPLVBox <PLVBox>
+{
+  /**
+   * Default constructor for an empty VBox.
+   */
+  public PLVBox ()
+  {}
 
-    /**
-     * Constructor with elements so that each element constitutes a new row with
-     * auto-height.
-     *
-     * @param aElements The elements for which rows should be created.
-     */
-    public PLVBox(@Nullable final IPLRenderableObject<?>... aElements) {
-        if (aElements != null)
-            for (final IPLRenderableObject<?> aElement : aElements)
-                addRow(aElement, HeightSpec.auto());
-    }
+  /**
+   * Constructor with elements so that each element constitutes a new row with
+   * auto-height.
+   *
+   * @param aElements
+   *        The elements for which rows should be created.
+   */
+  public PLVBox (@Nullable final IPLRenderableObject <?>... aElements)
+  {
+    if (aElements != null)
+      for (final IPLRenderableObject <?> aElement : aElements)
+        addRow (aElement, HeightSpec.auto ());
+  }
 
-    /**
-     * Constructor with elements so that each element constitutes a new row with
-     * auto-height.
-     *
-     * @param aElements The elements for which rows should be created.
-     *
-     * @since 4.0.1
-     */
-    public PLVBox(@Nullable final Iterable<? extends IPLRenderableObject<?>> aElements) {
-        if (aElements != null)
-            for (final IPLRenderableObject<?> aElement : aElements)
-                addRow(aElement, HeightSpec.auto());
-    }
+  /**
+   * Constructor with elements so that each element constitutes a new row with
+   * auto-height.
+   *
+   * @param aElements
+   *        The elements for which rows should be created.
+   * @since 4.0.1
+   */
+  public PLVBox (@Nullable final Iterable <? extends IPLRenderableObject <?>> aElements)
+  {
+    if (aElements != null)
+      for (final IPLRenderableObject <?> aElement : aElements)
+        addRow (aElement, HeightSpec.auto ());
+  }
 
-    @Override
-    @NonNull
-    public PLVBox internalCreateNewVertSplitObject(@NonNull final PLVBox aBase) {
-        final PLVBox ret = new PLVBox();
-        ret.setBasicDataFrom(aBase);
-        return ret;
-    }
+  @Override
+  @NonNull
+  public PLVBox internalCreateNewVertSplitObject (@NonNull final PLVBox aBase)
+  {
+    final PLVBox ret = new PLVBox ();
+    ret.setBasicDataFrom (aBase);
+    return ret;
+  }
 }

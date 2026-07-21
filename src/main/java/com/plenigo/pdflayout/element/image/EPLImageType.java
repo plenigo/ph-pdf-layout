@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,25 +29,29 @@ import org.jspecify.annotations.Nullable;
  * @author Philip Helger
  * @since 5.0.1
  */
-public enum EPLImageType implements IHasID<String> {
-    CCITT("ccitt"),
-    JPEG("jpeg"),
-    LOSSLESS("lossless");
+public enum EPLImageType implements IHasID <String>
+{
+  CCITT ("ccitt"),
+  JPEG ("jpeg"),
+  LOSSLESS ("lossless");
 
-    private final String m_sID;
+  private final String m_sID;
 
-    EPLImageType(@NonNull @Nonempty final String sID) {
-        m_sID = sID;
-    }
+  EPLImageType (@NonNull @Nonempty final String sID)
+  {
+    m_sID = sID;
+  }
 
-    @NonNull
-    @Nonempty
-    public String getID() {
-        return m_sID;
-    }
+  @NonNull
+  @Nonempty
+  public String getID ()
+  {
+    return m_sID;
+  }
 
-    @Nullable
-    public static EPLImageType getFromIDOrNull(@Nullable final String sID) {
-        return EnumHelper.getFromIDOrNull(EPLImageType.class, sID);
-    }
+  @Nullable
+  public static EPLImageType getFromIDOrNull (@Nullable final String sID)
+  {
+    return EnumHelper.getFromIDOrNull (EPLImageType.class, sID);
+  }
 }

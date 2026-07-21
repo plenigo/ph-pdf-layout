@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,55 +27,53 @@ import org.jspecify.annotations.Nullable;
  *
  * @author Philip Helger
  */
-public enum EValueUOMType implements IHasID<String> {
-    /**
-     * Absolute value provided
-     */
-    ABSOLUTE("abs"),
-    /**
-     * Percentage value provided
-     */
-    PERCENTAGE("perc"),
-    /**
-     * '*' value provided
-     */
-    STAR("star"),
-    /**
-     * Automatic scaling
-     */
-    AUTO("auto");
+public enum EValueUOMType implements IHasID <String>
+{
+  /** Absolute value provided */
+  ABSOLUTE ("abs"),
+  /** Percentage value provided */
+  PERCENTAGE ("perc"),
+  /** '*' value provided */
+  STAR ("star"),
+  /** Automatic scaling */
+  AUTO ("auto");
 
-    private final String m_sID;
+  private final String m_sID;
 
-    EValueUOMType(@NonNull @Nonempty final String sID) {
-        m_sID = sID;
-    }
+  EValueUOMType (@NonNull @Nonempty final String sID)
+  {
+    m_sID = sID;
+  }
 
-    @NonNull
-    @Nonempty
-    public String getID() {
-        return m_sID;
-    }
+  @NonNull
+  @Nonempty
+  public String getID ()
+  {
+    return m_sID;
+  }
 
-    /**
-     * @return <code>true</code> if this unit of measure requires a value,
-     * <code>false</code> if not.
-     */
-    public boolean isValueRequired() {
-        return this == ABSOLUTE || this == PERCENTAGE;
-    }
+  /**
+   * @return <code>true</code> if this unit of measure requires a value,
+   *         <code>false</code> if not.
+   */
+  public boolean isValueRequired ()
+  {
+    return this == ABSOLUTE || this == PERCENTAGE;
+  }
 
-    /**
-     * @return <code>true</code> if this unit of measure depends on the width of
-     * the surrounding element, <code>false</code> if this unit of measure
-     * defines the width based on the content of this element.
-     */
-    public boolean isOuterElementDependent() {
-        return this == ABSOLUTE || this == PERCENTAGE || this == STAR;
-    }
+  /**
+   * @return <code>true</code> if this unit of measure depends on the width of
+   *         the surrounding element, <code>false</code> if this unit of measure
+   *         defines the width based on the content of this element.
+   */
+  public boolean isOuterElementDependent ()
+  {
+    return this == ABSOLUTE || this == PERCENTAGE || this == STAR;
+  }
 
-    @Nullable
-    public static EValueUOMType getFromIDOrNull(@Nullable final String sID) {
-        return EnumHelper.getFromIDOrNull(EValueUOMType.class, sID);
-    }
+  @Nullable
+  public static EValueUOMType getFromIDOrNull (@Nullable final String sID)
+  {
+    return EnumHelper.getFromIDOrNull (EValueUOMType.class, sID);
+  }
 }

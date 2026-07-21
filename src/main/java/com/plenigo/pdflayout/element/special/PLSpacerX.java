@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,94 +33,108 @@ import java.io.IOException;
  *
  * @author Philip Helger
  */
-public class PLSpacerX extends AbstractPLRenderableObject<PLSpacerX> implements
-        IPLSplittableObject<PLSpacerX, PLSpacerX> {
-    private static final float HEIGHT_ZERO = 0f;
+public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX> implements
+                       IPLSplittableObject <PLSpacerX, PLSpacerX>
+{
+  private static final float HEIGHT_ZERO = 0f;
 
-    private float m_fWidth = -1;
-    private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
+  private float m_fWidth = -1;
+  private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
 
-    public PLSpacerX() {
-    }
+  public PLSpacerX ()
+  {}
 
-    public PLSpacerX(final float fWidth) {
-        setWidth(fWidth);
-    }
+  public PLSpacerX (final float fWidth)
+  {
+    setWidth (fWidth);
+  }
 
-    @Override
-    @NonNull
-    @OverridingMethodsMustInvokeSuper
-    public PLSpacerX setBasicDataFrom(@NonNull final PLSpacerX aSource) {
-        super.setBasicDataFrom(aSource);
-        setWidth(aSource.m_fWidth);
-        setVertSplittable(aSource.m_bVertSplittable);
-        return this;
-    }
+  @Override
+  @NonNull
+  @OverridingMethodsMustInvokeSuper
+  public PLSpacerX setBasicDataFrom (@NonNull final PLSpacerX aSource)
+  {
+    super.setBasicDataFrom (aSource);
+    setWidth (aSource.m_fWidth);
+    setVertSplittable (aSource.m_bVertSplittable);
+    return this;
+  }
 
-    public final float getWidth() {
-        return m_fWidth;
-    }
+  public final float getWidth ()
+  {
+    return m_fWidth;
+  }
 
-    @NonNull
-    public final PLSpacerX setWidth(final float fWidth) {
-        m_fWidth = fWidth;
-        return this;
-    }
+  @NonNull
+  public final PLSpacerX setWidth (final float fWidth)
+  {
+    m_fWidth = fWidth;
+    return this;
+  }
 
-    @Override
-    protected SizeSpec onPrepare(@NonNull final PreparationContext aCtx) {
-        final float fElementWidth = aCtx.getAvailableWidth() - getOutlineXSum();
+  @Override
+  protected SizeSpec onPrepare (@NonNull final PreparationContext aCtx)
+  {
+    final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
 
-        // Use the fixed width
-        return new SizeSpec(m_fWidth > 0 ? m_fWidth : fElementWidth, HEIGHT_ZERO);
-    }
+    // Use the fixed width
+    return new SizeSpec (m_fWidth > 0 ? m_fWidth : fElementWidth, HEIGHT_ZERO);
+  }
 
-    @Override
-    protected void onMarkAsNotPrepared() {
-        // Nada
-    }
+  @Override
+  protected void onMarkAsNotPrepared ()
+  {
+    // Nada
+  }
 
-    public final boolean isVertSplittable() {
-        return m_bVertSplittable;
-    }
+  public final boolean isVertSplittable ()
+  {
+    return m_bVertSplittable;
+  }
 
-    @NonNull
-    public final PLSpacerX setVertSplittable(final boolean bVertSplittable) {
-        m_bVertSplittable = bVertSplittable;
-        return this;
-    }
+  @NonNull
+  public final PLSpacerX setVertSplittable (final boolean bVertSplittable)
+  {
+    m_bVertSplittable = bVertSplittable;
+    return this;
+  }
 
-    @Override
-    @NonNull
-    public PLSpacerX internalCreateNewVertSplitObject(@NonNull final PLSpacerX aBase) {
-        final PLSpacerX ret = new PLSpacerX();
-        ret.setBasicDataFrom(aBase);
-        return ret;
-    }
+  @Override
+  @NonNull
+  public PLSpacerX internalCreateNewVertSplitObject (@NonNull final PLSpacerX aBase)
+  {
+    final PLSpacerX ret = new PLSpacerX ();
+    ret.setBasicDataFrom (aBase);
+    return ret;
+  }
 
-    @NonNull
-    public PLSplitResult splitElementVert(final float fAvailableWidth, final float fAvailableHeight) {
-        // Because height is 0, it always fits on the first page
-        return PLSplitResult.allOnFirst();
-    }
+  @NonNull
+  public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
+  {
+    // Because height is 0, it always fits on the first page
+    return PLSplitResult.allOnFirst ();
+  }
 
-    @Override
-    protected void onRender(@NonNull final PageRenderContext aCtx) throws IOException {
-        // Empty
-    }
+  @Override
+  protected void onRender (@NonNull final PageRenderContext aCtx) throws IOException
+  {
+    // Empty
+  }
 
-    @Override
-    public String toString() {
-        return ToStringGenerator.getDerived(super.toString())
-                .append("Width", m_fWidth)
-                .append("VertSplittable", m_bVertSplittable)
-                .getToString();
-    }
+  @Override
+  public String toString ()
+  {
+    return ToStringGenerator.getDerived (super.toString ())
+                            .append ("Width", m_fWidth)
+                            .append ("VertSplittable", m_bVertSplittable)
+                            .getToString ();
+  }
 
-    @NonNull
-    public static PLSpacerX createPrepared(final float fWidth) {
-        final PLSpacerX ret = new PLSpacerX(fWidth);
-        ret.prepare(new PreparationContext(null, fWidth, HEIGHT_ZERO));
-        return ret;
-    }
+  @NonNull
+  public static PLSpacerX createPrepared (final float fWidth)
+  {
+    final PLSpacerX ret = new PLSpacerX (fWidth);
+    ret.prepare (new PreparationContext (null, fWidth, HEIGHT_ZERO));
+    return ret;
+  }
 }

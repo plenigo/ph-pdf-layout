@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,56 +22,70 @@ import com.plenigo.pdflayout.spec.BorderStyleSpec;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Custom {@link com.plenigo.pdflayout.element.table.PLTable} grid specification.
+ * Custom {@link PLTable} grid specification.
  *
  * @author Philip Helger
  */
-public interface IPLTableGridType extends IHasID<String> {
-    /**
-     * Apply this grid to the whole provided table.
-     *
-     * @param aTable Table to modify. May not be <code>null</code>.
-     * @param aBSS   Border style specification to be used. May not be <code>null</code>.
-     */
-    default void applyGridToTable(@NonNull final PLTable aTable, @NonNull final BorderStyleSpec aBSS) {
-        ValueEnforcer.notNull(aTable, "Table");
-        applyGridToTable(aTable, 0, aTable.getRowCount() - 1, 0, aTable.getColumnCount() - 1, aBSS);
-    }
+public interface IPLTableGridType extends IHasID <String>
+{
+  /**
+   * Apply this grid to the whole provided table.
+   *
+   * @param aTable
+   *        Table to modify. May not be <code>null</code>.
+   * @param aBSS
+   *        Border style specification to be used. May not be <code>null</code>.
+   */
+  default void applyGridToTable (@NonNull final PLTable aTable, @NonNull final BorderStyleSpec aBSS)
+  {
+    ValueEnforcer.notNull (aTable, "Table");
+    applyGridToTable (aTable, 0, aTable.getRowCount () - 1, 0, aTable.getColumnCount () - 1, aBSS);
+  }
 
-    /**
-     * Apply this grid to the passed cell range of the provided table.
-     *
-     * @param aTable     Table to modify. May not be <code>null</code>.
-     * @param aCellRange The cell range to which it should be applied. May not be
-     *                   <code>null</code>.
-     * @param aBSS       Border style specification to be used. May not be <code>null</code>.
-     */
-    default void applyGridToTable(@NonNull final PLTable aTable, @NonNull final IPLCellRange aCellRange, @NonNull final BorderStyleSpec aBSS) {
-        ValueEnforcer.notNull(aTable, "Table");
-        ValueEnforcer.notNull(aCellRange, "CellRange");
+  /**
+   * Apply this grid to the passed cell range of the provided table.
+   *
+   * @param aTable
+   *        Table to modify. May not be <code>null</code>.
+   * @param aCellRange
+   *        The cell range to which it should be applied. May not be
+   *        <code>null</code>.
+   * @param aBSS
+   *        Border style specification to be used. May not be <code>null</code>.
+   */
+  default void applyGridToTable (@NonNull final PLTable aTable, @NonNull final IPLCellRange aCellRange, @NonNull final BorderStyleSpec aBSS)
+  {
+    ValueEnforcer.notNull (aTable, "Table");
+    ValueEnforcer.notNull (aCellRange, "CellRange");
 
-        applyGridToTable(aTable,
-                aCellRange.getFirstRow(),
-                aCellRange.getLastRow(),
-                aCellRange.getFirstColumn(),
-                aCellRange.getLastColumn(),
-                aBSS);
-    }
+    applyGridToTable (aTable,
+                      aCellRange.getFirstRow (),
+                      aCellRange.getLastRow (),
+                      aCellRange.getFirstColumn (),
+                      aCellRange.getLastColumn (),
+                      aBSS);
+  }
 
-    /**
-     * Apply this grid to the passed elements of the provided table.
-     *
-     * @param aTable           Table to modify. May not be <code>null</code>.
-     * @param nStartRowIncl    Start row index (inclusive).
-     * @param nEndRowIncl      End row index (inclusive).
-     * @param nStartColumnIncl Start column index (inclusive).
-     * @param nEndColumnIncl   End column index (inclusive).
-     * @param aBSS             Border style specification to be used. May not be <code>null</code>.
-     */
-    void applyGridToTable(@NonNull PLTable aTable,
-                          int nStartRowIncl,
-                          int nEndRowIncl,
-                          int nStartColumnIncl,
-                          int nEndColumnIncl,
-                          @NonNull BorderStyleSpec aBSS);
+  /**
+   * Apply this grid to the passed elements of the provided table.
+   *
+   * @param aTable
+   *        Table to modify. May not be <code>null</code>.
+   * @param nStartRowIncl
+   *        Start row index (inclusive).
+   * @param nEndRowIncl
+   *        End row index (inclusive).
+   * @param nStartColumnIncl
+   *        Start column index (inclusive).
+   * @param nEndColumnIncl
+   *        End column index (inclusive).
+   * @param aBSS
+   *        Border style specification to be used. May not be <code>null</code>.
+   */
+  void applyGridToTable (@NonNull PLTable aTable,
+                         int nStartRowIncl,
+                         int nEndRowIncl,
+                         int nStartColumnIncl,
+                         int nEndColumnIncl,
+                         @NonNull BorderStyleSpec aBSS);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,60 +27,101 @@ import org.jspecify.annotations.Nullable;
  * Base interface for a PDF layout object. It contains a user-assigned ID as
  * well as a unique "Debug ID".
  *
- * @param <IMPLTYPE> Implementation type
- *
  * @author Philip Helger
+ * @param <IMPLTYPE>
+ *        Implementation type
  */
-public interface IPLObject<IMPLTYPE extends IPLObject<IMPLTYPE>> extends
-        IHasID<String>,
-        IGenericImplTrait<IMPLTYPE>,
-        IPLVisitable {
-    /**
-     * Check if this object has the provided ID
-     *
-     * @param sID The ID to check. May be <code>null</code>.
-     *
-     * @return <code>true</code> if the provided ID matches this objects ID,
-     * <code>false</code> otherwise.
-     */
-    default boolean hasID(@Nullable final String sID) {
-        return getID().equals(sID);
-    }
+public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends
+                           IHasID <String>,
+                           IGenericImplTrait <IMPLTYPE>,
+                           IPLVisitable
+{
+  /**
+   * Check if this object has the provided ID
+   *
+   * @param sID
+   *        The ID to check. May be <code>null</code>.
+   * @return <code>true</code> if the provided ID matches this objects ID,
+   *         <code>false</code> otherwise.
+   */
+  default boolean hasID (@Nullable final String sID)
+  {
+    return getID ().equals (sID);
+  }
 
-    /**
-     * @return The debug ID of this element. Neither <code>null</code> nor empty.
-     * The debug ID is a combination of the real class and the user
-     * provided ID.
-     */
-    @NonNull
-    @Nonempty
-    String getDebugID();
+  /**
+   * @return The debug ID of this element. Neither <code>null</code> nor empty.
+   *         The debug ID is a combination of the real class and the user
+   *         provided ID.
+   */
+  @NonNull
+  @Nonempty
+  String getDebugID ();
 
-    /**
-     * @return <code>true</code> if this element is splittable, <code>false</code>
-     * otherwise.
-     */
-    default boolean isVertSplittable() {
-        return this instanceof com.plenigo.pdflayout.base.IPLSplittableObject<?, ?>;
-    }
+  /**
+   * @return The ID of the original (unsplit) ancestor of this object. For
+   *         objects that were never produced by a vertical split, this equals
+   *         {@link #getID()}. Stable across recursive splits so it can be used
+   *         to correlate fragments to the user-facing element they came from
+   *         (e.g. for table-of-contents generation).
+   * @since 8.2.0
+   */
+  @NonNull
+  @Nonempty
+  default String getOriginalID ()
+  {
+    return getID ();
+  }
 
-    /**
-     * @return this as an {@link com.plenigo.pdflayout.base.IPLSplittableObject} - ensure to call it only if
-     * {@link #isVertSplittable()} returns <code>true</code>.
-     */
-    @NonNull
-    default IPLSplittableObject<?, ?> getAsSplittable() {
-        return (IPLSplittableObject<?, ?>) this;
-    }
+  /**
+   * @return <code>true</code> if this object was produced as a fragment by a
+   *         vertical split, <code>false</code> if it is an unsplit original.
+   * @since 8.2.0
+   */
+  default boolean isSplitFragment ()
+  {
+    return false;
+  }
 
-    /**
-     * For copying stuff internally. Must always call super method
-     *
-     * @param aSource Source object to copy from. May not be <code>null</code>.
-     *
-     * @return this for chaining
-     */
-    @NonNull
-    @OverridingMethodsMustInvokeSuper
-    IMPLTYPE setBasicDataFrom(@NonNull IMPLTYPE aSource);
+  /**
+   * @return <code>true</code> if this object is reachable from its original
+   *         ancestor by always choosing the first (top) fragment at every
+   *         split. For unsplit originals this is always <code>true</code>.
+   *         Useful to identify the page on which an element first appears.
+   * @since 8.2.0
+   */
+  default boolean isFirstFragment ()
+  {
+    return true;
+  }
+
+  /**
+   * @return <code>true</code> if this element is splittable, <code>false</code>
+   *         otherwise.
+   */
+  default boolean isVertSplittable ()
+  {
+    return this instanceof IPLSplittableObject <?, ?>;
+  }
+
+  /**
+   * @return this as an {@link IPLSplittableObject} - ensure to call it only if
+   *         {@link #isVertSplittable()} returns <code>true</code>.
+   */
+  @NonNull
+  default IPLSplittableObject <?, ?> getAsSplittable ()
+  {
+    return (IPLSplittableObject <?, ?>) this;
+  }
+
+  /**
+   * For copying stuff internally. Must always call super method
+   *
+   * @param aSource
+   *        Source object to copy from. May not be <code>null</code>.
+   * @return this for chaining
+   */
+  @NonNull
+  @OverridingMethodsMustInvokeSuper
+  IMPLTYPE setBasicDataFrom (@NonNull IMPLTYPE aSource);
 }

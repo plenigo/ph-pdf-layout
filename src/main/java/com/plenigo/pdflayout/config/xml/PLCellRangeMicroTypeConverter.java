@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,31 +28,34 @@ import org.jspecify.annotations.Nullable;
  *
  * @author Philip Helger
  */
-public final class PLCellRangeMicroTypeConverter implements IMicroTypeConverter<PLCellRange> {
-    private static final String ATTR_FIRST_ROW = "firstrow";
-    private static final String ATTR_LAST_ROW = "lastrow";
-    private static final String ATTR_FIRST_COLUMN = "firstcol";
-    private static final String ATTR_LAST_COLUMN = "lastcol";
+public final class PLCellRangeMicroTypeConverter implements IMicroTypeConverter <PLCellRange>
+{
+  private static final String ATTR_FIRST_ROW = "firstrow";
+  private static final String ATTR_LAST_ROW = "lastrow";
+  private static final String ATTR_FIRST_COLUMN = "firstcol";
+  private static final String ATTR_LAST_COLUMN = "lastcol";
 
-    @NonNull
-    public IMicroElement convertToMicroElement(@NonNull final PLCellRange aValue,
-                                               @Nullable final String sNamespaceURI,
-                                               @NonNull final String sTagName) {
-        final IMicroElement aElement = new MicroElement(sNamespaceURI, sTagName);
+  @NonNull
+  public IMicroElement convertToMicroElement (@NonNull final PLCellRange aValue,
+                                              @Nullable final String sNamespaceURI,
+                                              @NonNull final String sTagName)
+  {
+    final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
-        aElement.setAttribute(ATTR_FIRST_ROW, aValue.getFirstRow());
-        aElement.setAttribute(ATTR_LAST_ROW, aValue.getLastRow());
-        aElement.setAttribute(ATTR_FIRST_COLUMN, aValue.getFirstColumn());
-        aElement.setAttribute(ATTR_LAST_COLUMN, aValue.getLastColumn());
-        return aElement;
-    }
+    aElement.setAttribute (ATTR_FIRST_ROW, aValue.getFirstRow ());
+    aElement.setAttribute (ATTR_LAST_ROW, aValue.getLastRow ());
+    aElement.setAttribute (ATTR_FIRST_COLUMN, aValue.getFirstColumn ());
+    aElement.setAttribute (ATTR_LAST_COLUMN, aValue.getLastColumn ());
+    return aElement;
+  }
 
-    @NonNull
-    public PLCellRange convertToNative(@NonNull final IMicroElement aElement) {
-        final int nFirstRow = aElement.getAttributeValueAsInt(ATTR_FIRST_ROW, 0);
-        final int nLastRow = aElement.getAttributeValueAsInt(ATTR_LAST_ROW, 0);
-        final int nFirstColumn = aElement.getAttributeValueAsInt(ATTR_FIRST_COLUMN, 0);
-        final int nLastColumn = aElement.getAttributeValueAsInt(ATTR_LAST_COLUMN, 0);
-        return new PLCellRange(nFirstRow, nLastRow, nFirstColumn, nLastColumn);
-    }
+  @NonNull
+  public PLCellRange convertToNative (@NonNull final IMicroElement aElement)
+  {
+    final int nFirstRow = aElement.getAttributeValueAsInt (ATTR_FIRST_ROW, 0);
+    final int nLastRow = aElement.getAttributeValueAsInt (ATTR_LAST_ROW, 0);
+    final int nFirstColumn = aElement.getAttributeValueAsInt (ATTR_FIRST_COLUMN, 0);
+    final int nLastColumn = aElement.getAttributeValueAsInt (ATTR_LAST_COLUMN, 0);
+    return new PLCellRange (nFirstRow, nLastRow, nFirstColumn, nLastColumn);
+  }
 }

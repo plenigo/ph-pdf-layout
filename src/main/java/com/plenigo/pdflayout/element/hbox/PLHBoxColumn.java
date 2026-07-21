@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,39 +30,46 @@ import org.jspecify.annotations.NonNull;
  * @author Philip Helger
  */
 @NotThreadSafe
-public final class PLHBoxColumn {
-    private IPLRenderableObject<?> m_aElement;
-    private WidthSpec m_aWidth;
+public final class PLHBoxColumn
+{
+  private IPLRenderableObject <?> m_aElement;
+  private WidthSpec m_aWidth;
 
-    public PLHBoxColumn(@NonNull final IPLRenderableObject<?> aElement, @NonNull final WidthSpec aWidth) {
-        internalSetElement(aElement);
-        internalSetWidth(aWidth);
-    }
+  public PLHBoxColumn (@NonNull final IPLRenderableObject <?> aElement, @NonNull final WidthSpec aWidth)
+  {
+    internalSetElement (aElement);
+    internalSetWidth (aWidth);
+  }
 
-    @NonNull
-    public IPLRenderableObject<?> getElement() {
-        return m_aElement;
-    }
+  @NonNull
+  public IPLRenderableObject <?> getElement ()
+  {
+    return m_aElement;
+  }
 
-    @NonNull
-    PLHBoxColumn internalSetElement(@NonNull final IPLRenderableObject<?> aElement) {
-        m_aElement = ValueEnforcer.notNull(aElement, "Element");
-        return this;
-    }
+  @NonNull
+  PLHBoxColumn internalSetElement (@NonNull final IPLRenderableObject <?> aElement)
+  {
+    m_aElement = ValueEnforcer.notNull (aElement, "Element");
+    return this;
+  }
 
-    @NonNull
-    public WidthSpec getWidth() {
-        return m_aWidth;
-    }
+  @NonNull
+  public WidthSpec getWidth ()
+  {
+    return m_aWidth;
+  }
 
-    @NonNull
-    PLHBoxColumn internalSetWidth(@NonNull final WidthSpec aWidth) {
-        m_aWidth = ValueEnforcer.notNull(aWidth, "Width");
-        return this;
-    }
+  @NonNull
+  PLHBoxColumn internalSetWidth (@NonNull final WidthSpec aWidth)
+  {
+    m_aWidth = ValueEnforcer.notNull (aWidth, "Width");
+    return this;
+  }
 
-    @Override
-    public String toString() {
-        return new ToStringGenerator(this).append("Element", m_aElement).append("Width", m_aWidth).getToString();
-    }
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).append ("Element", m_aElement).append ("Width", m_aWidth).getToString ();
+  }
 }

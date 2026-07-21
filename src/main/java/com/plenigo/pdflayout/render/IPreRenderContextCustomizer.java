@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,12 +23,14 @@ import org.jspecify.annotations.NonNull;
  *
  * @author Philip Helger
  */
-public interface IPreRenderContextCustomizer {
-    /**
-     * Customize the passed pre-rendering context. This can e.g. be used to add
-     * placeholders.
-     *
-     * @param aCtx The pre-rendering context to be modified.
-     */
-    void customizePreRenderContext(@NonNull PagePreRenderContext aCtx);
+public interface IPreRenderContextCustomizer
+{
+  /**
+   * Customize the passed pre-rendering context. This can e.g. be used to add
+   * placeholders.
+   *
+   * @param aCtx
+   *        The pre-rendering context to be modified.
+   */
+  void customizePreRenderContext (@NonNull PagePreRenderContext aCtx);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,37 +31,45 @@ import org.jspecify.annotations.Nullable;
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class LineDashPatternSpecMicroTypeConverter implements IMicroTypeConverter<LineDashPatternSpec> {
-    private static final String ATTR_PHASE = "phase";
-    private static final String ELEMENT_PATTERN = "pattern";
-    private static final String ATTR_ITEM = "item";
+public final class LineDashPatternSpecMicroTypeConverter implements IMicroTypeConverter <LineDashPatternSpec>
+{
+  private static final String ATTR_PHASE = "phase";
+  private static final String ELEMENT_PATTERN = "pattern";
+  private static final String ATTR_ITEM = "item";
 
-    @NonNull
-    public IMicroElement convertToMicroElement(@NonNull final LineDashPatternSpec aValue,
-                                               @Nullable final String sNamespaceURI,
-                                               @NonNull final String sTagName) {
-        final IMicroElement aElement = new MicroElement(sNamespaceURI, sTagName);
+  @NonNull
+  public IMicroElement convertToMicroElement (@NonNull final LineDashPatternSpec aValue,
+                                              @Nullable final String sNamespaceURI,
+                                              @NonNull final String sTagName)
+  {
+    final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
-        aElement.setAttribute(ATTR_PHASE, aValue.getPhase());
-        for (final float fPattern : aValue.getPattern())
-            aElement.addElementNS(sNamespaceURI, ELEMENT_PATTERN).setAttribute(ATTR_ITEM, fPattern);
+    aElement.setAttribute (ATTR_PHASE, aValue.getPhase ());
+    for (final float fPattern : aValue.getPattern ())
+      aElement.addElementNS (sNamespaceURI, ELEMENT_PATTERN).setAttribute (ATTR_ITEM, fPattern);
 
-        return aElement;
+    return aElement;
+  }
+
+  @NonNull
+  public LineDashPatternSpec convertToNative (@NonNull final IMicroElement aElement)
+  {
+    final float fPhase = StringParser.parseFloat (aElement.getAttributeValue (ATTR_PHASE), Float.NaN);
+    if (Float.isNaN (fPhase))
+      throw new IllegalArgumentException ("Failed to parse LineDashPatternSpec phase value");
+    final ICommonsList <IMicroElement> aChildren = aElement.getAllChildElements (ELEMENT_PATTERN);
+    final float [] aPattern = new float [aChildren.size ()];
+    int nIndex = 0;
+    for (final IMicroElement ePattern : aChildren)
+    {
+      aPattern[nIndex] = ePattern.getAttributeValueAsFloat (ATTR_ITEM, Float.NaN);
+      if (Float.isNaN (aPattern[nIndex]))
+        aPattern[nIndex] = ePattern.getAttributeValueAsFloat ("patternitem", Float.NaN);
+      if (Float.isNaN (aPattern[nIndex]))
+        throw new IllegalArgumentException ("Failed to parse LineDashPatternSpec pattern value at index " + nIndex);
+      nIndex++;
     }
 
-    @NonNull
-    public LineDashPatternSpec convertToNative(@NonNull final IMicroElement aElement) {
-        final float fPhase = StringParser.parseFloat(aElement.getAttributeValue(ATTR_PHASE), Float.NaN);
-        final ICommonsList<IMicroElement> aChildren = aElement.getAllChildElements(ELEMENT_PATTERN);
-        final float[] aPattern = new float[aChildren.size()];
-        int nIndex = 0;
-        for (final IMicroElement ePattern : aChildren) {
-            aPattern[nIndex] = ePattern.getAttributeValueAsFloat(ATTR_ITEM, Float.NaN);
-            if (Float.isNaN(aPattern[nIndex]))
-                aPattern[nIndex] = ePattern.getAttributeValueAsFloat("patternitem", Float.NaN);
-            nIndex++;
-        }
-
-        return new LineDashPatternSpec(aPattern, fPhase);
-    }
+    return new LineDashPatternSpec (aPattern, fPhase);
+  }
 }

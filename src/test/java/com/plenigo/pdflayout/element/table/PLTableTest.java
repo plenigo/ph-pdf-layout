@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,16 +15,6 @@
  * limitations under the License.
  */
 package com.plenigo.pdflayout.element.table;
-
-import static org.junit.Assert.assertNotNull;
-
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.function.Function;
-import java.util.function.IntFunction;
-
-import javax.imageio.ImageIO;
 
 import com.helger.annotation.style.ReturnsMutableCopy;
 import com.helger.base.string.StringHelper;
@@ -60,7 +50,15 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.jspecify.annotations.NonNull;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestRule;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.function.Function;
+import java.util.function.IntFunction;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Test class for class {@link PLTable}.
@@ -70,7 +68,7 @@ import org.junit.rules.TestRule;
 public final class PLTableTest
 {
   @Rule
-  public final TestRule m_aRule = new PLDebugTestRule();
+  public final PLDebugTestRule m_aRule = new PLDebugTestRule ();
 
   @Test
   public void testBasic () throws PDFCreationException
@@ -81,7 +79,7 @@ public final class PLTableTest
     final PaddingSpec aPadding = new PaddingSpec (2);
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
-    aPS1.addElement (new PLText("First dummy line", r10));
+    aPS1.addElement (new PLText ("First dummy line", r10));
 
     // Start table
     final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4) : PLTable.createWithPercentage (10,
@@ -133,7 +131,7 @@ public final class PLTableTest
                      new PLTableCell (new PLText (Integer.toString (i + i), r10).setPadding (aPadding)
                                                                                 .setMargin (aMargin)).setHorzAlign (EHorzAlignment.RIGHT));
     }
-    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec(PLColor.PINK, 1));
+    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (PLColor.PINK, 1));
     aPS1.addElement (aTable);
     aPS1.addElement (new PLText ("Last line", r10));
 
@@ -144,9 +142,9 @@ public final class PLTableTest
 
   @NonNull
   @ReturnsMutableCopy
-  public static <T> ICommonsList<T> createList (final int nCount, final IntFunction <T> aSupplier)
+  public static <T> ICommonsList <T> createList (final int nCount, final IntFunction <T> aSupplier)
   {
-    final ICommonsList <T> ret = new CommonsArrayList<>(nCount);
+    final ICommonsList <T> ret = new CommonsArrayList <> (nCount);
     for (int i = 0; i < nCount; ++i)
       ret.add (aSupplier.apply (i));
     return ret;
@@ -179,27 +177,30 @@ public final class PLTableTest
                                nIdx -> new PLTableCell (new PLText ("Col " + (nIdx + 1),
                                                                     r14b.getCloneWithDifferentColor (PLColor.GRAY)).setPadding (aPadding))));
 
-    final ICommonsList <Function <PLTableRow, PLTableRow>> aRowFcts;
-    aRowFcts = new CommonsArrayList <> (x -> x, x -> x.setFillColor (aBGRow));
+    final ICommonsList <Function <PLTableRow, PLTableRow>> aRowFcts = new CommonsArrayList <> (x -> x,
+                                                                                               x -> x.setFillColor (aBGRow));
 
-    final ICommonsList <Function <PLTableCell, PLTableCell>> aCellFcts;
-    aCellFcts = new CommonsArrayList <> (x -> x,
-                                         x -> x.setFillColor (aBGCell),
-                                         x -> ((PLText) x.getElement ()).getText ().startsWith ("Cell 2") ? x
-                                                                                                             .setFillColor (aBGCell)
-                                                                                                          : x);
+    final ICommonsList <Function <PLTableCell, PLTableCell>> aCellFcts = new CommonsArrayList <> (x -> x,
+                                                                                                  x -> x.setFillColor (aBGCell),
+                                                                                                  x -> ((PLText) x.getElement ()).getText ()
+                                                                                                                                 .startsWith ("Cell 2") ? x.setFillColor (aBGCell)
+                                                                                                                                                        : x);
 
-    final ICommonsList <Function <AbstractPLElement<?>, AbstractPLElement <?>>> aElementFcts;
-    aElementFcts = new CommonsArrayList <> (x -> x,
-                                            x -> x.setFillColor (aBGElement),
-                                            x -> x.setBorder (aBorder),
-                                            x -> x.setBorder (aBorder).setFillColor (aBGElement),
-                                            x -> x.setBorder (aBorder).setPadding (aPadding).setFillColor (aBGElement),
-                                            x -> x.setBorder (aBorder).setMargin (aMargin).setFillColor (aBGElement),
-                                            x -> x.setBorder (aBorder)
-                                                  .setPadding (aPadding)
-                                                  .setMargin (aMargin)
-                                                  .setFillColor (aBGElement));
+    final ICommonsList <Function <AbstractPLElement <?>, AbstractPLElement <?>>> aElementFcts = new CommonsArrayList <> (x -> x,
+                                                                                                                         x -> x.setFillColor (aBGElement),
+                                                                                                                         x -> x.setBorder (aBorder),
+                                                                                                                         x -> x.setBorder (aBorder)
+                                                                                                                               .setFillColor (aBGElement),
+                                                                                                                         x -> x.setBorder (aBorder)
+                                                                                                                               .setPadding (aPadding)
+                                                                                                                               .setFillColor (aBGElement),
+                                                                                                                         x -> x.setBorder (aBorder)
+                                                                                                                               .setMargin (aMargin)
+                                                                                                                               .setFillColor (aBGElement),
+                                                                                                                         x -> x.setBorder (aBorder)
+                                                                                                                               .setPadding (aPadding)
+                                                                                                                               .setMargin (aMargin)
+                                                                                                                               .setFillColor (aBGElement));
 
     int nRowFunc = 0;
     for (final Function <PLTableRow, PLTableRow> aRowFct : aRowFcts)
@@ -225,7 +226,7 @@ public final class PLTableTest
                                                                                                                                        "/" +
                                                                                                                                        nCurElementFunc,
                                                                                                                                        r10)))))));
-          aTable.addRow (new PLTableCell (new PLSpacerY(5), nCols));
+          aTable.addRow (new PLTableCell (new PLSpacerY (5), nCols));
           ++nElementFunc;
         }
         nCellFunc++;
@@ -416,7 +417,7 @@ public final class PLTableTest
       eGridType.applyGridToTable (aTable, new BorderStyleSpec (PLColor.PINK, 3));
       aPS1.addElement (aTable);
       aPS1.addElement (new PLText ("Text after table", r10));
-      aPS1.addElement (new PLPageBreak(false));
+      aPS1.addElement (new PLPageBreak (false));
     }
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
@@ -520,7 +521,7 @@ public final class PLTableTest
                                                        10);
     final PLTable aTable = PLTable.createWithEvenlySizedColumns (3).setID ("table");
     aTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10).setID ("longtext")).setID ("celllongtext"),
-                            new PLTableCell (new PLSpacerX(0).setID ("empty")).setID ("cellempty"),
+                            new PLTableCell (new PLSpacerX ().setID ("empty")).setID ("cellempty"),
                             new PLTableCell (new PLText ("Short text", r10).setID ("shorttext")).setID (
                                                                                                         "cellshorttext"))
           .setID ("row");
@@ -550,7 +551,7 @@ public final class PLTableTest
     {
       aTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10).setID ("longtext").setPadding (2)).setID (
                                                                                                                      "celllongtext"),
-                              new PLTableCell (new PLSpacerX (0).setID ("empty")).setID ("cellempty"),
+                              new PLTableCell (new PLSpacerX ().setWidth (0).setID ("empty")).setID ("cellempty"),
                               new PLTableCell (new PLText ("Short text", r10).setID ("shorttext")).setID (
                                                                                                           "cellshorttext"))
             .setID ("row" + i);
@@ -627,7 +628,7 @@ public final class PLTableTest
     {
       aTable.addAndReturnRow (new PLTableCell (new PLText (Integer.toString (i), r10).setID ("idx")).setID ("cell-idx"),
                               new PLTableCell (new PLText (sLongText, r10).setID ("longtext")).setID ("cell-longtext"),
-                              new PLTableCell (new PLSpacerX (0).setID ("empty")).setID ("cell-empty"),
+                              new PLTableCell (new PLSpacerX ().setWidth (0).setID ("empty")).setID ("cell-empty"),
                               new PLTableCell (new PLText ("Short text", r10).setID ("shorttext")).setID (
                                                                                                           "cell-shorttext"))
             .setID ("row-content-" + i)
@@ -751,7 +752,7 @@ public final class PLTableTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     // Source image has 33x33 pixels
-    final BufferedImage aImg = ImageIO.read (new FileSystemResource("src/test/resources/images/test1.jpg").getInputStream ());
+    final BufferedImage aImg = ImageIO.read (new FileSystemResource ("src/test/resources/images/test1.jpg").getInputStream ());
     assertNotNull (aImg);
 
     // Start table
@@ -819,14 +820,14 @@ public final class PLTableTest
     final PLTable aOuterTable = new PLTable (WidthSpec.perc (25), WidthSpec.star ()).setID ("outer-table");
     for (int i = 0; i < 25; ++i)
     {
-      final PLTable aInnerTable = new PLTable (WidthSpec.perc (30), WidthSpec.perc (70));
+      final PLTable aInnerTable = new PLTable (WidthSpec.perc (30), WidthSpec.perc (70)).setID ("inner-table-" + i);
       for (int j = 0; j < 4; ++j)
-        aInnerTable.addRow (new PLTableCell (new PLText (sShortText, r10)),
-                            new PLTableCell (new PLText (sShortText, r10)));
+        aInnerTable.addAndReturnRow (new PLTableCell (new PLText (sShortText, r10)),
+                                     new PLTableCell (new PLText (sShortText, r10))).setID ("inner-row" + j);
       EPLTableGridType.FULL.applyGridToTable (aInnerTable, new BorderStyleSpec (PLColor.GREEN));
 
       aOuterTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10)).setPadding (5),
-                                   new PLTableCell (aInnerTable)).setID ("row" + i);
+                                   new PLTableCell (aInnerTable)).setID ("outer-row" + i);
     }
     EPLTableGridType.FULL.applyGridToTable (aOuterTable, new BorderStyleSpec (PLColor.RED));
     aPS1.addElement (aOuterTable);
@@ -853,14 +854,14 @@ public final class PLTableTest
     final PLTable aOuterTable = new PLTable (WidthSpec.perc (25), WidthSpec.star ()).setID ("outer-table");
     for (int i = 0; i < 25; ++i)
     {
-      final PLTable aInnerTable = new PLTable (WidthSpec.perc (30), WidthSpec.perc (70));
+      final PLTable aInnerTable = new PLTable (WidthSpec.perc (30), WidthSpec.perc (70)).setID ("inner-table-" + i);
       for (int j = 0; j < 4; ++j)
         aInnerTable.addAndReturnRow (new PLTableCell (new PLText (sShortText, r10)),
-                                     new PLTableCell (new PLText (sShortText, r10)));
+                                     new PLTableCell (new PLText (sShortText, r10))).setID ("inner-row" + j);
       EPLTableGridType.FULL.applyGridToTable (aInnerTable, new BorderStyleSpec (PLColor.GREEN));
 
       // Place text in box, and add padding to box instead of the table
-      aOuterTable.addAndReturnRow (new PLTableCell (new PLBox(new PLText (sLongText, r10)).setPadding (5)),
+      aOuterTable.addAndReturnRow (new PLTableCell (new PLBox (new PLText (sLongText, r10)).setPadding (5)),
                                    new PLTableCell (aInnerTable)).setID ("row" + i);
     }
     EPLTableGridType.FULL.applyGridToTable (aOuterTable, new BorderStyleSpec (PLColor.RED));

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -51,25 +51,27 @@ import org.jspecify.annotations.NonNull;
  *
  * @author Philip Helger
  */
-public final class PDFMicroTypeConverterRegistry {
-    private PDFMicroTypeConverterRegistry() {
-    }
+public final class PDFMicroTypeConverterRegistry
+{
+  private PDFMicroTypeConverterRegistry ()
+  {}
 
-    public static void registerMicroTypeConverter(@NonNull final IMicroTypeConverterRegistry aRegistry,
-                                                  @NonNull final IPreloadFontResolver aPreloadFontResolver) {
-        // Details
-        aRegistry.registerMicroElementTypeConverter(BorderSpec.class, new BorderSpecMicroTypeConverter());
-        aRegistry.registerMicroElementTypeConverter(BorderStyleSpec.class, new BorderStyleSpecMicroTypeConverter());
-        aRegistry.registerMicroElementTypeConverter(FontSpec.class, new FontSpecMicroTypeConverter(aPreloadFontResolver));
-        aRegistry.registerMicroElementTypeConverter(HeightSpec.class, new HeightSpecMicroTypeConverter());
-        aRegistry.registerMicroElementTypeConverter(LineDashPatternSpec.class,
-                new LineDashPatternSpecMicroTypeConverter());
-        aRegistry.registerMicroElementTypeConverter(MarginSpec.class, new MarginSpecMicroTypeConverter());
-        aRegistry.registerMicroElementTypeConverter(PaddingSpec.class, new PaddingSpecMicroTypeConverter());
-        aRegistry.registerMicroElementTypeConverter(PLCellRange.class, new PLCellRangeMicroTypeConverter());
-        aRegistry.registerMicroElementTypeConverter(PLColor.class, new PLColorMicroTypeConverter());
-        aRegistry.registerMicroElementTypeConverter(SizeSpec.class, new SizeSpecMicroTypeConverter());
-        aRegistry.registerMicroElementTypeConverter(TextAndWidthSpec.class, new TextAndWidthSpecMicroTypeConverter());
-        aRegistry.registerMicroElementTypeConverter(WidthSpec.class, new WidthSpecMicroTypeConverter());
-    }
+  public static void registerMicroTypeConverter (@NonNull final IMicroTypeConverterRegistry aRegistry,
+                                                 @NonNull final IPreloadFontResolver aPreloadFontResolver)
+  {
+    // Details
+    aRegistry.registerMicroElementTypeConverter (BorderSpec.class, new BorderSpecMicroTypeConverter ());
+    aRegistry.registerMicroElementTypeConverter (BorderStyleSpec.class, new BorderStyleSpecMicroTypeConverter ());
+    aRegistry.registerMicroElementTypeConverter (FontSpec.class, new FontSpecMicroTypeConverter (aPreloadFontResolver));
+    aRegistry.registerMicroElementTypeConverter (HeightSpec.class, new HeightSpecMicroTypeConverter ());
+    aRegistry.registerMicroElementTypeConverter (LineDashPatternSpec.class,
+                                                 new LineDashPatternSpecMicroTypeConverter ());
+    aRegistry.registerMicroElementTypeConverter (MarginSpec.class, new MarginSpecMicroTypeConverter ());
+    aRegistry.registerMicroElementTypeConverter (PaddingSpec.class, new PaddingSpecMicroTypeConverter ());
+    aRegistry.registerMicroElementTypeConverter (PLCellRange.class, new PLCellRangeMicroTypeConverter ());
+    aRegistry.registerMicroElementTypeConverter (PLColor.class, new PLColorMicroTypeConverter ());
+    aRegistry.registerMicroElementTypeConverter (SizeSpec.class, new SizeSpecMicroTypeConverter ());
+    aRegistry.registerMicroElementTypeConverter (TextAndWidthSpec.class, new TextAndWidthSpecMicroTypeConverter ());
+    aRegistry.registerMicroElementTypeConverter (WidthSpec.class, new WidthSpecMicroTypeConverter ());
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +15,6 @@
  * limitations under the License.
  */
 package com.plenigo.pdflayout.element.link;
-
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import com.helger.base.string.StringHelper;
 import com.helger.io.resource.ClassPathResource;
@@ -41,6 +36,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Test class for {@link PLExternalLink}
  *
@@ -49,7 +48,7 @@ import org.junit.rules.TestRule;
 public final class PLExternalLinkTest
 {
   @Rule
-  public final TestRule m_aRule = new PLDebugTestRule();
+  public final TestRule m_aRule = new PLDebugTestRule ();
 
   @Test
   public void testBasic () throws PDFCreationException, IOException
@@ -61,13 +60,13 @@ public final class PLExternalLinkTest
       PLDebugRender.setDebugRender (true);
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
-    aPS1.addElement (new PLExternalLink (new PLText("bla", r10)).setURI ("https://example.org")
+    aPS1.addElement (new PLExternalLink (new PLText ("bla", r10)).setURI ("https://example.org")
                                                                  .setBorder (PLColor.RED)
                                                                  .setFillColor (PLColor.YELLOW)
                                                                  .setMarginBottom (20));
     aPS1.addElement (new PLExternalLink (new PLText ("bla", r10)).setURI ("https://example.org")
                                                                  .setBorder (PLColor.GREEN)
-                                                                 .setBorder (new BorderStyleSpec(new LineDashPatternSpec(2,
+                                                                 .setBorder (new BorderStyleSpec (new LineDashPatternSpec (2,
                                                                                                                            3)))
                                                                  .setFillColor (PLColor.YELLOW));
     aPS1.addElement (new PLExternalLink (new PLText ("bla p10", r10)).setURI ("https://example.org")
@@ -92,7 +91,7 @@ public final class PLExternalLinkTest
                                                                                                 .setBorderBottom (new BorderStyleSpec (PLColor.BLUE)));
     aPS1.addElement (new PLText ("This is no link", r10));
 
-    aPS1.addElement (new PLExternalLink (new PLImage(ImageIO.read (ClassPathResource.getInputStream ("images/test1.jpg")),
+    aPS1.addElement (new PLExternalLink (new PLImage (ImageIO.read (ClassPathResource.getInputStream ("images/test1.jpg")),
                                                       50,
                                                       50)).setURI ("https://example.org")
                                                           .setBorder (PLColor.RED)

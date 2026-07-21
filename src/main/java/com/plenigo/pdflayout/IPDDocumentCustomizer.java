@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,13 @@ import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 
 /**
- * Callback interface for PDF customization
+ * Callback interface for PDF customization.
+ * <p>
+ * <b>Trust boundary:</b> an {@link IPDDocumentCustomizer} receives full mutation access to the
+ * {@link PDDocument} - including security handlers, encryption, the page tree, fonts and
+ * annotations. Only register customizers from code you trust; never pass an implementation built
+ * from untrusted input (for example a deserialized lambda or a class loaded from a tenant-supplied
+ * jar).
  *
  * @author Philip Helger
  */

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,24 +27,28 @@ import org.jspecify.annotations.Nullable;
  * @author Philip Helger
  * @since 7.4.0
  */
-public enum ELineCapStyle implements IHasIntID {
-    CAP(0),
-    ROUND_CAP(1),
-    SQUARE(2);
+public enum ELineCapStyle implements IHasIntID
+{
+  CAP (0),
+  ROUND_CAP (1),
+  SQUARE (2);
 
-    private final int m_nValue;
+  private final int m_nValue;
 
-    ELineCapStyle(@Nonnegative final int nValue) {
-        m_nValue = nValue;
-    }
+  ELineCapStyle (@Nonnegative final int nValue)
+  {
+    m_nValue = nValue;
+  }
 
-    @Nonnegative
-    public int getID() {
-        return m_nValue;
-    }
+  @Nonnegative
+  public int getID ()
+  {
+    return m_nValue;
+  }
 
-    @Nullable
-    public static ELineCapStyle getFromIDOrNull(final int nID) {
-        return EnumHelper.getFromIDOrNull(ELineCapStyle.class, nID);
-    }
+  @Nullable
+  public static ELineCapStyle getFromIDOrNull (final int nID)
+  {
+    return EnumHelper.getFromIDOrNull (ELineCapStyle.class, nID);
+  }
 }

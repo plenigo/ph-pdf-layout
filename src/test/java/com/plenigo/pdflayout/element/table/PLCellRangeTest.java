@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,11 +16,10 @@
  */
 package com.plenigo.pdflayout.element.table;
 
-import static org.junit.Assert.assertEquals;
-
+import com.helger.xml.mock.XMLTestHelper;
 import org.junit.Test;
 
-import com.helger.xml.mock.XMLTestHelper;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test class for class {@link PLCellRange}.

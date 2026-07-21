@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,19 +28,22 @@ import org.jspecify.annotations.Nullable;
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class PaddingSpecMicroTypeConverter extends AbstractRectSpecMicroTypeConverter<PaddingSpec> {
+public final class PaddingSpecMicroTypeConverter extends AbstractRectSpecMicroTypeConverter <PaddingSpec>
+{
 
-    @NonNull
-    public IMicroElement convertToMicroElement(@NonNull final PaddingSpec aValue,
-                                               @Nullable final String sNamespaceURI,
-                                               @NonNull final String sTagName) {
-        final IMicroElement aElement = new MicroElement(sNamespaceURI, sTagName);
-        fillMicroElement(aValue, aElement);
-        return aElement;
-    }
+  @NonNull
+  public IMicroElement convertToMicroElement (@NonNull final PaddingSpec aValue,
+                                              @Nullable final String sNamespaceURI,
+                                              @NonNull final String sTagName)
+  {
+    final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
+    fillMicroElement (aValue, aElement);
+    return aElement;
+  }
 
-    @NonNull
-    public PaddingSpec convertToNative(@NonNull final IMicroElement aElement) {
-        return new PaddingSpec(convertToRectSpec(aElement));
-    }
+  @NonNull
+  public PaddingSpec convertToNative (@NonNull final IMicroElement aElement)
+  {
+    return new PaddingSpec (convertToRectSpec (aElement));
+  }
 }

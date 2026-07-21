@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,30 +29,33 @@ import org.jspecify.annotations.Nullable;
  *
  * @author Philip Helger
  */
-public final class HeightSpecMicroTypeConverter implements IMicroTypeConverter<HeightSpec> {
-    private static final String ATTR_TYPE = "type";
-    private static final String ATTR_VALUE = "value";
+public final class HeightSpecMicroTypeConverter implements IMicroTypeConverter <HeightSpec>
+{
+  private static final String ATTR_TYPE = "type";
+  private static final String ATTR_VALUE = "value";
 
-    @NonNull
-    public IMicroElement convertToMicroElement(@NonNull final HeightSpec aValue,
-                                               @Nullable final String sNamespaceURI,
-                                               @NonNull final String sTagName) {
-        final IMicroElement aElement = new MicroElement(sNamespaceURI, sTagName);
+  @NonNull
+  public IMicroElement convertToMicroElement (@NonNull final HeightSpec aValue,
+                                              @Nullable final String sNamespaceURI,
+                                              @NonNull final String sTagName)
+  {
+    final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
-        aElement.setAttribute(ATTR_TYPE, aValue.getTypeID());
-        if (aValue.isAbsolute())
-            aElement.setAttribute(ATTR_VALUE, aValue.getValue());
-        return aElement;
-    }
+    aElement.setAttribute (ATTR_TYPE, aValue.getTypeID ());
+    if (aValue.isAbsolute ())
+      aElement.setAttribute (ATTR_VALUE, aValue.getValue ());
+    return aElement;
+  }
 
-    @NonNull
-    public HeightSpec convertToNative(@NonNull final IMicroElement aElement) {
-        final String sTypeID = aElement.getAttributeValue(ATTR_TYPE);
-        final EValueUOMType eHeightType = EValueUOMType.getFromIDOrNull(sTypeID);
-        if (eHeightType == null)
-            throw new IllegalStateException("Failed to resolve height type with ID '" + sTypeID + "!");
+  @NonNull
+  public HeightSpec convertToNative (@NonNull final IMicroElement aElement)
+  {
+    final String sTypeID = aElement.getAttributeValue (ATTR_TYPE);
+    final EValueUOMType eHeightType = EValueUOMType.getFromIDOrNull (sTypeID);
+    if (eHeightType == null)
+      throw new IllegalStateException ("Failed to resolve height type with ID '" + sTypeID + "!");
 
-        final float fValue = eHeightType.isValueRequired() ? aElement.getAttributeValueAsFloat(ATTR_VALUE, Float.NaN) : 0;
-        return new HeightSpec(eHeightType, fValue);
-    }
+    final float fValue = eHeightType.isValueRequired () ? aElement.getAttributeValueAsFloat (ATTR_VALUE, Float.NaN) : 0;
+    return new HeightSpec (eHeightType, fValue);
+  }
 }

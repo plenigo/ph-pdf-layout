@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 package com.plenigo.pdflayout.element.box;
-
-import java.io.File;
 
 import com.plenigo.pdflayout.PDFCreationException;
 import com.plenigo.pdflayout.PDFTestComparer;
@@ -35,6 +33,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
+import java.io.File;
+
 /**
  * Test class for {@link PLBox}
  *
@@ -43,7 +43,7 @@ import org.junit.rules.TestRule;
 public final class PLBoxTest
 {
   @Rule
-  public final TestRule m_aRule = new PLDebugTestRule();
+  public final TestRule m_aRule = new PLDebugTestRule ();
 
   @Test
   public void testBasic () throws PDFCreationException
@@ -57,7 +57,7 @@ public final class PLBoxTest
     aPS1.addElement (new PLBox ().setMargin (5).setPadding (5).setBorder (PLColor.RED).setFillColor (PLColor.YELLOW));
 
     // Check horizontal alignment
-    aPS1.addElement (new PLBox (new PLText("Left", r10).setHorzAlign (EHorzAlignment.LEFT).setBorder (PLColor.RED))
+    aPS1.addElement (new PLBox (new PLText ("Left", r10).setHorzAlign (EHorzAlignment.LEFT).setBorder (PLColor.RED))
                                                                                                                     .setPadding (2)
                                                                                                                     .setMargin (5)
                                                                                                                     .setFillColor (PLColor.YELLOW));
@@ -101,7 +101,7 @@ public final class PLBoxTest
                                                                                                              .setFillColor (PLColor.YELLOW));
     aPS1.addElement (new PLBox (new PLText ("Text with different borders,\nmargins and paddings", r10).setHorzAlign (
                                                                                                                      EHorzAlignment.CENTER)
-                                                                                                      .setBorder (new BorderStyleSpec(PLColor.RED,
+                                                                                                      .setBorder (new BorderStyleSpec (PLColor.RED,
                                                                                                                                        5),
                                                                                                                   new BorderStyleSpec (PLColor.GREEN,
                                                                                                                                        5),

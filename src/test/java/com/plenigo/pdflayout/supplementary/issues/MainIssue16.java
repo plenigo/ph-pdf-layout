@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,6 @@
  */
 package com.plenigo.pdflayout.supplementary.issues;
 
-import java.io.File;
-
 import com.plenigo.pdflayout.PDFCreationException;
 import com.plenigo.pdflayout.PageLayoutPDF;
 import com.plenigo.pdflayout.base.PLColor;
@@ -31,6 +29,8 @@ import com.plenigo.pdflayout.spec.FontSpec;
 import com.plenigo.pdflayout.spec.PreloadFont;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
+import java.io.File;
+
 public class MainIssue16
 {
   public static void main (final String [] args) throws PDFCreationException
@@ -43,7 +43,7 @@ public class MainIssue16
 
     // Table1
     final PLTable aTable = PLTable.createWithPercentage (30, 70).setMarginLeft (200).setID ("t1");
-    aTable.addAndReturnRow (new PLTableCell(new PLText("SUMMARY", r13)), new PLTableCell (new PLText ("", r13)))
+    aTable.addAndReturnRow (new PLTableCell (new PLText ("SUMMARY", r13)), new PLTableCell (new PLText ("", r13)))
           .setFillColor (PLColor.BLUE)
           .setID ("headerrow");
     for (int i = 0; i < 4; ++i)
@@ -63,7 +63,7 @@ public class MainIssue16
                       new PLTableCell (new PLText ("Duration", r10))).setID ("row");
     }
 
-    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec(PLColor.LIGHT_GRAY));
+    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (PLColor.LIGHT_GRAY));
     EPLTableGridType.FULL.applyGridToTable (aTable2, new BorderStyleSpec (PLColor.LIGHT_GRAY));
 
     aPS1.addElement (aTable);

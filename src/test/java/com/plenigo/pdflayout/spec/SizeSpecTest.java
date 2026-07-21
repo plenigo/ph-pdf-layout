@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,13 +16,12 @@
  */
 package com.plenigo.pdflayout.spec;
 
-import static org.junit.Assert.assertEquals;
-
+import com.helger.base.mock.CommonsAssert;
+import com.helger.unittest.support.TestHelper;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Test;
 
-import com.helger.base.mock.CommonsAssert;
-import com.helger.unittest.support.TestHelper;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test class for class {@link SizeSpec}.

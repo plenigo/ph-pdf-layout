@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,53 +35,61 @@ import java.io.IOException;
  * Represent a static image based on {@link BufferedImage}. This image type is
  * supported for all {@link EPLImageType}s!
  *
- * @author Philip Helger
  * @see PLStreamImage
+ * @author Philip Helger
  */
-public class PLImage extends AbstractPLImage<PLImage> {
-    private final BufferedImage m_aImage;
+public class PLImage extends AbstractPLImage <PLImage>
+{
+  private final BufferedImage m_aImage;
 
-    public PLImage(@NonNull final BufferedImage aImage) {
-        this(aImage, aImage.getWidth(), aImage.getHeight());
+  public PLImage (@NonNull final BufferedImage aImage)
+  {
+    this (aImage, aImage.getWidth (), aImage.getHeight ());
+  }
+
+  public PLImage (@NonNull final BufferedImage aImage, @Nonnegative final float fImageWidth, @Nonnegative final float fImageHeight)
+  {
+    super (fImageWidth, fImageHeight);
+    ValueEnforcer.notNull (aImage, "Image");
+
+    m_aImage = aImage;
+  }
+
+  @Override
+  @NonNull
+  @OverridingMethodsMustInvokeSuper
+  public PLImage setBasicDataFrom (@NonNull final PLImage aSource)
+  {
+    super.setBasicDataFrom (aSource);
+    return this;
+  }
+
+  @Nullable
+  public BufferedImage getImage ()
+  {
+    return m_aImage;
+  }
+
+  @Override
+  @NonNull
+  protected PDImageXObject getXObject (@NonNull final PagePreRenderContext aCtx) throws IOException
+  {
+    switch (getImageType ())
+    {
+      case CCITT:
+        return CCITTFactory.createFromImage (aCtx.getDocument (), m_aImage);
+      case JPEG:
+        return JPEGFactory.createFromImage (aCtx.getDocument (), m_aImage);
+      case LOSSLESS:
+        return LosslessFactory.createFromImage (aCtx.getDocument (), m_aImage);
+      default:
+        throw new IllegalStateException ("Unsupported image type: " + toString ());
     }
+  }
 
-    public PLImage(@NonNull final BufferedImage aImage, @Nonnegative final float fImageWidth, @Nonnegative final float fImageHeight) {
-        super(fImageWidth, fImageHeight);
-        ValueEnforcer.notNull(aImage, "Image");
-
-        m_aImage = aImage;
-    }
-
-    @Override
-    @NonNull
-    @OverridingMethodsMustInvokeSuper
-    public PLImage setBasicDataFrom(@NonNull final PLImage aSource) {
-        super.setBasicDataFrom(aSource);
-        return this;
-    }
-
-    @Nullable
-    public BufferedImage getImage() {
-        return m_aImage;
-    }
-
-    @Override
-    @NonNull
-    protected PDImageXObject getXObject(@NonNull final PagePreRenderContext aCtx) throws IOException {
-        switch (getImageType()) {
-            case CCITT:
-                return CCITTFactory.createFromImage(aCtx.getDocument(), m_aImage);
-            case JPEG:
-                return JPEGFactory.createFromImage(aCtx.getDocument(), m_aImage);
-            case LOSSLESS:
-                return LosslessFactory.createFromImage(aCtx.getDocument(), m_aImage);
-            default:
-                throw new IllegalStateException("Unsupported image type: " + toString());
-        }
-    }
-
-    @Override
-    public String toString() {
-        return ToStringGenerator.getDerived(super.toString()).append("Image", m_aImage).getToString();
-    }
+  @Override
+  public String toString ()
+  {
+    return ToStringGenerator.getDerived (super.toString ()).append ("Image", m_aImage).getToString ();
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 package com.plenigo.pdflayout.element.hbox;
-
-import java.io.File;
 
 import com.plenigo.pdflayout.PDFCreationException;
 import com.plenigo.pdflayout.PDFTestComparer;
@@ -37,6 +35,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
+import java.io.File;
+
 /**
  * Test class for {@link PLHBox}
  *
@@ -45,7 +45,7 @@ import org.junit.rules.TestRule;
 public final class PLHBoxTest
 {
   @Rule
-  public final TestRule m_aRule = new PLDebugTestRule();
+  public final TestRule m_aRule = new PLDebugTestRule ();
 
   @Test
   public void testStarWidthInline () throws PDFCreationException
@@ -56,7 +56,7 @@ public final class PLHBoxTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLText(s, r10).setBorder (PLColor.RED), WidthSpec.star ());
+    aHBox.addColumn (new PLText (s, r10).setBorder (PLColor.RED), WidthSpec.star ());
     aHBox.addColumn (new PLText (s, r10).setBorder (PLColor.RED), WidthSpec.star ());
     aHBox.addColumn (new PLText (s, r10).setBorder (PLColor.RED), WidthSpec.star ());
     aPS1.addElement (aHBox);
@@ -75,7 +75,7 @@ public final class PLHBoxTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLBox(new PLText (s, r10)).setBorder (PLColor.RED), WidthSpec.star ());
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (PLColor.RED), WidthSpec.star ());
     aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (PLColor.RED), WidthSpec.star ());
     aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (PLColor.RED), WidthSpec.star ());
     aPS1.addElement (aHBox);
@@ -240,7 +240,7 @@ public final class PLHBoxTest
           aHBox.addColumn (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (PLColor.RED), WidthSpec.auto ());
           aPS1.addElement (aHBox);
         }
-    aPS1.addElement (new PLPageBreak(true));
+    aPS1.addElement (new PLPageBreak (true));
 
     for (int i = 0; i < 2; ++i)
       for (int j = 0; j < 2; ++j)

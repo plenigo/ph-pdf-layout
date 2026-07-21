@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,41 +36,47 @@ import java.io.IOException;
  * @author Philip Helger
  */
 @NotThreadSafe
-public final class PreparationContextGlobal {
-    private final PDDocument m_aDoc;
-    private final ICommonsMap<PreloadFont, LoadedFont> m_aFontCache = new CommonsHashMap<>();
+public final class PreparationContextGlobal
+{
+  private final PDDocument m_aDoc;
+  private final ICommonsMap <PreloadFont, LoadedFont> m_aFontCache = new CommonsHashMap <> ();
 
-    /**
-     * Constructor
-     *
-     * @param aDoc The {@link PDDocument} worked upon
-     */
-    public PreparationContextGlobal(@NonNull final PDDocument aDoc) {
-        ValueEnforcer.notNull(aDoc, "PDDocument");
-        m_aDoc = aDoc;
+  /**
+   * Constructor
+   *
+   * @param aDoc
+   *        The {@link PDDocument} worked upon
+   */
+  public PreparationContextGlobal (@NonNull final PDDocument aDoc)
+  {
+    ValueEnforcer.notNull (aDoc, "PDDocument");
+    m_aDoc = aDoc;
+  }
+
+  /**
+   * @return The {@link PDDocument} as provided in the constructor. Never <code>null</code>.
+   */
+  @NonNull
+  public PDDocument getDocument ()
+  {
+    return m_aDoc;
+  }
+
+  @NonNull
+  public LoadedFont getLoadedFont (@NonNull final FontSpec aFontSpec) throws IOException
+  {
+    final PreloadFont aPreloadFont = aFontSpec.getPreloadFont ();
+    LoadedFont aLoadedFont = m_aFontCache.get (aPreloadFont);
+    if (aLoadedFont == null)
+    {
+      if (PLDebugLog.isDebugFont ())
+        PLDebugLog.debugFont (aPreloadFont.toString (), "Loading into current document");
+
+      aLoadedFont = new LoadedFont (aPreloadFont.loadPDFont (m_aDoc),
+                                    aPreloadFont.getFallbackCodePoint (),
+                                    aPreloadFont.getFontLineHeight ());
+      m_aFontCache.put (aPreloadFont, aLoadedFont);
     }
-
-    /**
-     * @return The {@link PDDocument} as provided in the constructor. Never <code>null</code>.
-     */
-    @NonNull
-    public PDDocument getDocument() {
-        return m_aDoc;
-    }
-
-    @NonNull
-    public LoadedFont getLoadedFont(@NonNull final FontSpec aFontSpec) throws IOException {
-        final PreloadFont aPreloadFont = aFontSpec.getPreloadFont();
-        LoadedFont aLoadedFont = m_aFontCache.get(aPreloadFont);
-        if (aLoadedFont == null) {
-            if (PLDebugLog.isDebugFont())
-                PLDebugLog.debugFont(aPreloadFont.toString(), "Loading into current document");
-
-            aLoadedFont = new LoadedFont(aPreloadFont.loadPDFont(m_aDoc),
-                    aPreloadFont.getFallbackCodePoint(),
-                    aPreloadFont.getFontLineHeight());
-            m_aFontCache.put(aPreloadFont, aLoadedFont);
-        }
-        return aLoadedFont;
-    }
+    return aLoadedFont;
+  }
 }
