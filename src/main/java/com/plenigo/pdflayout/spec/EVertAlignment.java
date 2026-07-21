@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,38 +27,36 @@ import org.jspecify.annotations.Nullable;
  *
  * @author Philip Helger
  */
-public enum EVertAlignment implements IHasID<String> {
-    /**
-     * Align top
-     */
-    TOP("top"),
+public enum EVertAlignment implements IHasID <String>
+{
+  /** Align top */
+  TOP ("top"),
 
-    /**
-     * Align middle
-     */
-    MIDDLE("middle"),
+  /** Align middle */
+  MIDDLE ("middle"),
 
-    /**
-     * Align bottom
-     */
-    BOTTOM("bottom");
+  /** Align bottom */
+  BOTTOM ("bottom");
 
-    public static final EVertAlignment DEFAULT = TOP;
+  public static final EVertAlignment DEFAULT = TOP;
 
-    private final String m_sID;
+  private final String m_sID;
 
-    EVertAlignment(@NonNull @Nonempty final String sID) {
-        m_sID = sID;
-    }
+  EVertAlignment (@NonNull @Nonempty final String sID)
+  {
+    m_sID = sID;
+  }
 
-    @NonNull
-    @Nonempty
-    public String getID() {
-        return m_sID;
-    }
+  @NonNull
+  @Nonempty
+  public String getID ()
+  {
+    return m_sID;
+  }
 
-    @Nullable
-    public static EVertAlignment getFromIDOrNull(@Nullable final String sID) {
-        return EnumHelper.getFromIDOrNull(EVertAlignment.class, sID);
-    }
+  @Nullable
+  public static EVertAlignment getFromIDOrNull (@Nullable final String sID)
+  {
+    return EnumHelper.getFromIDOrNull (EVertAlignment.class, sID);
+  }
 }

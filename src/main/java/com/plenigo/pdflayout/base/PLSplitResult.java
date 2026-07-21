@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,57 +28,66 @@ import org.jspecify.annotations.Nullable;
  * @author Philip Helger
  */
 @Immutable
-public class PLSplitResult {
-    private final EPLSplitResultType m_eSplitResultType;
-    private final PLElementWithSize m_aFirstElement;
-    private final PLElementWithSize m_aSecondElement;
+public class PLSplitResult
+{
+  private final EPLSplitResultType m_eSplitResultType;
+  private final PLElementWithSize m_aFirstElement;
+  private final PLElementWithSize m_aSecondElement;
 
-    private PLSplitResult(@NonNull final EPLSplitResultType eSplitResultType,
-                          @Nullable final PLElementWithSize aFirstElement,
-                          @Nullable final PLElementWithSize aSecondElement) {
-        ValueEnforcer.notNull(eSplitResultType, "SplitResultType");
-        m_eSplitResultType = eSplitResultType;
-        m_aFirstElement = aFirstElement;
-        m_aSecondElement = aSecondElement;
-    }
+  private PLSplitResult (@NonNull final EPLSplitResultType eSplitResultType,
+                         @Nullable final PLElementWithSize aFirstElement,
+                         @Nullable final PLElementWithSize aSecondElement)
+  {
+    ValueEnforcer.notNull (eSplitResultType, "SplitResultType");
+    m_eSplitResultType = eSplitResultType;
+    m_aFirstElement = aFirstElement;
+    m_aSecondElement = aSecondElement;
+  }
 
-    @NonNull
-    public EPLSplitResultType getSplitResultType() {
-        return m_eSplitResultType;
-    }
+  @NonNull
+  public EPLSplitResultType getSplitResultType ()
+  {
+    return m_eSplitResultType;
+  }
 
-    @Nullable
-    public PLElementWithSize getFirstElement() {
-        return m_aFirstElement;
-    }
+  @Nullable
+  public PLElementWithSize getFirstElement ()
+  {
+    return m_aFirstElement;
+  }
 
-    @Nullable
-    public PLElementWithSize getSecondElement() {
-        return m_aSecondElement;
-    }
+  @Nullable
+  public PLElementWithSize getSecondElement ()
+  {
+    return m_aSecondElement;
+  }
 
-    @Override
-    public String toString() {
-        return new ToStringGenerator(this).append("FirstElement", m_aFirstElement)
-                .append("SecondElement", m_aSecondElement)
-                .getToString();
-    }
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).append ("FirstElement", m_aFirstElement)
+                                       .append ("SecondElement", m_aSecondElement)
+                                       .getToString ();
+  }
 
-    @NonNull
-    public static PLSplitResult createSplit(@NonNull final PLElementWithSize aFirstElement,
-                                            @NonNull final PLElementWithSize aSecondElement) {
-        ValueEnforcer.notNull(aFirstElement, "FirstElement");
-        ValueEnforcer.notNull(aSecondElement, "SecondElement");
-        return new PLSplitResult(EPLSplitResultType.SPLIT_SUCCESS, aFirstElement, aSecondElement);
-    }
+  @NonNull
+  public static PLSplitResult createSplit (@NonNull final PLElementWithSize aFirstElement,
+                                      @NonNull final PLElementWithSize aSecondElement)
+  {
+    ValueEnforcer.notNull (aFirstElement, "FirstElement");
+    ValueEnforcer.notNull (aSecondElement, "SecondElement");
+    return new PLSplitResult (EPLSplitResultType.SPLIT_SUCCESS, aFirstElement, aSecondElement);
+  }
 
-    @NonNull
-    public static PLSplitResult allOnFirst() {
-        return new PLSplitResult(EPLSplitResultType.SPLIT_ALL_ON_FIRST, null, null);
-    }
+  @NonNull
+  public static PLSplitResult allOnFirst ()
+  {
+    return new PLSplitResult (EPLSplitResultType.SPLIT_ALL_ON_FIRST, null, null);
+  }
 
-    @NonNull
-    public static PLSplitResult allOnSecond() {
-        return new PLSplitResult(EPLSplitResultType.SPLIT_ALL_ON_SECOND, null, null);
-    }
+  @NonNull
+  public static PLSplitResult allOnSecond ()
+  {
+    return new PLSplitResult (EPLSplitResultType.SPLIT_ALL_ON_SECOND, null, null);
+  }
 }

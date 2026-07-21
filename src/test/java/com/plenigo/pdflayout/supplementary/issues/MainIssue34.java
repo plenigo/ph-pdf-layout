@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,6 @@
  */
 package com.plenigo.pdflayout.supplementary.issues;
 
-import java.io.File;
-
 import com.plenigo.pdflayout.PDFCreationException;
 import com.plenigo.pdflayout.PageLayoutPDF;
 import com.plenigo.pdflayout.base.PLColor;
@@ -32,6 +30,8 @@ import com.plenigo.pdflayout.spec.FontSpec;
 import com.plenigo.pdflayout.spec.PreloadFont;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
+import java.io.File;
+
 public class MainIssue34
 {
   public static void main (final String [] args) throws PDFCreationException
@@ -42,7 +42,7 @@ public class MainIssue34
 
     final PLTable aTable = PLTable.createWithEvenlySizedColumns (4);
     // header
-    aTable.addRow (new PLTableCell(new PLText("Col1", r13)),
+    aTable.addRow (new PLTableCell (new PLText ("Col1", r13)),
                    new PLTableCell (new PLText ("Col2", r13)),
                    new PLTableCell (new PLText ("Col3", r13)),
                    new PLTableCell (new PLText ("Col4", r13)));
@@ -55,11 +55,11 @@ public class MainIssue34
                    new PLTableCell (new PLText (s, r10)).setMaxHeight (75).setClipContent (true),
                    new PLTableCell (new PLText (s, r10)));
 
-    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec(PLColor.RED));
+    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (PLColor.RED));
 
     aPS1.addElement (aTable);
 
-    aPS1.addElement (new PLBox(new PLText (s, r10)).setMaxHeight (17)
+    aPS1.addElement (new PLBox (new PLText (s, r10)).setMaxHeight (17)
                                                     .setBorder (new BorderStyleSpec (PLColor.GREEN))
                                                     .setClipContent (true));
 

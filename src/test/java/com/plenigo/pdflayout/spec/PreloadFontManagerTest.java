@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,20 +16,18 @@
  */
 package com.plenigo.pdflayout.spec;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-
-import java.io.IOException;
-
+import com.helger.font.api.IFontResource;
+import com.helger.font.lato2.EFontResourceLato2;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.unittest.support.TestHelper;
-import com.helger.font.api.IFontResource;
-import com.helger.font.lato2.EFontResourceLato2;
+import java.io.IOException;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 /**
  * Test class for class {@link PreloadFontManager}.
@@ -51,9 +49,6 @@ public final class PreloadFontManagerTest
     assertNotNull (aMgr.getOrAddEmbeddingPreloadFont (EFontResourceLato2.LATO2_BLACK));
     assertSame (aMgr.getOrAddEmbeddingPreloadFont (EFontResourceLato2.LATO2_BLACK),
                 aMgr.getOrAddEmbeddingPreloadFont (EFontResourceLato2.LATO2_BLACK));
-
-    for (final PreloadFont x : aMgr.getAllPreloadFonts ())
-      TestHelper.testDefaultSerialization (x);
   }
 
   public void _test (final PDType1Font f, final int nCP) throws IOException

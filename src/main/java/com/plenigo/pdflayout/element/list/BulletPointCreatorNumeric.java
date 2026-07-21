@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,33 +32,39 @@ import java.util.function.IntFunction;
  * @author Philip Helger
  * @since 5.1.0
  */
-public class BulletPointCreatorNumeric extends AbstractBulletPointCreatorFontBased<BulletPointCreatorNumeric> {
-    private final IntFunction<String> m_aFormatter;
+public class BulletPointCreatorNumeric extends AbstractBulletPointCreatorFontBased <BulletPointCreatorNumeric>
+{
+  private final IntFunction <String> m_aFormatter;
 
-    public BulletPointCreatorNumeric(@NonNull final IntFunction<String> aFormatter, @NonNull final FontSpec aFontSpec) {
-        super(aFontSpec);
-        ValueEnforcer.notNull(aFormatter, "Formatter");
-        m_aFormatter = aFormatter;
-    }
+  public BulletPointCreatorNumeric (@NonNull final IntFunction <String> aFormatter, @NonNull final FontSpec aFontSpec)
+  {
+    super (aFontSpec);
+    ValueEnforcer.notNull (aFormatter, "Formatter");
+    m_aFormatter = aFormatter;
+  }
 
-    @NonNull
-    public final IntFunction<String> getFormatter() {
-        return m_aFormatter;
-    }
+  @NonNull
+  public final IntFunction <String> getFormatter ()
+  {
+    return m_aFormatter;
+  }
 
-    @NonNull
-    public String getBulletPointText(@Nonnegative final int nBulletPointIndex) {
-        // Use 0-based index
-        return m_aFormatter.apply(nBulletPointIndex);
-    }
+  @NonNull
+  public String getBulletPointText (@Nonnegative final int nBulletPointIndex)
+  {
+    // Use 0-based index
+    return m_aFormatter.apply (nBulletPointIndex);
+  }
 
-    @NonNull
-    public PLText getBulletPointElement(@Nonnegative final int nBulletPointIndex) {
-        return new PLText(getBulletPointText(nBulletPointIndex), getFontSpec()).setPadding(getPadding());
-    }
+  @NonNull
+  public PLText getBulletPointElement (@Nonnegative final int nBulletPointIndex)
+  {
+    return new PLText (getBulletPointText (nBulletPointIndex), getFontSpec ()).setPadding (getPadding ());
+  }
 
-    @Override
-    public String toString() {
-        return ToStringGenerator.getDerived(super.toString()).append("Formatter", m_aFormatter).getToString();
-    }
+  @Override
+  public String toString ()
+  {
+    return ToStringGenerator.getDerived (super.toString ()).append ("Formatter", m_aFormatter).getToString ();
+  }
 }

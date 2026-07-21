@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,10 +16,9 @@
  */
 package com.plenigo.pdflayout;
 
-import org.junit.rules.ExternalResource;
-
 import com.plenigo.pdflayout.debug.PLDebugLog;
 import com.plenigo.pdflayout.debug.PLDebugLog.PLDebugOutputLogger;
+import org.junit.rules.ExternalResource;
 
 public class PLDebugTestRule extends ExternalResource
 {

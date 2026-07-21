@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,9 +16,9 @@
  */
 package org.apache.pdfbox.pdmodel.font;
 
-import java.io.IOException;
-
 import org.jspecify.annotations.NonNull;
+
+import java.io.IOException;
 
 /**
  * Helper class to access package private classes of {@link PDFont}.

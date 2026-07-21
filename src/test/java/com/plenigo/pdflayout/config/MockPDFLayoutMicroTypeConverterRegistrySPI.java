@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,15 +24,17 @@ import org.jspecify.annotations.NonNull;
 
 /**
  * Mock SPI implementation
- *
+ * 
  * @author Philip Helger
  */
 @IsSPIImplementation
-public final class MockPDFLayoutMicroTypeConverterRegistrySPI implements IMicroTypeConverterRegistrarSPI {
-    public static final PreloadFontManager PRELOAD_FONT_MANAGER = new PreloadFontManager();
+public final class MockPDFLayoutMicroTypeConverterRegistrySPI implements IMicroTypeConverterRegistrarSPI
+{
+  public static final PreloadFontManager PRELOAD_FONT_MANAGER = new PreloadFontManager ();
 
-    @Override
-    public void registerMicroTypeConverter(@NonNull final IMicroTypeConverterRegistry aRegistry) {
-        PDFMicroTypeConverterRegistry.registerMicroTypeConverter(aRegistry, PRELOAD_FONT_MANAGER);
-    }
+  @Override
+  public void registerMicroTypeConverter (@NonNull final IMicroTypeConverterRegistry aRegistry)
+  {
+    PDFMicroTypeConverterRegistry.registerMicroTypeConverter (aRegistry, PRELOAD_FONT_MANAGER);
+  }
 }

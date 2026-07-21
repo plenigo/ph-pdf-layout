@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,14 +26,15 @@ import org.jspecify.annotations.NonNull;
  * @author Philip Helger
  * @since 5.1.0
  */
-public interface IBulletPointCreator {
-    /**
-     * Get the bullet point text for the specified index.
-     *
-     * @param nBulletPointIndex The 0-based index of the bullet point to be created.
-     *
-     * @return A non-<code>null</code> bullet point element.
-     */
-    @NonNull
-    IPLRenderableObject<?> getBulletPointElement(@Nonnegative int nBulletPointIndex);
+public interface IBulletPointCreator
+{
+  /**
+   * Get the bullet point text for the specified index.
+   *
+   * @param nBulletPointIndex
+   *        The 0-based index of the bullet point to be created.
+   * @return A non-<code>null</code> bullet point element.
+   */
+  @NonNull
+  IPLRenderableObject <?> getBulletPointElement (@Nonnegative int nBulletPointIndex);
 }

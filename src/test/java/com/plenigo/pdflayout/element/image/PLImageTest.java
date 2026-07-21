@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +15,6 @@
  * limitations under the License.
  */
 package com.plenigo.pdflayout.element.image;
-
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import com.helger.io.resource.ClassPathResource;
 import com.plenigo.pdflayout.PDFCreationException;
@@ -40,6 +35,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Test class for {@link PLImage} and {@link PLStreamImage}
@@ -49,7 +47,7 @@ import org.junit.rules.TestRule;
 public final class PLImageTest
 {
   @Rule
-  public final TestRule m_aRule = new PLDebugTestRule();
+  public final TestRule m_aRule = new PLDebugTestRule ();
 
   @Test
   public void testBasic () throws PDFCreationException, IOException
@@ -58,12 +56,12 @@ public final class PLImageTest
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
 
-    aPS1.addElement (new PLText("First line - left image below", r10).setHorzAlign (EHorzAlignment.CENTER)
+    aPS1.addElement (new PLText ("First line - left image below", r10).setHorzAlign (EHorzAlignment.CENTER)
                                                                       .setBorder (PLColor.RED));
     aPS1.addElement (new PLImage (ImageIO.read (ClassPathResource.getInputStream ("images/test1.jpg")), 50, 50));
 
     aPS1.addElement (new PLText ("Second line - table with 5 columns below", r10).setHorzAlign (EHorzAlignment.CENTER)
-                                                                                 .setBorder (new BorderStyleSpec(PLColor.BLUE)));
+                                                                                 .setBorder (new BorderStyleSpec (PLColor.BLUE)));
     final PLHBox aHBox = new PLHBox ();
     aHBox.addColumn (new PLText ("Col1", r10), WidthSpec.perc (10));
     aHBox.addColumn (new PLStreamImage (new ClassPathResource ("images/test1.jpg"), 50, 50).setFillColor (PLColor.BLUE),

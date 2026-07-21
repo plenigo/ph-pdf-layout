@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,10 @@
  */
 package com.plenigo.pdflayout.element.table;
 
+import com.helger.annotation.Nonnegative;
 import com.helger.annotation.style.ReturnsMutableCopy;
 import com.helger.base.clone.ICloneable;
+import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.hashcode.HashCodeGenerator;
 import com.helger.base.tostring.ToStringGenerator;
 import org.jspecify.annotations.NonNull;
@@ -27,135 +29,159 @@ import org.jspecify.annotations.NonNull;
  *
  * @author Philip Helger
  */
-public class PLCellRange implements IPLCellRange, ICloneable<PLCellRange> {
-    private int m_nFirstRow;
-    private int m_nLastRow;
-    private int m_nFirstCol;
-    private int m_nLastCol;
+public class PLCellRange implements IPLCellRange, ICloneable <PLCellRange>
+{
+  private int m_nFirstRow;
+  private int m_nLastRow;
+  private int m_nFirstCol;
+  private int m_nLastCol;
 
-    /**
-     * Default constructor
-     *
-     * @param nFirstRow First row index, inclusive.
-     * @param nLastRow  Last row index, inclusive.
-     * @param nFirstCol First column index, inclusive.
-     * @param nLastCol  Last column index, inclusive.
-     */
-    public PLCellRange(final int nFirstRow, final int nLastRow, final int nFirstCol, final int nLastCol) {
-        setFirstRow(nFirstRow);
-        setLastRow(nLastRow);
-        setFirstColumn(nFirstCol);
-        setLastColumn(nLastCol);
-    }
+  /**
+   * Default constructor
+   *
+   * @param nFirstRow
+   *        First row index, inclusive.
+   * @param nLastRow
+   *        Last row index, inclusive.
+   * @param nFirstCol
+   *        First column index, inclusive.
+   * @param nLastCol
+   *        Last column index, inclusive.
+   */
+  public PLCellRange (final int nFirstRow, final int nLastRow, final int nFirstCol, final int nLastCol)
+  {
+    setFirstRow (nFirstRow);
+    setLastRow (nLastRow);
+    setFirstColumn (nFirstCol);
+    setLastColumn (nLastCol);
+  }
 
-    /**
-     * Copy constructor
-     *
-     * @param aOther The cell range to copy the values from. May not be
-     *               <code>null</code>.
-     */
-    public PLCellRange(@NonNull final IPLCellRange aOther) {
-        this(aOther.getFirstRow(), aOther.getLastRow(), aOther.getFirstColumn(), aOther.getLastColumn());
-    }
+  /**
+   * Copy constructor
+   *
+   * @param aOther
+   *        The cell range to copy the values from. May not be
+   *        <code>null</code>.
+   */
+  public PLCellRange (@NonNull final IPLCellRange aOther)
+  {
+    this (aOther.getFirstRow (), aOther.getLastRow (), aOther.getFirstColumn (), aOther.getLastColumn ());
+  }
 
-    /**
-     * @return row number for the upper left hand corner
-     */
-    public int getFirstRow() {
-        return m_nFirstRow;
-    }
+  /**
+   * @return row number for the upper left hand corner
+   */
+  public int getFirstRow ()
+  {
+    return m_nFirstRow;
+  }
 
-    /**
-     * @return row number for the lower right hand corner
-     */
-    public int getLastRow() {
-        return m_nLastRow;
-    }
+  /**
+   * @return row number for the lower right hand corner
+   */
+  public int getLastRow ()
+  {
+    return m_nLastRow;
+  }
 
-    /**
-     * @return column number for the upper left hand corner
-     */
-    public int getFirstColumn() {
-        return m_nFirstCol;
-    }
+  /**
+   * @return column number for the upper left hand corner
+   */
+  public int getFirstColumn ()
+  {
+    return m_nFirstCol;
+  }
 
-    /**
-     * @return column number for the lower right hand corner
-     */
-    public int getLastColumn() {
-        return m_nLastCol;
-    }
+  /**
+   * @return column number for the lower right hand corner
+   */
+  public int getLastColumn ()
+  {
+    return m_nLastCol;
+  }
 
-    /**
-     * @param nFirstRow row number for the upper left hand corner
-     *
-     * @return this for chaining
-     */
-    @NonNull
-    public final PLCellRange setFirstRow(final int nFirstRow) {
-        m_nFirstRow = nFirstRow;
-        return this;
-    }
+  /**
+   * @param nFirstRow
+   *        row number for the upper left hand corner
+   * @return this for chaining
+   */
+  @NonNull
+  public final PLCellRange setFirstRow (@Nonnegative final int nFirstRow)
+  {
+    ValueEnforcer.isGE0 (nFirstRow, "FirstRow");
+    m_nFirstRow = nFirstRow;
+    return this;
+  }
 
-    /**
-     * @param nLastRow row number for the lower right hand corner
-     *
-     * @return this for chaining
-     */
-    @NonNull
-    public final PLCellRange setLastRow(final int nLastRow) {
-        m_nLastRow = nLastRow;
-        return this;
-    }
+  /**
+   * @param nLastRow
+   *        row number for the lower right hand corner
+   * @return this for chaining
+   */
+  @NonNull
+  public final PLCellRange setLastRow (@Nonnegative final int nLastRow)
+  {
+    ValueEnforcer.isGE0 (nLastRow, "LastRow");
+    m_nLastRow = nLastRow;
+    return this;
+  }
 
-    /**
-     * @param nFirstCol column number for the upper left hand corner
-     *
-     * @return this for chaining
-     */
-    @NonNull
-    public final PLCellRange setFirstColumn(final int nFirstCol) {
-        m_nFirstCol = nFirstCol;
-        return this;
-    }
+  /**
+   * @param nFirstCol
+   *        column number for the upper left hand corner
+   * @return this for chaining
+   */
+  @NonNull
+  public final PLCellRange setFirstColumn (@Nonnegative final int nFirstCol)
+  {
+    ValueEnforcer.isGE0 (nFirstCol, "FirstColumn");
+    m_nFirstCol = nFirstCol;
+    return this;
+  }
 
-    /**
-     * @param nLastCol column number for the lower right hand corner
-     *
-     * @return this for chaining
-     */
-    public final PLCellRange setLastColumn(final int nLastCol) {
-        m_nLastCol = nLastCol;
-        return this;
-    }
+  /**
+   * @param nLastCol
+   *        column number for the lower right hand corner
+   * @return this for chaining
+   */
+  public final PLCellRange setLastColumn (@Nonnegative final int nLastCol)
+  {
+    ValueEnforcer.isGE0 (nLastCol, "LastColumn");
+    m_nLastCol = nLastCol;
+    return this;
+  }
 
-    @NonNull
-    @ReturnsMutableCopy
-    public PLCellRange getClone() {
-        return new PLCellRange(this);
-    }
+  @NonNull
+  @ReturnsMutableCopy
+  public PLCellRange getClone ()
+  {
+    return new PLCellRange (this);
+  }
 
-    @Override
-    public String toString() {
-        return new ToStringGenerator(this).append("FirstRow", m_nFirstRow)
-                .append("LastRow", m_nLastRow)
-                .append("FirstColumn", m_nFirstCol)
-                .append("LastColumn", m_nLastCol)
-                .getToString();
-    }
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).append ("FirstRow", m_nFirstRow)
+                                       .append ("LastRow", m_nLastRow)
+                                       .append ("FirstColumn", m_nFirstCol)
+                                       .append ("LastColumn", m_nLastCol)
+                                       .getToString ();
+  }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (o == this)
-            return true;
-        if (o == null || !getClass().equals(o.getClass()))
-            return false;
-        final PLCellRange rhs = (PLCellRange) o;
-        return m_nFirstRow == rhs.m_nFirstRow && m_nLastRow == rhs.m_nLastRow && m_nFirstCol == rhs.m_nFirstCol && m_nLastCol == rhs.m_nLastCol;
-    }
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return true;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+    final PLCellRange rhs = (PLCellRange) o;
+    return m_nFirstRow == rhs.m_nFirstRow && m_nLastRow == rhs.m_nLastRow && m_nFirstCol == rhs.m_nFirstCol && m_nLastCol == rhs.m_nLastCol;
+  }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeGenerator(this).append(m_nFirstRow).append(m_nLastRow).append(m_nFirstCol).append(m_nLastCol).getHashCode();
-    }
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_nFirstRow).append (m_nLastRow).append (m_nFirstCol).append (m_nLastCol).getHashCode ();
+  }
 }

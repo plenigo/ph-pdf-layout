@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,35 +23,36 @@ import org.jspecify.annotations.Nullable;
 /**
  * Base interface for objects with a fill color
  *
- * @param <IMPLTYPE> Implementation type
- *
  * @author Philip Helger
+ * @param <IMPLTYPE>
+ *        Implementation type
  */
-public interface IPLHasFillColor<IMPLTYPE extends IPLHasFillColor<IMPLTYPE>> extends IGenericImplTrait<IMPLTYPE> {
-    /**
-     * By default nothing is filled, so the default value is <code>null</code>.
-     */
-    PLColor DEFAULT_FILL_COLOR = null;
+public interface IPLHasFillColor <IMPLTYPE extends IPLHasFillColor <IMPLTYPE>> extends IGenericImplTrait <IMPLTYPE>
+{
+  /**
+   * By default nothing is filled, so the default value is <code>null</code>.
+   */
+  PLColor DEFAULT_FILL_COLOR = null;
 
-    /**
-     * Set the element fill color.
-     *
-     * @param aFillColor The fill color to use. May be <code>null</code>.
-     *
-     * @return this
-     *
-     * @since 7.2.0
-     */
-    @NonNull
-    IMPLTYPE setFillColor(@Nullable PLColor aFillColor);
+  /**
+   * Set the element fill color.
+   *
+   * @param aFillColor
+   *        The fill color to use. May be <code>null</code>.
+   * @return this
+   * @since 7.2.0
+   */
+  @NonNull
+  IMPLTYPE setFillColor (@Nullable PLColor aFillColor);
 
-    /**
-     * @return The current fill color. May be <code>null</code>.
-     */
-    @Nullable
-    PLColor getFillColor();
+  /**
+   * @return The current fill color. May be <code>null</code>.
+   */
+  @Nullable
+  PLColor getFillColor ();
 
-    default boolean hasFillColor() {
-        return getFillColor() != null;
-    }
+  default boolean hasFillColor ()
+  {
+    return getFillColor () != null;
+  }
 }

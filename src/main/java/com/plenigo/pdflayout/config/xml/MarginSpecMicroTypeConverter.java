@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,19 +28,22 @@ import org.jspecify.annotations.Nullable;
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class MarginSpecMicroTypeConverter extends AbstractRectSpecMicroTypeConverter<MarginSpec> {
-    @Override
-    @NonNull
-    public IMicroElement convertToMicroElement(@NonNull final MarginSpec aValue,
-                                               @Nullable final String sNamespaceURI,
-                                               @NonNull final String sTagName) {
-        final IMicroElement aElement = new MicroElement(sNamespaceURI, sTagName);
-        fillMicroElement(aValue, aElement);
-        return aElement;
-    }
+public final class MarginSpecMicroTypeConverter extends AbstractRectSpecMicroTypeConverter <MarginSpec>
+{
+  @Override
+  @NonNull
+  public IMicroElement convertToMicroElement (@NonNull final MarginSpec aValue,
+                                              @Nullable final String sNamespaceURI,
+                                              @NonNull final String sTagName)
+  {
+    final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
+    fillMicroElement (aValue, aElement);
+    return aElement;
+  }
 
-    @NonNull
-    public MarginSpec convertToNative(@NonNull final IMicroElement aElement) {
-        return new MarginSpec(convertToRectSpec(aElement));
-    }
+  @NonNull
+  public MarginSpec convertToNative (@NonNull final IMicroElement aElement)
+  {
+    return new MarginSpec (convertToRectSpec (aElement));
+  }
 }

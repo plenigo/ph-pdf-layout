@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,20 +26,24 @@ import org.jspecify.annotations.Nullable;
  *
  * @author Philip Helger
  */
-public class PLBox extends AbstractPLBox<PLBox> {
-    public PLBox() {
-        super(null);
-    }
+public class PLBox extends AbstractPLBox <PLBox>
+{
+  public PLBox ()
+  {
+    super (null);
+  }
 
-    public PLBox(@Nullable final IPLRenderableObject<?> aElement) {
-        super(aElement);
-    }
+  public PLBox (@Nullable final IPLRenderableObject <?> aElement)
+  {
+    super (aElement);
+  }
 
-    @Override
-    @NonNull
-    public PLBox internalCreateNewVertSplitObject(@NonNull final PLBox aBase) {
-        final PLBox ret = new PLBox();
-        ret.setBasicDataFrom(aBase);
-        return ret;
-    }
+  @Override
+  @NonNull
+  public PLBox internalCreateNewVertSplitObject (@NonNull final PLBox aBase)
+  {
+    final PLBox ret = new PLBox ();
+    ret.setBasicDataFrom (aBase);
+    return ret;
+  }
 }

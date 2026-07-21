@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,33 +30,39 @@ import org.jspecify.annotations.NonNull;
  * @author Philip Helger
  */
 @NotThreadSafe
-public final class PLVBoxRow {
-    private IPLRenderableObject<?> m_aElement;
-    private final HeightSpec m_aHeight;
+public final class PLVBoxRow
+{
+  private IPLRenderableObject <?> m_aElement;
+  private final HeightSpec m_aHeight;
 
-    public PLVBoxRow(@NonNull final IPLRenderableObject<?> aElement, @NonNull final HeightSpec aHeight) {
-        internalSetElement(aElement);
-        m_aHeight = ValueEnforcer.notNull(aHeight, "Height");
-    }
+  public PLVBoxRow (@NonNull final IPLRenderableObject <?> aElement, @NonNull final HeightSpec aHeight)
+  {
+    internalSetElement (aElement);
+    m_aHeight = ValueEnforcer.notNull (aHeight, "Height");
+  }
 
-    @NonNull
-    public IPLRenderableObject<?> getElement() {
-        return m_aElement;
-    }
+  @NonNull
+  public IPLRenderableObject <?> getElement ()
+  {
+    return m_aElement;
+  }
 
-    @NonNull
-    PLVBoxRow internalSetElement(@NonNull final IPLRenderableObject<?> aElement) {
-        m_aElement = ValueEnforcer.notNull(aElement, "Element");
-        return this;
-    }
+  @NonNull
+  PLVBoxRow internalSetElement (@NonNull final IPLRenderableObject <?> aElement)
+  {
+    m_aElement = ValueEnforcer.notNull (aElement, "Element");
+    return this;
+  }
 
-    @NonNull
-    public HeightSpec getHeight() {
-        return m_aHeight;
-    }
+  @NonNull
+  public HeightSpec getHeight ()
+  {
+    return m_aHeight;
+  }
 
-    @Override
-    public String toString() {
-        return new ToStringGenerator(this).append("Element", m_aElement).append("Height", m_aHeight).getToString();
-    }
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).append ("Element", m_aElement).append ("Height", m_aHeight).getToString ();
+  }
 }

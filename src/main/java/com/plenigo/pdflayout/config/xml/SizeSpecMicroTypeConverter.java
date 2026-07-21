@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,26 +28,29 @@ import org.jspecify.annotations.Nullable;
  *
  * @author Philip Helger
  */
-public final class SizeSpecMicroTypeConverter implements IMicroTypeConverter<SizeSpec> {
-    private static final String ATTR_WIDTH = "width";
-    private static final String ATTR_HEIGHT = "height";
+public final class SizeSpecMicroTypeConverter implements IMicroTypeConverter <SizeSpec>
+{
+  private static final String ATTR_WIDTH = "width";
+  private static final String ATTR_HEIGHT = "height";
 
-    @NonNull
-    public IMicroElement convertToMicroElement(@NonNull final SizeSpec aValue,
-                                               @Nullable final String sNamespaceURI,
-                                               @NonNull final String sTagName) {
-        final IMicroElement aElement = new MicroElement(sNamespaceURI, sTagName);
+  @NonNull
+  public IMicroElement convertToMicroElement (@NonNull final SizeSpec aValue,
+                                              @Nullable final String sNamespaceURI,
+                                              @NonNull final String sTagName)
+  {
+    final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
-        aElement.setAttribute(ATTR_WIDTH, aValue.getWidth());
-        aElement.setAttribute(ATTR_HEIGHT, aValue.getHeight());
-        return aElement;
-    }
+    aElement.setAttribute (ATTR_WIDTH, aValue.getWidth ());
+    aElement.setAttribute (ATTR_HEIGHT, aValue.getHeight ());
+    return aElement;
+  }
 
-    @NonNull
-    public SizeSpec convertToNative(@NonNull final IMicroElement aElement) {
-        final float fWidth = aElement.getAttributeValueAsFloat(ATTR_WIDTH, Float.NaN);
-        final float fHeight = aElement.getAttributeValueAsFloat(ATTR_HEIGHT, Float.NaN);
+  @NonNull
+  public SizeSpec convertToNative (@NonNull final IMicroElement aElement)
+  {
+    final float fWidth = aElement.getAttributeValueAsFloat (ATTR_WIDTH, Float.NaN);
+    final float fHeight = aElement.getAttributeValueAsFloat (ATTR_HEIGHT, Float.NaN);
 
-        return new SizeSpec(fWidth, fHeight);
-    }
+    return new SizeSpec (fWidth, fHeight);
+  }
 }

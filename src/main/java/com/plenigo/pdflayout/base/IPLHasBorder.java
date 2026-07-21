@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,246 +25,263 @@ import org.jspecify.annotations.Nullable;
 /**
  * Base interface for objects having a border
  *
- * @param <IMPLTYPE> Implementation type
- *
  * @author Philip Helger
+ * @param <IMPLTYPE>
+ *        Implementation type
  */
-public interface IPLHasBorder<IMPLTYPE extends IPLHasBorder<IMPLTYPE>> extends
-        IPLHasOutline,
-        IGenericImplTrait<IMPLTYPE> {
-    /**
-     * The default border is a 0 border, meaning no border at all.
-     */
-    BorderSpec DEFAULT_BORDER = BorderSpec.BORDER0;
+public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
+                              IPLHasOutline,
+                              IGenericImplTrait <IMPLTYPE>
+{
+  /**
+   * The default border is a 0 border, meaning no border at all.
+   */
+  BorderSpec DEFAULT_BORDER = BorderSpec.BORDER0;
 
-    /**
-     * Set all border values (left, top, right, bottom) to the same value. This
-     * method may not be called after an element got prepared!
-     *
-     * @param aColor The color to use. May not be <code>null</code>.
-     *
-     * @return this
-     *
-     * @since 7.2.0
-     */
-    @NonNull
-    default IMPLTYPE setBorder(@NonNull final PLColor aColor) {
-        return setBorder(new BorderStyleSpec(aColor));
-    }
+  /**
+   * @return The current border. Never <code>null</code>.
+   */
+  @NonNull
+  BorderSpec getBorder ();
 
-    /**
-     * Set all border values (left, top, right, bottom) to the same value. This
-     * method may not be called after an element got prepared!
-     *
-     * @param aBorder The border style specification to use. May be <code>null</code> to
-     *                indicate no border.
-     *
-     * @return this
-     */
-    @NonNull
-    default IMPLTYPE setBorder(@Nullable final BorderStyleSpec aBorder) {
-        return setBorder(new BorderSpec(aBorder));
-    }
+  /**
+   * @return The current top border.
+   */
+  default float getBorderTopWidth ()
+  {
+    return getBorder ().getTopWidth ();
+  }
 
-    /**
-     * Set all border values. This method may not be called after an element got
-     * prepared!
-     *
-     * @param aBorderY The Y-value to use (for top and bottom). May be <code>null</code> to
-     *                 indicate no border.
-     * @param aBorderX The X-value to use (for left and right). May be <code>null</code> to
-     *                 indicate no border.
-     *
-     * @return this
-     */
-    @NonNull
-    default IMPLTYPE setBorder(@Nullable final BorderStyleSpec aBorderY, @Nullable final BorderStyleSpec aBorderX) {
-        return setBorder(new BorderSpec(aBorderY, aBorderX));
-    }
+  /**
+   * @return The current right border.
+   */
+  default float getBorderRightWidth ()
+  {
+    return getBorder ().getRightWidth ();
+  }
 
-    /**
-     * Set all border values to potentially different values. This method may not
-     * be called after an element got prepared!
-     *
-     * @param aBorderTop    Top. May be <code>null</code> to indicate no border.
-     * @param aBorderRight  Right. May be <code>null</code> to indicate no border.
-     * @param aBorderBottom Bottom. May be <code>null</code> to indicate no border.
-     * @param aBorderLeft   Left. May be <code>null</code> to indicate no border.
-     *
-     * @return this
-     */
-    @NonNull
-    default IMPLTYPE setBorder(@Nullable final BorderStyleSpec aBorderTop,
-                               @Nullable final BorderStyleSpec aBorderRight,
-                               @Nullable final BorderStyleSpec aBorderBottom,
-                               @Nullable final BorderStyleSpec aBorderLeft) {
-        return setBorder(new BorderSpec(aBorderTop, aBorderRight, aBorderBottom, aBorderLeft));
-    }
+  /**
+   * @return The current bottom border.
+   */
+  default float getBorderBottomWidth ()
+  {
+    return getBorder ().getBottomWidth ();
+  }
 
-    /**
-     * Set the border values. This method may not be called after an element got
-     * prepared!
-     *
-     * @param aBorder Border to use. May not be <code>null</code>.
-     *
-     * @return this
-     */
-    @NonNull
-    IMPLTYPE setBorder(@NonNull BorderSpec aBorder);
+  /**
+   * @return The current left border.
+   */
+  default float getBorderLeftWidth ()
+  {
+    return getBorder ().getLeftWidth ();
+  }
 
-    /**
-     * Set the top border value. This method may not be called after an element
-     * got prepared!
-     *
-     * @param aBorder The value to use. May be <code>null</code>.
-     *
-     * @return this
-     */
-    @NonNull
-    default IMPLTYPE setBorderTop(@Nullable final BorderStyleSpec aBorder) {
-        return setBorder(getBorder().getCloneWithTop(aBorder));
-    }
+  /**
+   * @return The sum of left and right border.
+   */
+  default float getBorderXSumWidth ()
+  {
+    return getBorder ().getXSumWidth ();
+  }
 
-    /**
-     * Set the right border value. This method may not be called after an element
-     * got prepared!
-     *
-     * @param aBorder The value to use. May be <code>null</code>.
-     *
-     * @return this
-     */
-    @NonNull
-    default IMPLTYPE setBorderRight(@Nullable final BorderStyleSpec aBorder) {
-        return setBorder(getBorder().getCloneWithRight(aBorder));
-    }
+  /**
+   * @return The sum of top and bottom border.
+   */
+  default float getBorderYSumWidth ()
+  {
+    return getBorder ().getYSumWidth ();
+  }
 
-    /**
-     * Set the bottom border value. This method may not be called after an element
-     * got prepared!
-     *
-     * @param aBorder The value to use. May be <code>null</code>.
-     *
-     * @return this
-     */
-    @NonNull
-    default IMPLTYPE setBorderBottom(@Nullable final BorderStyleSpec aBorder) {
-        return setBorder(getBorder().getCloneWithBottom(aBorder));
-    }
+  @Override
+  default float getOutlineTop ()
+  {
+    return getBorderTopWidth ();
+  }
 
-    /**
-     * Set the left border value. This method may not be called after an element
-     * got prepared!
-     *
-     * @param aBorder The value to use. May be <code>null</code>.
-     *
-     * @return this
-     */
-    @NonNull
-    default IMPLTYPE setBorderLeft(@Nullable final BorderStyleSpec aBorder) {
-        return setBorder(getBorder().getCloneWithLeft(aBorder));
-    }
+  @Override
+  default float getOutlineRight ()
+  {
+    return getBorderRightWidth ();
+  }
 
-    /**
-     * Set the left and right border value. This method may not be called after an
-     * element got prepared!
-     *
-     * @param aBorder The value to use. May be <code>null</code>.
-     *
-     * @return this
-     */
-    @NonNull
-    default IMPLTYPE setBorderX(@Nullable final BorderStyleSpec aBorder) {
-        return setBorderLeft(aBorder).setBorderRight(aBorder);
-    }
+  @Override
+  default float getOutlineBottom ()
+  {
+    return getBorderBottomWidth ();
+  }
 
-    /**
-     * Set the top and bottom border value. This method may not be called after an
-     * element got prepared!
-     *
-     * @param aBorder The value to use. May be <code>null</code>.
-     *
-     * @return this
-     */
-    @NonNull
-    default IMPLTYPE setBorderY(@Nullable final BorderStyleSpec aBorder) {
-        return setBorderTop(aBorder).setBorderBottom(aBorder);
-    }
+  @Override
+  default float getOutlineLeft ()
+  {
+    return getBorderLeftWidth ();
+  }
 
-    /**
-     * @return The current border. Never <code>null</code>.
-     */
-    @NonNull
-    BorderSpec getBorder();
+  @Override
+  default float getOutlineXSum ()
+  {
+    return getBorderXSumWidth ();
+  }
 
-    /**
-     * @return The current top border.
-     */
-    default float getBorderTopWidth() {
-        return getBorder().getTopWidth();
-    }
+  @Override
+  default float getOutlineYSum ()
+  {
+    return getBorderYSumWidth ();
+  }
 
-    /**
-     * @return The current right border.
-     */
-    default float getBorderRightWidth() {
-        return getBorder().getRightWidth();
-    }
+  /**
+   * Set all border values (left, top, right, bottom) to the same value. This method may not be
+   * called after an element got prepared!
+   *
+   * @param aColor
+   *        The color to use. May not be <code>null</code>.
+   * @return this
+   * @since 7.2.0
+   */
+  @NonNull
+  default IMPLTYPE setBorder (@NonNull final PLColor aColor)
+  {
+    return setBorder (new BorderStyleSpec (aColor));
+  }
 
-    /**
-     * @return The current bottom border.
-     */
-    default float getBorderBottomWidth() {
-        return getBorder().getBottomWidth();
-    }
+  /**
+   * Set all border values (left, top, right, bottom) to the same value. This method may not be
+   * called after an element got prepared!
+   *
+   * @param aBorder
+   *        The border style specification to use. May be <code>null</code> to indicate no border.
+   * @return this
+   */
+  @NonNull
+  default IMPLTYPE setBorder (@Nullable final BorderStyleSpec aBorder)
+  {
+    return setBorder (new BorderSpec (aBorder));
+  }
 
-    /**
-     * @return The current left border.
-     */
-    default float getBorderLeftWidth() {
-        return getBorder().getLeftWidth();
-    }
+  /**
+   * Set all border values. This method may not be called after an element got prepared!
+   *
+   * @param aBorderY
+   *        The Y-value to use (for top and bottom). May be <code>null</code> to indicate no border.
+   * @param aBorderX
+   *        The X-value to use (for left and right). May be <code>null</code> to indicate no border.
+   * @return this
+   */
+  @NonNull
+  default IMPLTYPE setBorder (@Nullable final BorderStyleSpec aBorderY, @Nullable final BorderStyleSpec aBorderX)
+  {
+    return setBorder (new BorderSpec (aBorderY, aBorderX));
+  }
 
-    /**
-     * @return The sum of left and right border.
-     */
-    default float getBorderXSumWidth() {
-        return getBorder().getXSumWidth();
-    }
+  /**
+   * Set all border values to potentially different values. This method may not be called after an
+   * element got prepared!
+   *
+   * @param aBorderTop
+   *        Top. May be <code>null</code> to indicate no border.
+   * @param aBorderRight
+   *        Right. May be <code>null</code> to indicate no border.
+   * @param aBorderBottom
+   *        Bottom. May be <code>null</code> to indicate no border.
+   * @param aBorderLeft
+   *        Left. May be <code>null</code> to indicate no border.
+   * @return this
+   */
+  @NonNull
+  default IMPLTYPE setBorder (@Nullable final BorderStyleSpec aBorderTop,
+                              @Nullable final BorderStyleSpec aBorderRight,
+                              @Nullable final BorderStyleSpec aBorderBottom,
+                              @Nullable final BorderStyleSpec aBorderLeft)
+  {
+    return setBorder (new BorderSpec (aBorderTop, aBorderRight, aBorderBottom, aBorderLeft));
+  }
 
-    /**
-     * @return The sum of top and bottom border.
-     */
-    default float getBorderYSumWidth() {
-        return getBorder().getYSumWidth();
-    }
+  /**
+   * Set the border values. This method may not be called after an element got prepared!
+   *
+   * @param aBorder
+   *        Border to use. May not be <code>null</code>.
+   * @return this
+   */
+  @NonNull
+  IMPLTYPE setBorder (@NonNull BorderSpec aBorder);
 
-    @Override
-    default float getOutlineTop() {
-        return getBorderTopWidth();
-    }
+  /**
+   * Set the top border value. This method may not be called after an element got prepared!
+   *
+   * @param aBorder
+   *        The value to use. May be <code>null</code>.
+   * @return this
+   */
+  @NonNull
+  default IMPLTYPE setBorderTop (@Nullable final BorderStyleSpec aBorder)
+  {
+    return setBorder (getBorder ().getCloneWithTop (aBorder));
+  }
 
-    @Override
-    default float getOutlineRight() {
-        return getBorderRightWidth();
-    }
+  /**
+   * Set the right border value. This method may not be called after an element got prepared!
+   *
+   * @param aBorder
+   *        The value to use. May be <code>null</code>.
+   * @return this
+   */
+  @NonNull
+  default IMPLTYPE setBorderRight (@Nullable final BorderStyleSpec aBorder)
+  {
+    return setBorder (getBorder ().getCloneWithRight (aBorder));
+  }
 
-    @Override
-    default float getOutlineBottom() {
-        return getBorderBottomWidth();
-    }
+  /**
+   * Set the bottom border value. This method may not be called after an element got prepared!
+   *
+   * @param aBorder
+   *        The value to use. May be <code>null</code>.
+   * @return this
+   */
+  @NonNull
+  default IMPLTYPE setBorderBottom (@Nullable final BorderStyleSpec aBorder)
+  {
+    return setBorder (getBorder ().getCloneWithBottom (aBorder));
+  }
 
-    @Override
-    default float getOutlineLeft() {
-        return getBorderLeftWidth();
-    }
+  /**
+   * Set the left border value. This method may not be called after an element got prepared!
+   *
+   * @param aBorder
+   *        The value to use. May be <code>null</code>.
+   * @return this
+   */
+  @NonNull
+  default IMPLTYPE setBorderLeft (@Nullable final BorderStyleSpec aBorder)
+  {
+    return setBorder (getBorder ().getCloneWithLeft (aBorder));
+  }
 
-    @Override
-    default float getOutlineXSum() {
-        return getBorderXSumWidth();
-    }
+  /**
+   * Set the left and right border value. This method may not be called after an element got
+   * prepared!
+   *
+   * @param aBorder
+   *        The value to use. May be <code>null</code>.
+   * @return this
+   */
+  @NonNull
+  default IMPLTYPE setBorderX (@Nullable final BorderStyleSpec aBorder)
+  {
+    return setBorderLeft (aBorder).setBorderRight (aBorder);
+  }
 
-    @Override
-    default float getOutlineYSum() {
-        return getBorderYSumWidth();
-    }
+  /**
+   * Set the top and bottom border value. This method may not be called after an element got
+   * prepared!
+   *
+   * @param aBorder
+   *        The value to use. May be <code>null</code>.
+   * @return this
+   */
+  @NonNull
+  default IMPLTYPE setBorderY (@Nullable final BorderStyleSpec aBorder)
+  {
+    return setBorderTop (aBorder).setBorderBottom (aBorder);
+  }
 }

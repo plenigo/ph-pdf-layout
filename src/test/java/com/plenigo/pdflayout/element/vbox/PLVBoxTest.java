@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 package com.plenigo.pdflayout.element.vbox;
-
-import java.io.File;
 
 import com.helger.base.string.StringHelper;
 import com.plenigo.pdflayout.PDFCreationException;
@@ -39,7 +37,8 @@ import com.plenigo.pdflayout.spec.WidthSpec;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestRule;
+
+import java.io.File;
 
 /**
  * Test class for {@link PLVBox}
@@ -49,7 +48,7 @@ import org.junit.rules.TestRule;
 public final class PLVBoxTest
 {
   @Rule
-  public final TestRule m_aRule = new PLDebugTestRule();
+  public final PLDebugTestRule m_aRule = new PLDebugTestRule ();
 
   @Test
   public void testBasic () throws PDFCreationException
@@ -60,7 +59,7 @@ public final class PLVBoxTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     final PLVBox aVBox = new PLVBox ();
-    aVBox.addRow (new PLText(s, r10).setBorder (PLColor.RED));
+    aVBox.addRow (new PLText (s, r10).setBorder (PLColor.RED));
 
     // Check horizontal alignment
     aVBox.addRow (new PLText ("Left", r10).setHorzAlign (EHorzAlignment.LEFT).setBorder (PLColor.RED).setID ("left1"));
@@ -93,14 +92,14 @@ public final class PLVBoxTest
   public void testStarAutoStarFullWidth () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
-    final PLPageSet aPS1 = new PLPageSet (new SizeSpec(400, 600));
+    final PLPageSet aPS1 = new PLPageSet (new SizeSpec (400, 600));
 
     final PLVBox aVBox = new PLVBox ();
     aVBox.addRow (new PLText ("This is a test String determining the width of the content", r10).setBorder (
                                                                                                             PLColor.RED));
 
     // Check horizontal alignment
-    aVBox.addRow (new PLBox(new PLText ("Left/top", r10).setBorder (PLColor.RED)).setHorzAlign (EHorzAlignment.LEFT)
+    aVBox.addRow (new PLBox (new PLText ("Left/top", r10).setBorder (PLColor.RED)).setHorzAlign (EHorzAlignment.LEFT)
                                                                                   .setVertAlign (EVertAlignment.TOP)
                                                                                   .setFillColor (PLColor.YELLOW),
                   HeightSpec.star ());
@@ -171,7 +170,7 @@ public final class PLVBoxTest
             aVBox.addRow (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (PLColor.GREEN), HeightSpec.auto ());
             aPS1.addElement (aVBox);
           }
-    aPS1.addElement (new PLPageBreak(true));
+    aPS1.addElement (new PLPageBreak (true));
 
     for (int h = 0; h < 2; h++)
       for (int i = 0; i < 2; ++i)

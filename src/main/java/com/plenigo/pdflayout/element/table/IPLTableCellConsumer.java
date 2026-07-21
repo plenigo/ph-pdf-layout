@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,17 +25,22 @@ import org.jspecify.annotations.NonNull;
  * @author Philip Helger
  */
 @FunctionalInterface
-public interface IPLTableCellConsumer {
-    /**
-     * Performs this operation on the given arguments.
-     *
-     * @param aCell                    the current table cell. Never <code>null</code>.
-     * @param nCellIndex               The cell index. Always &ge; 0.
-     * @param nEffectiveCellStartIndex The effective cell start index including colspan. Always &ge; 0.
-     * @param nEffectiveCellEndIndex   The effective cell end index including colspan. Always &ge; 0.
-     */
-    void accept(@NonNull PLTableCell aCell,
-                @Nonnegative int nCellIndex,
-                @Nonnegative int nEffectiveCellStartIndex,
-                @Nonnegative int nEffectiveCellEndIndex);
+public interface IPLTableCellConsumer
+{
+  /**
+   * Performs this operation on the given arguments.
+   *
+   * @param aCell
+   *        the current table cell. Never <code>null</code>.
+   * @param nCellIndex
+   *        The cell index. Always &ge; 0.
+   * @param nEffectiveCellStartIndex
+   *        The effective cell start index including colspan. Always &ge; 0.
+   * @param nEffectiveCellEndIndex
+   *        The effective cell end index including colspan. Always &ge; 0.
+   */
+  void accept (@NonNull PLTableCell aCell,
+               @Nonnegative int nCellIndex,
+               @Nonnegative int nEffectiveCellStartIndex,
+               @Nonnegative int nEffectiveCellEndIndex);
 }

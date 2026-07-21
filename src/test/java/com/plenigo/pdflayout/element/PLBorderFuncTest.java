@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 package com.plenigo.pdflayout.element;
-
-import java.io.File;
 
 import com.plenigo.pdflayout.PDFCreationException;
 import com.plenigo.pdflayout.PDFTestComparer;
@@ -39,6 +37,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
+import java.io.File;
+
 /**
  * TEst class for {@link PLImage}
  *
@@ -47,7 +47,7 @@ import org.junit.rules.TestRule;
 public final class PLBorderFuncTest
 {
   @Rule
-  public final TestRule m_aRule = new PLDebugTestRule();
+  public final TestRule m_aRule = new PLDebugTestRule ();
 
   @Test
   public void testDifferentBordersText () throws PDFCreationException
@@ -65,12 +65,12 @@ public final class PLBorderFuncTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setID ("pageset")
                                                          .setMargin (fValue)
                                                          .setFillColor (PLColor.GREEN)
-                                                         .setBorder (new BorderSpec(aAll));
-    aPS1.addElement (new PLText("Border top", r10).setID ("top").setBorderTop (aTop));
+                                                         .setBorder (new BorderSpec (aAll));
+    aPS1.addElement (new PLText ("Border top", r10).setID ("top").setBorderTop (aTop));
     aPS1.addElement (new PLText ("Border right", r10).setID ("right").setBorderRight (aRight));
     aPS1.addElement (new PLText ("Border bottom", r10).setID ("bottom").setBorderBottom (aBottom));
     aPS1.addElement (new PLText ("Border left", r10).setID ("left").setBorderLeft (aLeft));
-    aPS1.addElement (new PLSpacerY(fSpacer).setID ("spacer"));
+    aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
     aPS1.addElement (new PLText ("Border top left", r10).setID ("top left").setBorderTop (aTop).setBorderLeft (aLeft));
     aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
     aPS1.addElement (new PLText ("Border top right", r10).setID ("top right")

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,6 @@
  */
 package com.plenigo.pdflayout.element.list;
 
-import java.io.File;
-
 import com.helger.base.string.StringHelper;
 import com.plenigo.pdflayout.PDFCreationException;
 import com.plenigo.pdflayout.PDFTestComparer;
@@ -32,7 +30,8 @@ import com.plenigo.pdflayout.spec.WidthSpec;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestRule;
+
+import java.io.File;
 
 /**
  * Test class for {@link PLBulletPointList}
@@ -42,7 +41,7 @@ import org.junit.rules.TestRule;
 public final class PLBulletPointListTest
 {
   @Rule
-  public final TestRule m_aRule = new PLDebugTestRule();
+  public final PLDebugTestRule m_aRule = new PLDebugTestRule ();
 
   @Test
   public void testBasic () throws PDFCreationException
@@ -55,7 +54,7 @@ public final class PLBulletPointListTest
       final PLBulletPointList aList = new PLBulletPointList (WidthSpec.abs (15f),
                                                              BulletPointCreatorSymbol.createFilledDot (10f));
       for (int i = 0; i < 10; ++i)
-        aList.addBulletPoint (new PLText("Bullet point item " + i, r10));
+        aList.addBulletPoint (new PLText ("Bullet point item " + i, r10));
       aPS1.addElement (aList);
     }
 

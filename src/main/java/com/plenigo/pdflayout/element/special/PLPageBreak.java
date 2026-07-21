@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,51 +35,59 @@ import java.io.IOException;
  *
  * @author Philip Helger
  */
-public class PLPageBreak extends AbstractPLRenderableObject<PLPageBreak> {
-    private final boolean m_bForcePageBreak;
+public class PLPageBreak extends AbstractPLRenderableObject <PLPageBreak>
+{
+  private final boolean m_bForcePageBreak;
 
-    /**
-     * Constructor
-     *
-     * @param bForcePageBreak <code>true</code> if this is a forced page break, <code>false</code>
-     *                        if it is a normal page break.
-     */
-    public PLPageBreak(final boolean bForcePageBreak) {
-        m_bForcePageBreak = bForcePageBreak;
-    }
+  /**
+   * Constructor
+   *
+   * @param bForcePageBreak
+   *        <code>true</code> if this is a forced page break, <code>false</code>
+   *        if it is a normal page break.
+   */
+  public PLPageBreak (final boolean bForcePageBreak)
+  {
+    m_bForcePageBreak = bForcePageBreak;
+  }
 
-    /**
-     * @return <code>true</code> if this is a forced page break,
-     * <code>false</code> if it is a normal page break.
-     */
-    public final boolean isForcePageBreak() {
-        return m_bForcePageBreak;
-    }
+  /**
+   * @return <code>true</code> if this is a forced page break,
+   *         <code>false</code> if it is a normal page break.
+   */
+  public final boolean isForcePageBreak ()
+  {
+    return m_bForcePageBreak;
+  }
 
-    @Override
-    protected SizeSpec onPrepare(@NonNull final PreparationContext aCtx) {
-        // Use the fixed size
-        return SizeSpec.SIZE0;
-    }
+  @Override
+  protected SizeSpec onPrepare (@NonNull final PreparationContext aCtx)
+  {
+    // Use the fixed size
+    return SizeSpec.SIZE0;
+  }
 
-    @Override
-    protected void onMarkAsNotPrepared() {
-        // Nada
-    }
+  @Override
+  protected void onMarkAsNotPrepared ()
+  {
+    // Nada
+  }
 
-    @Override
-    protected void onRender(@NonNull final PageRenderContext aCtx) throws IOException {
-    }
+  @Override
+  protected void onRender (@NonNull final PageRenderContext aCtx) throws IOException
+  {}
 
-    @Override
-    public String toString() {
-        return ToStringGenerator.getDerived(super.toString()).append("forcePageBreak", m_bForcePageBreak).getToString();
-    }
+  @Override
+  public String toString ()
+  {
+    return ToStringGenerator.getDerived (super.toString ()).append ("forcePageBreak", m_bForcePageBreak).getToString ();
+  }
 
-    @NonNull
-    public static PLPageBreak createPreparedPageBreak() {
-        final PLPageBreak ret = new PLPageBreak(false);
-        ret.internalMarkAsPrepared(SizeSpec.SIZE0);
-        return ret;
-    }
+  @NonNull
+  public static PLPageBreak createPreparedPageBreak ()
+  {
+    final PLPageBreak ret = new PLPageBreak (false);
+    ret.internalMarkAsPrepared (SizeSpec.SIZE0);
+    return ret;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,62 +22,72 @@ import com.helger.base.tostring.ToStringGenerator;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The current context for preparing an element. The preparation context depends
- * on the location of an element.
+ * The current context for preparing an element. The preparation context depends on the location of
+ * an element.
  *
  * @author Philip Helger
  */
 @Immutable
-public final class PreparationContext {
-    private final PreparationContextGlobal m_aGlobalCtx;
-    private final float m_fAvailableWidth;
-    private final float m_fAvailableHeight;
+public final class PreparationContext
+{
+  private final PreparationContextGlobal m_aGlobalCtx;
+  private final float m_fAvailableWidth;
+  private final float m_fAvailableHeight;
 
-    /**
-     * Constructor
-     *
-     * @param aGlobalCtx       The global preparation context worked upon. May be
-     *                         <code>null</code>.
-     * @param fAvailableWidth  The available width of the surrounding element. Includes margin,
-     *                         border and padding of the contained element. Should be &gt; 0.
-     * @param fAvailableHeight The available height of the surrounding element. Includes margin,
-     *                         border and padding of the contained element. Should be &gt; 0.
-     */
-    public PreparationContext(@Nullable final PreparationContextGlobal aGlobalCtx,
-                              @Nonnegative final float fAvailableWidth,
-                              @Nonnegative final float fAvailableHeight) {
-        // ValueEnforcer.isGE0 (fAvailableWidth, "AvailableWidth");
-        // ValueEnforcer.isGE0 (fAvailableHeight, "AvailableHeight");
+  /**
+   * Constructor
+   *
+   * @param aGlobalCtx
+   *        The global preparation context worked upon. May be <code>null</code>.
+   * @param fAvailableWidth
+   *        The available width of the surrounding element. Includes margin, border and padding of
+   *        the contained element. Should be &gt; 0.
+   * @param fAvailableHeight
+   *        The available height of the surrounding element. Includes margin, border and padding of
+   *        the contained element. Should be &gt; 0.
+   */
+  public PreparationContext (@Nullable final PreparationContextGlobal aGlobalCtx,
+                             @Nonnegative final float fAvailableWidth,
+                             @Nonnegative final float fAvailableHeight)
+  {
+    // Note: negative values can occur legitimately when elements with
+    // padding/border exceed the available space, so no validation here
+    // ValueEnforcer.isGE0 (fAvailableWidth, "AvailableWidth");
+    // ValueEnforcer.isGE0 (fAvailableHeight, "AvailableHeight");
 
-        m_aGlobalCtx = aGlobalCtx;
-        m_fAvailableWidth = fAvailableWidth;
-        m_fAvailableHeight = fAvailableHeight;
-    }
+    m_aGlobalCtx = aGlobalCtx;
+    m_fAvailableWidth = fAvailableWidth;
+    m_fAvailableHeight = fAvailableHeight;
+  }
 
-    @Nullable
-    public PreparationContextGlobal getGlobalContext() {
-        return m_aGlobalCtx;
-    }
+  @Nullable
+  public PreparationContextGlobal getGlobalContext ()
+  {
+    return m_aGlobalCtx;
+  }
 
-    /**
-     * @return The available width of the surrounding element. Should be &gt; 0.
-     */
-    public float getAvailableWidth() {
-        return m_fAvailableWidth;
-    }
+  /**
+   * @return The available width of the surrounding element. Should be &gt; 0.
+   */
+  public float getAvailableWidth ()
+  {
+    return m_fAvailableWidth;
+  }
 
-    /**
-     * @return The available height of the surrounding element. Should be &gt; 0.
-     */
-    public float getAvailableHeight() {
-        return m_fAvailableHeight;
-    }
+  /**
+   * @return The available height of the surrounding element. Should be &gt; 0.
+   */
+  public float getAvailableHeight ()
+  {
+    return m_fAvailableHeight;
+  }
 
-    @Override
-    public String toString() {
-        return new ToStringGenerator(this).append("GlobalCtx", m_aGlobalCtx)
-                .append("AvailableWidth", m_fAvailableWidth)
-                .append("AvailableHeight", m_fAvailableHeight)
-                .getToString();
-    }
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).append ("GlobalCtx", m_aGlobalCtx)
+                                       .append ("AvailableWidth", m_fAvailableWidth)
+                                       .append ("AvailableHeight", m_fAvailableHeight)
+                                       .getToString ();
+  }
 }

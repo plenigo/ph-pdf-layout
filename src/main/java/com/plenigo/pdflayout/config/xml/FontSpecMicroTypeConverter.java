@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,44 +34,48 @@ import org.jspecify.annotations.Nullable;
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class FontSpecMicroTypeConverter implements IMicroTypeConverter<FontSpec> {
-    private static final String ATTR_PRELOAD_FONT_ID = "preloadfontid";
-    private static final String ATTR_FONT_SIZE = "fontsize";
-    private static final String ELEMENT_COLOR = "color";
+public final class FontSpecMicroTypeConverter implements IMicroTypeConverter <FontSpec>
+{
+  private static final String ATTR_PRELOAD_FONT_ID = "preloadfontid";
+  private static final String ATTR_FONT_SIZE = "fontsize";
+  private static final String ELEMENT_COLOR = "color";
 
-    private final IPreloadFontResolver m_aPreloadFontResolver;
+  private final IPreloadFontResolver m_aPreloadFontResolver;
 
-    public FontSpecMicroTypeConverter(@NonNull final IPreloadFontResolver aPreloadFontResolver) {
-        m_aPreloadFontResolver = ValueEnforcer.notNull(aPreloadFontResolver, "PreloadFontResolver");
-    }
+  public FontSpecMicroTypeConverter (@NonNull final IPreloadFontResolver aPreloadFontResolver)
+  {
+    m_aPreloadFontResolver = ValueEnforcer.notNull (aPreloadFontResolver, "PreloadFontResolver");
+  }
 
-    @NonNull
-    public IMicroElement convertToMicroElement(@NonNull final FontSpec aValue,
-                                               @Nullable final String sNamespaceURI,
-                                               @NonNull final String sTagName) {
-        final IMicroElement aElement = new MicroElement(sNamespaceURI, sTagName);
+  @NonNull
+  public IMicroElement convertToMicroElement (@NonNull final FontSpec aValue,
+                                              @Nullable final String sNamespaceURI,
+                                              @NonNull final String sTagName)
+  {
+    final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
-        aElement.setAttribute(ATTR_PRELOAD_FONT_ID, aValue.getPreloadFontID());
-        aElement.setAttribute(ATTR_FONT_SIZE, aValue.getFontSize());
+    aElement.setAttribute (ATTR_PRELOAD_FONT_ID, aValue.getPreloadFontID ());
+    aElement.setAttribute (ATTR_FONT_SIZE, aValue.getFontSize ());
 
-        final PLColor aColor = aValue.getColor();
-        if (aColor != FontSpec.DEFAULT_COLOR)
-            aElement.addChild(MicroTypeConverter.convertToMicroElement(aColor, sNamespaceURI, ELEMENT_COLOR));
-        return aElement;
-    }
+    final PLColor aColor = aValue.getColor ();
+    if (aColor != FontSpec.DEFAULT_COLOR)
+      aElement.addChild (MicroTypeConverter.convertToMicroElement (aColor, sNamespaceURI, ELEMENT_COLOR));
+    return aElement;
+  }
 
-    @NonNull
-    public FontSpec convertToNative(@NonNull final IMicroElement aElement) {
-        final String sPreloadFontID = aElement.getAttributeValue(ATTR_PRELOAD_FONT_ID);
-        final PreloadFont aPreloadFont = m_aPreloadFontResolver.getPreloadFontOfID(sPreloadFontID);
-        if (aPreloadFont == null)
-            throw new IllegalStateException("Failed to resolve preloadfont with ID '" + sPreloadFontID + "!");
+  @NonNull
+  public FontSpec convertToNative (@NonNull final IMicroElement aElement)
+  {
+    final String sPreloadFontID = aElement.getAttributeValue (ATTR_PRELOAD_FONT_ID);
+    final PreloadFont aPreloadFont = m_aPreloadFontResolver.getPreloadFontOfID (sPreloadFontID);
+    if (aPreloadFont == null)
+      throw new IllegalStateException ("Failed to resolve preloadfont with ID '" + sPreloadFontID + "!");
 
-        final float fFontSize = aElement.getAttributeValueAsFloat(ATTR_FONT_SIZE, Float.NaN);
+    final float fFontSize = aElement.getAttributeValueAsFloat (ATTR_FONT_SIZE, Float.NaN);
 
-        final PLColor aColor = MicroTypeConverter.convertToNative(aElement.getFirstChildElement(ELEMENT_COLOR),
-                PLColor.class,
-                FontSpec.DEFAULT_COLOR);
-        return new FontSpec(aPreloadFont, fFontSize, aColor);
-    }
+    final PLColor aColor = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_COLOR),
+                                                               PLColor.class,
+                                                               FontSpec.DEFAULT_COLOR);
+    return new FontSpec (aPreloadFont, fFontSize, aColor);
+  }
 }

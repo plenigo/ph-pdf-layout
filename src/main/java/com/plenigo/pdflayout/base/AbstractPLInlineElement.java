@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,21 +22,23 @@ import org.jspecify.annotations.NonNull;
 /**
  * Abstract implementation of {@link IPLInlineElement}
  *
- * @param <IMPLTYPE> The implementation type of this class.
- *
  * @author Philip Helger
+ * @param <IMPLTYPE>
+ *        The implementation type of this class.
  */
-public abstract class AbstractPLInlineElement<IMPLTYPE extends AbstractPLInlineElement<IMPLTYPE>> extends AbstractPLElement<IMPLTYPE>
-        implements
-        IPLInlineElement<IMPLTYPE> {
-    public AbstractPLInlineElement() {
-    }
+public abstract class AbstractPLInlineElement <IMPLTYPE extends AbstractPLInlineElement <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
+                                              implements
+                                              IPLInlineElement <IMPLTYPE>
+{
+  public AbstractPLInlineElement ()
+  {}
 
-    @Override
-    @NonNull
-    @OverridingMethodsMustInvokeSuper
-    public IMPLTYPE setBasicDataFrom(@NonNull final IMPLTYPE aSource) {
-        super.setBasicDataFrom(aSource);
-        return thisAsT();
-    }
+  @Override
+  @NonNull
+  @OverridingMethodsMustInvokeSuper
+  public IMPLTYPE setBasicDataFrom (@NonNull final IMPLTYPE aSource)
+  {
+    super.setBasicDataFrom (aSource);
+    return thisAsT ();
+  }
 }

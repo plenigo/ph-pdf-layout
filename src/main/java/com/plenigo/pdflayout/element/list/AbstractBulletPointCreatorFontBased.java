@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,44 +26,50 @@ import org.jspecify.annotations.NonNull;
 /**
  * An abstract implementation of {@link IBulletPointCreator} that uses a Font based character.
  *
- * @param <IMPLTYPE> Implementation type
- *
  * @author Philip Helger
+ * @param <IMPLTYPE>
+ *        Implementation type
  * @since 5.1.0
  */
-public abstract class AbstractBulletPointCreatorFontBased<IMPLTYPE extends AbstractBulletPointCreatorFontBased<IMPLTYPE>>
-        implements
-        IBulletPointCreator,
-        IPLHasPadding<IMPLTYPE> {
-    private final FontSpec m_aFontSpec;
-    private PaddingSpec m_aPadding = PaddingSpec.PADDING0;
+public abstract class AbstractBulletPointCreatorFontBased <IMPLTYPE extends AbstractBulletPointCreatorFontBased <IMPLTYPE>>
+                                                          implements
+                                                          IBulletPointCreator,
+                                                          IPLHasPadding <IMPLTYPE>
+{
+  private final FontSpec m_aFontSpec;
+  private PaddingSpec m_aPadding = PaddingSpec.PADDING0;
 
-    public AbstractBulletPointCreatorFontBased(@NonNull final FontSpec aFontSpec) {
-        ValueEnforcer.notNull(aFontSpec, "FontSpec");
-        m_aFontSpec = aFontSpec;
-    }
+  public AbstractBulletPointCreatorFontBased (@NonNull final FontSpec aFontSpec)
+  {
+    ValueEnforcer.notNull (aFontSpec, "FontSpec");
+    m_aFontSpec = aFontSpec;
+  }
 
-    @NonNull
-    public final FontSpec getFontSpec() {
-        return m_aFontSpec;
-    }
+  @NonNull
+  public final FontSpec getFontSpec ()
+  {
+    return m_aFontSpec;
+  }
 
-    public final PaddingSpec getPadding() {
-        return m_aPadding;
-    }
+  public final PaddingSpec getPadding ()
+  {
+    return m_aPadding;
+  }
 
-    @NonNull
-    public final IMPLTYPE setPadding(@NonNull final PaddingSpec aPadding) {
-        ValueEnforcer.notNull(aPadding, "Padding");
-        m_aPadding = aPadding;
-        return thisAsT();
-    }
+  @NonNull
+  public final IMPLTYPE setPadding (@NonNull final PaddingSpec aPadding)
+  {
+    ValueEnforcer.notNull (aPadding, "Padding");
+    m_aPadding = aPadding;
+    return thisAsT ();
+  }
 
-    @Override
-    public String toString() {
-        return ToStringGenerator.getDerived(super.toString())
-                .append("FontSpec", m_aFontSpec)
-                .append("Padding", m_aPadding)
-                .getToString();
-    }
+  @Override
+  public String toString ()
+  {
+    return ToStringGenerator.getDerived (super.toString ())
+                            .append ("FontSpec", m_aFontSpec)
+                            .append ("Padding", m_aPadding)
+                            .getToString ();
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@ package com.plenigo.pdflayout.spec;
 import com.helger.annotation.CheckForSigned;
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.WillNotClose;
-import com.helger.annotation.concurrent.Immutable;
+import com.helger.annotation.concurrent.NotThreadSafe;
 import com.helger.annotation.style.MustImplementEqualsAndHashcode;
 import com.helger.annotation.style.ReturnsMutableCopy;
 import com.helger.base.enforce.ValueEnforcer;
@@ -45,228 +45,256 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * This class represents a wrapper around a {@link PDFont} that is uniquely assigned to a
- * PDDocument.
+ * PDDocument. Instances hold lazily populated per-codepoint caches. Note that the underlying
+ * {@link PDFont} is also not thread-safe in PDFBox.
  *
  * @author Philip Helger
  */
-@Immutable
+@NotThreadSafe
 @MustImplementEqualsAndHashcode
-public class LoadedFont {
-    private static final class EncodedCodePoint implements Serializable {
-        private final int m_nCodePoint;
-        private final byte[] m_aEncoded;
-        // Lazy inited
-        private Integer m_aEncodedValue;
+public class LoadedFont
+{
+  private static final class EncodedCodePoint
+  {
+    private final int m_nCodePoint;
+    private final byte [] m_aEncoded;
+    // Lazy inited
+    private volatile Integer m_aEncodedValue;
 
-        private EncodedCodePoint(final int nCodePoint, @NonNull final byte[] aEncoded) {
-            m_nCodePoint = nCodePoint;
-            m_aEncoded = aEncoded;
-        }
-
-        /**
-         * @return The effective code point use.
-         */
-        public int getCodePoint() {
-            return m_nCodePoint;
-        }
-
-        public void writeEncodedBytes(@NonNull @WillNotClose final OutputStream aOS) throws IOException {
-            aOS.write(m_aEncoded);
-        }
-
-        private static int _toInt(@NonNull final byte[] aEncoded) {
-            int ret = 0;
-            for (final byte b : aEncoded) {
-                ret <<= 8;
-                ret |= (b + 256) % 256;
-            }
-            return ret;
-        }
-
-        public int getEncodedIntValue() {
-            Integer ret = m_aEncodedValue;
-            if (ret == null) {
-                // Lazy init
-                ret = m_aEncodedValue = Integer.valueOf(_toInt(m_aEncoded));
-            }
-            return ret.intValue();
-        }
-    }
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoadedFont.class);
-
-    /**
-     * The underlying PDFBox font
-     */
-    private final PDFont m_aFont;
-    /**
-     * The fallback character to be used in case an unmappable character is contained
-     */
-    private final int m_nFallbackCodePoint;
-    // Status vars
-    private final float m_fLineHeight;
-    private final float m_fDescent;
-    private final boolean m_bFontWillBeSubset;
-    private final IntObjectMap<EncodedCodePoint> m_aEncodedCodePointCache = new IntObjectMap<>();
-    private final IntFloatMap m_aCodePointWidthCache = new IntFloatMap();
-
-    public LoadedFont(@NonNull final PDFont aFont,
-                      final int nFallbackCodePoint,
-                      @CheckForSigned final float fCustomLineHeight) {
-        ValueEnforcer.notNull(aFont, "Font");
-        m_aFont = aFont;
-        m_nFallbackCodePoint = nFallbackCodePoint;
-
-        PDFontDescriptor aFD = aFont.getFontDescriptor();
-        if (aFD == null) {
-            if (aFont instanceof PDType0Font) {
-                final PDCIDFont aDescendantFont = ((PDType0Font) aFont).getDescendantFont();
-                if (aDescendantFont != null)
-                    aFD = aDescendantFont.getFontDescriptor();
-            }
-        }
-        if (aFD == null)
-            throw new IllegalArgumentException("Failed to determine FontDescriptor from specified font " + aFont);
-
-        if (fCustomLineHeight > 0) {
-            // Font height from parsing TTF/OTF
-            m_fLineHeight = fCustomLineHeight;
-        } else {
-            // That's the overall font bounding box from the <code>head</code> table of the font
-            m_fLineHeight = aFD.getFontBoundingBox().getHeight();
-        }
-
-        m_fDescent = aFD.getDescent();
-        m_bFontWillBeSubset = m_aFont.willBeSubset();
+    private EncodedCodePoint (final int nCodePoint, final byte @NonNull [] aEncoded)
+    {
+      m_nCodePoint = nCodePoint;
+      m_aEncoded = aEncoded;
     }
 
     /**
-     * @return The underlying font. Never <code>null</code>.
+     * @return The effective code point use.
      */
-    @NonNull
-    public final PDFont getFont() {
-        return m_aFont;
+    public int getCodePoint ()
+    {
+      return m_nCodePoint;
     }
 
-    @Nonnegative
-    public final float getDescent(@Nonnegative final float fFontSize) {
-        return PLConvert.getForFontSize(m_fDescent, fFontSize);
+    public void writeEncodedBytes (@NonNull @WillNotClose final OutputStream aOS) throws IOException
+    {
+      aOS.write (m_aEncoded);
     }
 
-    @Nonnegative
-    public final float getTextHeight(@Nonnegative final float fFontSize) {
-        return PLConvert.getForFontSize(m_fLineHeight, fFontSize);
+    private static int _toInt (final byte @NonNull [] aEncoded)
+    {
+      int ret = 0;
+      for (final byte b : aEncoded)
+      {
+        ret <<= 8;
+        ret |= (b + 256) % 256;
+      }
+      return ret;
     }
 
-    @NonNull
-    public static EncodedCodePoint encodeCodepointWithFallback(@NonNull final PDFont aFont,
-                                                               final int nCodepoint,
-                                                               final int nFallbackCodepoint) throws IOException {
-        try {
-            // multi-byte encoding with 1 to 4 bytes
-            final byte[] aEncodedBytes = PDFontHelper.encode(aFont, nCodepoint);
-            return new EncodedCodePoint(nCodepoint, aEncodedBytes);
-        } catch (final IllegalArgumentException ex) {
-            if (PLDebugLog.isDebugFont())
-                PLDebugLog.debugFont(aFont.toString(), "No code point " + nCodepoint + " in this font - " + ex.getMessage());
-            try {
-                // Use fallback code point
-                final byte[] aEncodedBytes = PDFontHelper.encode(aFont, nFallbackCodepoint);
-                return new EncodedCodePoint(nFallbackCodepoint, aEncodedBytes);
-            } catch (final IllegalArgumentException ex2) {
-                if (PLDebugLog.isDebugFont())
-                    PLDebugLog.debugFont(aFont.toString(),
-                            "No fallback code point " +
-                                    nFallbackCodepoint +
-                                    " in this font - " +
-                                    ex2.getMessage());
-                throw ex2;
-            }
-        }
+    public int getEncodedIntValue ()
+    {
+      Integer ret = m_aEncodedValue;
+      if (ret == null)
+      {
+        // Lazy init
+        ret = m_aEncodedValue = Integer.valueOf (_toInt (m_aEncoded));
+      }
+      return ret.intValue ();
+    }
+  }
+
+  private static final Logger LOGGER = LoggerFactory.getLogger (LoadedFont.class);
+
+  /** The underlying PDFBox font */
+  private final PDFont m_aFont;
+  /**
+   * The fallback character to be used in case an unmappable character is contained
+   */
+  private final int m_nFallbackCodePoint;
+  // Status vars
+  private final float m_fLineHeight;
+  private final float m_fDescent;
+  private final boolean m_bFontWillBeSubset;
+  private final IntObjectMap <EncodedCodePoint> m_aEncodedCodePointCache = new IntObjectMap <> ();
+  private final IntFloatMap m_aCodePointWidthCache = new IntFloatMap ();
+
+  public LoadedFont (@NonNull final PDFont aFont,
+                     final int nFallbackCodePoint,
+                     @CheckForSigned final float fCustomLineHeight)
+  {
+    ValueEnforcer.notNull (aFont, "Font");
+    m_aFont = aFont;
+    m_nFallbackCodePoint = nFallbackCodePoint;
+
+    PDFontDescriptor aFD = aFont.getFontDescriptor ();
+    if (aFD == null)
+    {
+      if (aFont instanceof PDType0Font)
+      {
+        final PDCIDFont aDescendantFont = ((PDType0Font) aFont).getDescendantFont ();
+        if (aDescendantFont != null)
+          aFD = aDescendantFont.getFontDescriptor ();
+      }
+    }
+    if (aFD == null)
+      throw new IllegalArgumentException ("Failed to determine FontDescriptor from specified font " + aFont);
+
+    if (fCustomLineHeight > 0)
+    {
+      // Font height from parsing TTF/OTF
+      m_fLineHeight = fCustomLineHeight;
+    }
+    else
+    {
+      // That's the overall font bounding box from the <code>head</code> table of the font
+      m_fLineHeight = aFD.getFontBoundingBox ().getHeight ();
     }
 
-    @NonNull
-    private EncodedCodePoint _getEncodedCodePoint(final int nCodePoint) throws IOException {
-        EncodedCodePoint aECP = m_aEncodedCodePointCache.get(nCodePoint);
-        if (aECP == null) {
-            // Encode code point according to the font rules
-            aECP = encodeCodepointWithFallback(m_aFont, nCodePoint, m_nFallbackCodePoint);
-            // put in cache
-            m_aEncodedCodePointCache.put(nCodePoint, aECP);
-        }
-        return aECP;
+    m_fDescent = aFD.getDescent ();
+    m_bFontWillBeSubset = m_aFont.willBeSubset ();
+  }
+
+  /**
+   * @return The underlying font. Never <code>null</code>.
+   */
+  @NonNull
+  public final PDFont getFont ()
+  {
+    return m_aFont;
+  }
+
+  @Nonnegative
+  public final float getDescent (@Nonnegative final float fFontSize)
+  {
+    return PLConvert.getForFontSize (m_fDescent, fFontSize);
+  }
+
+  @Nonnegative
+  public final float getTextHeight (@Nonnegative final float fFontSize)
+  {
+    return PLConvert.getForFontSize (m_fLineHeight, fFontSize);
+  }
+
+  @NonNull
+  public static EncodedCodePoint encodeCodepointWithFallback (@NonNull final PDFont aFont,
+                                                              final int nCodepoint,
+                                                              final int nFallbackCodepoint) throws IOException
+  {
+    try
+    {
+      // multi-byte encoding with 1 to 4 bytes
+      final byte [] aEncodedBytes = PDFontHelper.encode (aFont, nCodepoint);
+      return new EncodedCodePoint (nCodepoint, aEncodedBytes);
+    }
+    catch (final IllegalArgumentException ex)
+    {
+      if (PLDebugLog.isDebugFont ())
+        PLDebugLog.debugFont (aFont.toString (), "No code point " + nCodepoint + " in this font - " + ex.getMessage ());
+      try
+      {
+        // Use fallback code point
+        final byte [] aEncodedBytes = PDFontHelper.encode (aFont, nFallbackCodepoint);
+        return new EncodedCodePoint (nFallbackCodepoint, aEncodedBytes);
+      }
+      catch (final IllegalArgumentException ex2)
+      {
+        if (PLDebugLog.isDebugFont ())
+          PLDebugLog.debugFont (aFont.toString (),
+                                "No fallback code point " +
+                                                   nFallbackCodepoint +
+                                                   " in this font - " +
+                                                   ex2.getMessage ());
+        throw ex2;
+      }
+    }
+  }
+
+  @NonNull
+  private EncodedCodePoint _getEncodedCodePoint (final int nCodePoint) throws IOException
+  {
+    // Fast path: shared read lock
+    EncodedCodePoint aECP = m_aEncodedCodePointCache.get (nCodePoint);
+    if (aECP == null)
+    {
+      aECP = encodeCodepointWithFallback (m_aFont, nCodePoint, m_nFallbackCodePoint);
+      m_aEncodedCodePointCache.put (nCodePoint, aECP);
+    }
+    return aECP;
+  }
+
+  private float _getCodePointWidth (final int nCodePoint) throws IOException
+  {
+    // Fast path: shared read lock
+    float fWidth = m_aCodePointWidthCache.get (nCodePoint, -1f);
+    if (fWidth < 0)
+    {
+      final EncodedCodePoint aECP = _getEncodedCodePoint (nCodePoint);
+      fWidth = m_aFont.getWidth (aECP.getEncodedIntValue ());
+      m_aCodePointWidthCache.put (nCodePoint, fWidth);
+    }
+    return fWidth;
+  }
+
+  @Nonnegative
+  public float getStringWidth (@NonNull final String sText, @Nonnegative final float fFontSize) throws IOException
+  {
+    if (false)
+    {
+      // Toooo slow
+      return PLConvert.getForFontSize (m_aFont.getStringWidth (sText), fFontSize);
     }
 
-    private float _getCodePointWidth(final int nCodePoint) throws IOException {
-        float fWidth = m_aCodePointWidthCache.get(nCodePoint, -1f);
-        if (fWidth < 0) {
-            // Get encoded code point (from its own cache)
-            final EncodedCodePoint aECP = _getEncodedCodePoint(nCodePoint);
+    float fWidth = 0;
 
-            // Get width of encoded value
-            fWidth = m_aFont.getWidth(aECP.getEncodedIntValue());
+    // Iterate on code point basis
+    int nCPOfs = 0;
+    final int nLength = sText.length ();
+    while (nCPOfs < nLength)
+    {
+      final int nCP = sText.codePointAt (nCPOfs);
+      nCPOfs += Character.charCount (nCP);
 
-            // Map code point to width to save encoding
-            m_aCodePointWidthCache.put(nCodePoint, fWidth);
-        }
-        return fWidth;
+      // Use code point cache for maximum performance
+      fWidth += _getCodePointWidth (nCP);
     }
+    // The width is in 1000 unit of text space, ie 333 or 777
+    return PLConvert.getForFontSize (fWidth, fFontSize);
+  }
 
-    @Nonnegative
-    public float getStringWidth(@NonNull final String sText, @Nonnegative final float fFontSize) throws IOException {
-        if (false) {
-            // Toooo slow
-            return PLConvert.getForFontSize(m_aFont.getStringWidth(sText), fFontSize);
-        }
-        float fWidth = 0;
+  /**
+   * A quick version to encode the passed text so that it can be written with
+   * <code>COSWriter.writeString</code>
+   *
+   * @param sText
+   *        Text to be written.
+   * @return The byte array that can be written with the COSWrite. Never <code>null</code>.
+   * @throws IOException
+   *         In case something goes wrong
+   */
+  public byte @NonNull [] getEncodedForPageContentStream (@NonNull final String sText) throws IOException
+  {
+    // Minimum is 1*string length
+    // Maximum is 4*string length
+    try (final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream (sText.length () * 2))
+    {
+      int nCPOfs = 0;
+      while (nCPOfs < sText.length ())
+      {
+        final int nCP = sText.codePointAt (nCPOfs);
+        nCPOfs += Character.charCount (nCP);
 
-        // Iterate on code point basis
-        int nCPOfs = 0;
-        final int nLength = sText.length();
-        while (nCPOfs < nLength) {
-            final int nCP = sText.codePointAt(nCPOfs);
-            nCPOfs += Character.charCount(nCP);
-
-            // Use code point cache for maximum performance
-            fWidth += _getCodePointWidth(nCP);
-        }
-        // The width is in 1000 unit of text space, ie 333 or 777
-        return PLConvert.getForFontSize(fWidth, fFontSize);
+        final EncodedCodePoint aECP = _getEncodedCodePoint (nCP);
+        if (m_bFontWillBeSubset)
+          m_aFont.addToSubset (aECP.getCodePoint ());
+        aECP.writeEncodedBytes (aBAOS);
+      }
+      return aBAOS.toByteArray ();
     }
-
-    /**
-     * A quick version to encode the passed text so that it can be written with
-     * <code>COSWriter.writeString</code>
-     *
-     * @param sText Text to be written.
-     *
-     * @return The byte array that can be written with the COSWrite. Never <code>null</code>.
-     *
-     * @throws IOException In case something goes wrong
-     */
-    @NonNull
-    public byte[] getEncodedForPageContentStream(@NonNull final String sText) throws IOException {
-        // Minimum is 1*string length
-        // Maximum is 4*string length
-        try (final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream(sText.length() * 2)) {
-            int nCPOfs = 0;
-            while (nCPOfs < sText.length()) {
-                final int nCP = sText.codePointAt(nCPOfs);
-                nCPOfs += Character.charCount(nCP);
-
-                final EncodedCodePoint aECP = _getEncodedCodePoint(nCP);
-                if (m_bFontWillBeSubset)
-                    m_aFont.addToSubset(aECP.getCodePoint());
-                aECP.writeEncodedBytes(aBAOS);
-            }
-            return aBAOS.toByteArray();
-        }
-    }
+  }
 
     private void _getLineFitToWidthForward(@NonNull final String sLine,
                                            @Nonnegative final float fFontSize,
@@ -360,39 +388,42 @@ public class LoadedFont {
         ValueEnforcer.isGT0(fMaxFirstWidth, "MaxWidth");
         ValueEnforcer.isGT0(fMaxWidth, "MaxWidth");
 
-        // First split by the contained line breaks
-        // In the constructor we ensured that only "\n" is used
-        final String[] aLines = StringHelper.getExplodedArray('\n', sText);
+    // First split by the contained line breaks
+    // In the constructor we ensured that only "\n" is used
+    final String [] aLines = StringHelper.getExplodedArray ('\n', sText);
 
-        final ICommonsList<TextAndWidthSpec> ret = new CommonsArrayList<>();
-        for (final String sLine : aLines)
-            _getLineFitToWidthForward(sLine, fFontSize, fMaxFirstWidth, fMaxWidth, ret);
+    final ICommonsList <TextAndWidthSpec> ret = new CommonsArrayList <> ();
+    for (final String sLine : aLines)
+        _getLineFitToWidthForward(sLine, fFontSize, fMaxFirstWidth, fMaxWidth, ret);
 
         return ret;
-    }
+  }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (o == this)
-            return true;
-        if (o == null || !getClass().equals(o.getClass()))
-            return false;
-        final LoadedFont rhs = (LoadedFont) o;
-        return m_aFont.equals(rhs.m_aFont);
-    }
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return true;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+    final LoadedFont rhs = (LoadedFont) o;
+    return m_aFont.equals (rhs.m_aFont);
+  }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeGenerator(this).append(m_aFont).getHashCode();
-    }
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_aFont).getHashCode ();
+  }
 
-    @Override
-    public String toString() {
-        return new ToStringGenerator(null).append("Font", m_aFont)
-                .append("FallbackCodePoint", m_nFallbackCodePoint)
-                .append("BBHeight", m_fLineHeight)
-                .append("Descent", m_fDescent)
-                .append("FontWillBeSubset", m_bFontWillBeSubset)
-                .getToString();
-    }
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (null).append ("Font", m_aFont)
+                                       .append ("FallbackCodePoint", m_nFallbackCodePoint)
+                                       .append ("BBHeight", m_fLineHeight)
+                                       .append ("Descent", m_fDescent)
+                                       .append ("FontWillBeSubset", m_bFontWillBeSubset)
+                                       .getToString ();
+  }
 }

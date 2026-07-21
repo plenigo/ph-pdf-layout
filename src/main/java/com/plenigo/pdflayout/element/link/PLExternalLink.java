@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,20 +27,24 @@ import org.jspecify.annotations.Nullable;
  * @author Philip Helger
  * @since 6.0.1
  */
-public class PLExternalLink extends AbstractPLExternalLink<PLExternalLink> {
-    public PLExternalLink() {
-        super(null);
-    }
+public class PLExternalLink extends AbstractPLExternalLink <PLExternalLink>
+{
+  public PLExternalLink ()
+  {
+    super (null);
+  }
 
-    public PLExternalLink(@Nullable final IPLRenderableObject<?> aElement) {
-        super(aElement);
-    }
+  public PLExternalLink (@Nullable final IPLRenderableObject <?> aElement)
+  {
+    super (aElement);
+  }
 
-    @Override
-    @NonNull
-    public PLExternalLink internalCreateNewVertSplitObject(@NonNull final PLExternalLink aBase) {
-        final PLExternalLink ret = new PLExternalLink();
-        ret.setBasicDataFrom(aBase);
-        return ret;
-    }
+  @Override
+  @NonNull
+  public PLExternalLink internalCreateNewVertSplitObject (@NonNull final PLExternalLink aBase)
+  {
+    final PLExternalLink ret = new PLExternalLink ();
+    ret.setBasicDataFrom (aBase);
+    return ret;
+  }
 }

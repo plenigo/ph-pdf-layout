@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,92 +36,104 @@ import java.io.Serializable;
  * @author Philip Helger
  */
 @MustImplementEqualsAndHashcode
-public class LineDashPatternSpec implements Serializable {
-    public static final LineDashPatternSpec SOLID = new LineDashPatternSpec();
-    public static final LineDashPatternSpec DASHED_2 = new LineDashPatternSpec(2f);
-    public static final LineDashPatternSpec DASHED_3 = new LineDashPatternSpec(3f);
-    public static final LineDashPatternSpec DASHED_4 = new LineDashPatternSpec(4f);
-    public static final LineDashPatternSpec DASHED_5 = new LineDashPatternSpec(5f);
+public class LineDashPatternSpec implements Serializable
+{
+  public static final LineDashPatternSpec SOLID = new LineDashPatternSpec ();
+  public static final LineDashPatternSpec DASHED_2 = new LineDashPatternSpec (2f);
+  public static final LineDashPatternSpec DASHED_3 = new LineDashPatternSpec (3f);
+  public static final LineDashPatternSpec DASHED_4 = new LineDashPatternSpec (4f);
+  public static final LineDashPatternSpec DASHED_5 = new LineDashPatternSpec (5f);
 
-    private final float[] m_aPattern;
-    private final float m_fPhase;
+  private final float [] m_aPattern;
+  private final float m_fPhase;
 
-    public LineDashPatternSpec() {
-        this(new float[0], 0);
-    }
+  public LineDashPatternSpec ()
+  {
+    this (new float [0], 0);
+  }
 
-    public LineDashPatternSpec(@Nonnegative final float fPattern) {
-        this(new float[]{fPattern}, 0);
-    }
+  public LineDashPatternSpec (@Nonnegative final float fPattern)
+  {
+    this (new float [] { fPattern }, 0);
+  }
 
-    public LineDashPatternSpec(@Nonnegative final float fPatternOn, @Nonnegative final float fPatternOff) {
-        this(new float[]{fPatternOn, fPatternOff}, 0);
-    }
+  public LineDashPatternSpec (@Nonnegative final float fPatternOn, @Nonnegative final float fPatternOff)
+  {
+    this (new float [] { fPatternOn, fPatternOff }, 0);
+  }
 
-    /**
-     * @param aPattern The pattern array. May not be <code>null</code>. Must have 0-2
-     *                 items. 0 items means solid line, 1 item means identical on and off
-     *                 length and 2 items means potentially different on and off length.
-     *                 All contains values must be &gt; 0.
-     * @param fPhase   The phase of the pattern. Where to start the painting, first
-     *                 counting on than off.
-     */
-    public LineDashPatternSpec(@NonNull final float[] aPattern, final float fPhase) {
-        ValueEnforcer.notNull(aPattern, "Pattern");
-        ValueEnforcer.isTrue(aPattern.length <= 2,
-                () -> "Too many patterns (" + aPattern.length + ") provided. At max 2 items are allowed.");
-        for (final float fPatternValue : aPattern)
-            ValueEnforcer.isGT0(fPatternValue, "PatternValue");
+  /**
+   * @param aPattern
+   *        The pattern array. May not be <code>null</code>. Must have 0-2
+   *        items. 0 items means solid line, 1 item means identical on and off
+   *        length and 2 items means potentially different on and off length.
+   *        All contains values must be &gt; 0.
+   * @param fPhase
+   *        The phase of the pattern. Where to start the painting, first
+   *        counting on than off.
+   */
+  public LineDashPatternSpec (final float @NonNull [] aPattern, final float fPhase)
+  {
+    ValueEnforcer.notNull (aPattern, "Pattern");
+    ValueEnforcer.isTrue (aPattern.length <= 2,
+                          () -> "Too many patterns (" + aPattern.length + ") provided. At max 2 items are allowed.");
+    for (final float fPatternValue : aPattern)
+      ValueEnforcer.isGT0 (fPatternValue, "PatternValue");
 
-        m_aPattern = ArrayHelper.getCopy(aPattern);
-        m_fPhase = fPhase;
-    }
+    m_aPattern = ArrayHelper.getCopy (aPattern);
+    m_fPhase = fPhase;
+  }
 
-    /**
-     * @return A copy with all patterns. 0-2 elements.
-     */
-    @NonNull
-    @ReturnsMutableCopy
-    public final float[] getPattern() {
-        return ArrayHelper.getCopy(m_aPattern);
-    }
+  /**
+   * @return A copy with all patterns. 0-2 elements.
+   */
+  @ReturnsMutableCopy
+  public final float @NonNull[] getPattern ()
+  {
+    return ArrayHelper.getCopy (m_aPattern);
+  }
 
-    /**
-     * @return A COS array with 0-2 elements. Never <code>null</code>.
-     */
-    @NonNull
-    @ReturnsMutableCopy
-    public final COSArray getPatternCOSArray() {
-        final COSArray ret = new COSArray();
-        for (final float f : m_aPattern)
-            ret.add(new COSFloat(f));
-        return ret;
-    }
+  /**
+   * @return A COS array with 0-2 elements. Never <code>null</code>.
+   */
+  @NonNull
+  @ReturnsMutableCopy
+  public final COSArray getPatternCOSArray ()
+  {
+    final COSArray ret = new COSArray ();
+    for (final float f : m_aPattern)
+      ret.add (new COSFloat (f));
+    return ret;
+  }
 
-    /**
-     * @return The phase to use.
-     */
-    public final float getPhase() {
-        return m_fPhase;
-    }
+  /**
+   * @return The phase to use.
+   */
+  public final float getPhase ()
+  {
+    return m_fPhase;
+  }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o)
-            return true;
-        if (o == null || !getClass().equals(o.getClass()))
-            return false;
-        final LineDashPatternSpec rhs = (LineDashPatternSpec) o;
-        return EqualsHelper.equals(m_aPattern, rhs.m_aPattern) && EqualsHelper.equals(m_fPhase, rhs.m_fPhase);
-    }
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (this == o)
+      return true;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+    final LineDashPatternSpec rhs = (LineDashPatternSpec) o;
+    return EqualsHelper.equals (m_aPattern, rhs.m_aPattern) && EqualsHelper.equals (m_fPhase, rhs.m_fPhase);
+  }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeGenerator(this).append(m_aPattern).append(m_fPhase).getHashCode();
-    }
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_aPattern).append (m_fPhase).getHashCode ();
+  }
 
-    @Override
-    public String toString() {
-        return new ToStringGenerator(null).append("Pattern", m_aPattern).append("Phase", m_fPhase).getToString();
-    }
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (null).append ("Pattern", m_aPattern).append ("Phase", m_fPhase).getToString ();
+  }
 }

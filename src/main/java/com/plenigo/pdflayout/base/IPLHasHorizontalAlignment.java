@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,57 +23,61 @@ import org.jspecify.annotations.NonNull;
 /**
  * Base interface for objects with a horizontal alignment
  *
- * @param <IMPLTYPE> Implementation type
- *
  * @author Philip Helger
+ * @param <IMPLTYPE>
+ *        Implementation type
  */
-public interface IPLHasHorizontalAlignment<IMPLTYPE extends IPLHasHorizontalAlignment<IMPLTYPE>> extends
-        IPLRenderableObject<IMPLTYPE> {
-    EHorzAlignment DEFAULT_HORZ_ALIGNMENT = EHorzAlignment.DEFAULT;
+public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAlignment <IMPLTYPE>> extends
+                                           IPLRenderableObject <IMPLTYPE>
+{
+  EHorzAlignment DEFAULT_HORZ_ALIGNMENT = EHorzAlignment.DEFAULT;
 
-    /**
-     * @return The horizontal alignment of this element. By default it is
-     * {@link EHorzAlignment#DEFAULT}. Never <code>null</code>. The
-     * horizontal alignment may only be applied to contained children!
-     */
-    @NonNull
-    EHorzAlignment getHorzAlign();
+  /**
+   * @return The horizontal alignment of this element. By default it is
+   *         {@link EHorzAlignment#DEFAULT}. Never <code>null</code>. The
+   *         horizontal alignment may only be applied to contained children!
+   */
+  @NonNull
+  EHorzAlignment getHorzAlign ();
 
-    /**
-     * Set the horizontal alignment of this element. The horizontal alignment may
-     * only be applied to contained children!
-     *
-     * @param eHorzAlign The new horizontal alignment. May not be <code>null</code>.
-     *
-     * @return this
-     */
-    @NonNull
-    IMPLTYPE setHorzAlign(@NonNull EHorzAlignment eHorzAlign);
+  /**
+   * Set the horizontal alignment of this element. The horizontal alignment may
+   * only be applied to contained children!
+   *
+   * @param eHorzAlign
+   *        The new horizontal alignment. May not be <code>null</code>.
+   * @return this
+   */
+  @NonNull
+  IMPLTYPE setHorzAlign (@NonNull EHorzAlignment eHorzAlign);
 
-    /**
-     * Get the indentation for a certain horizontal alignment. This method uses
-     * the provided element width as the basis for alignment.
-     *
-     * @param fAvailableWidth The available width of the surrounding element. This is usually
-     *                        larger than fElementWidth.
-     * @param fElementWidth   The width of the element to align.
-     *
-     * @return The indentation offset. Always &ge; 0.
-     */
-    @Nonnegative
-    default float getIndentX(final float fAvailableWidth, final float fElementWidth) {
-        switch (getHorzAlign()) {
-            case LEFT:
-                return 0f;
-            case CENTER:
-                return Math.max((fAvailableWidth - fElementWidth) / 2, 0f);
-            case RIGHT:
-                return Math.max(fAvailableWidth - fElementWidth, 0f);
-            case JUSTIFY:
-            case BLOCK:
-                return 0f;
-            default:
-                throw new IllegalStateException("Unsupported horizontal alignment " + getHorzAlign());
-        }
+  /**
+   * Get the indentation for a certain horizontal alignment. This method uses
+   * the provided element width as the basis for alignment.
+   *
+   * @param fAvailableWidth
+   *        The available width of the surrounding element. This is usually
+   *        larger than fElementWidth.
+   * @param fElementWidth
+   *        The width of the element to align.
+   * @return The indentation offset. Always &ge; 0.
+   */
+  @Nonnegative
+  default float getIndentX (final float fAvailableWidth, final float fElementWidth)
+  {
+    switch (getHorzAlign ())
+    {
+      case LEFT:
+        return 0f;
+      case CENTER:
+        return Math.max ((fAvailableWidth - fElementWidth) / 2, 0f);
+      case RIGHT:
+        return Math.max (fAvailableWidth - fElementWidth, 0f);
+      case JUSTIFY:
+      case BLOCK:
+        return 0f;
+      default:
+        throw new IllegalStateException ("Unsupported horizontal alignment " + getHorzAlign ());
     }
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,18 +24,20 @@ import org.jspecify.annotations.NonNull;
  *
  * @author Philip Helger
  */
-public class PLHBox extends AbstractPLHBox<PLHBox> {
-    /**
-     * Default constructor for an empty HBox.
-     */
-    public PLHBox() {
-    }
+public class PLHBox extends AbstractPLHBox <PLHBox>
+{
+  /**
+   * Default constructor for an empty HBox.
+   */
+  public PLHBox ()
+  {}
 
-    @Override
-    @NonNull
-    public PLHBox internalCreateNewVertSplitObject(@NonNull final PLHBox aBase) {
-        final PLHBox ret = new PLHBox();
-        ret.setBasicDataFrom(aBase);
-        return ret;
-    }
+  @Override
+  @NonNull
+  public PLHBox internalCreateNewVertSplitObject (@NonNull final PLHBox aBase)
+  {
+    final PLHBox ret = new PLHBox ();
+    ret.setBasicDataFrom (aBase);
+    return ret;
+  }
 }

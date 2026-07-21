@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,16 +26,17 @@ import java.io.IOException;
  *
  * @author Philip Helger
  */
-public interface IPLVisitable {
-    /**
-     * Visit this object and all descendants
-     *
-     * @param aVisitor The visitor to use. May not be <code>null</code>.
-     *
-     * @return {@link EChange#CHANGED} if something changed internally.
-     *
-     * @throws IOException on PDFBox error
-     */
-    @NonNull
-    EChange visit(@NonNull IPLVisitor aVisitor) throws IOException;
+public interface IPLVisitable
+{
+  /**
+   * Visit this object and all descendants
+   *
+   * @param aVisitor
+   *        The visitor to use. May not be <code>null</code>.
+   * @return {@link EChange#CHANGED} if something changed internally.
+   * @throws IOException
+   *         on PDFBox error
+   */
+  @NonNull
+  EChange visit (@NonNull IPLVisitor aVisitor) throws IOException;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,9 +16,7 @@
  */
 package com.plenigo.pdflayout.supplementary.issues;
 
-import java.io.File;
-import java.io.IOException;
-
+import com.helger.font.open_sans.EFontResourceOpenSans;
 import org.apache.fontbox.ttf.TTFParser;
 import org.apache.fontbox.ttf.TrueTypeFont;
 import org.apache.pdfbox.io.RandomAccessReadBuffer;
@@ -30,7 +28,8 @@ import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.font.open_sans.EFontResourceOpenSans;
+import java.io.File;
+import java.io.IOException;
 
 public final class MainIssue3337
 {

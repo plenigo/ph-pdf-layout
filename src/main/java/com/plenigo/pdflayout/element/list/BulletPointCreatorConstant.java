@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,27 +30,32 @@ import org.jspecify.annotations.NonNull;
  * @author Philip Helger
  * @since 5.1.0
  */
-public class BulletPointCreatorConstant extends AbstractBulletPointCreatorFontBased<BulletPointCreatorConstant> {
-    private final String m_sText;
+public class BulletPointCreatorConstant extends AbstractBulletPointCreatorFontBased <BulletPointCreatorConstant>
+{
+  private final String m_sText;
 
-    public BulletPointCreatorConstant(@NonNull final String sText, @NonNull final FontSpec aFontSpec) {
-        super(aFontSpec);
-        ValueEnforcer.notNull(sText, "Text");
-        m_sText = sText;
-    }
+  public BulletPointCreatorConstant (@NonNull final String sText, @NonNull final FontSpec aFontSpec)
+  {
+    super (aFontSpec);
+    ValueEnforcer.notNull (sText, "Text");
+    m_sText = sText;
+  }
 
-    @NonNull
-    public final String getText() {
-        return m_sText;
-    }
+  @NonNull
+  public final String getText ()
+  {
+    return m_sText;
+  }
 
-    @NonNull
-    public PLText getBulletPointElement(@Nonnegative final int nBulletPointIndex) {
-        return new PLText(m_sText, getFontSpec()).setPadding(getPadding());
-    }
+  @NonNull
+  public PLText getBulletPointElement (@Nonnegative final int nBulletPointIndex)
+  {
+    return new PLText (m_sText, getFontSpec ()).setPadding (getPadding ());
+  }
 
-    @Override
-    public String toString() {
-        return ToStringGenerator.getDerived(super.toString()).append("Text", m_sText).getToString();
-    }
+  @Override
+  public String toString ()
+  {
+    return ToStringGenerator.getDerived (super.toString ()).append ("Text", m_sText).getToString ();
+  }
 }

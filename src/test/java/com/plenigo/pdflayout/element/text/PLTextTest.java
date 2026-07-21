@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,12 +16,23 @@
  */
 package com.plenigo.pdflayout.element.text;
 
-import java.io.File;
-import java.util.Map;
-
 import com.helger.base.CGlobal;
 import com.helger.base.string.StringHelper;
 import com.helger.collection.commons.CommonsArrayList;
+import com.helger.font.alegreya_sans.EFontResourceAlegreyaSans;
+import com.helger.font.anaheim.EFontResourceAnaheim;
+import com.helger.font.api.IHasFontResource;
+import com.helger.font.exo2.EFontResourceExo2;
+import com.helger.font.kurinto.mono.EFontResourceKurintoMono;
+import com.helger.font.kurinto.sans.EFontResourceKurintoSans;
+import com.helger.font.lato2.EFontResourceLato2;
+import com.helger.font.markazi.EFontResourceMarkazi;
+import com.helger.font.noto_sans_hk.EFontResourceNotoSansHK;
+import com.helger.font.noto_sans_sc.EFontResourceNotoSansSC;
+import com.helger.font.noto_sans_tc.EFontResourceNotoSansTC;
+import com.helger.font.open_sans.EFontResourceOpenSans;
+import com.helger.font.roboto.EFontResourceRoboto;
+import com.helger.font.source_sans_pro.EFontResourceSourceSansPro;
 import com.plenigo.pdflayout.PDFCreationException;
 import com.plenigo.pdflayout.PDFTestComparer;
 import com.plenigo.pdflayout.PLDebugTestRule;
@@ -43,20 +54,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
-import com.helger.font.alegreya_sans.EFontResourceAlegreyaSans;
-import com.helger.font.anaheim.EFontResourceAnaheim;
-import com.helger.font.api.IHasFontResource;
-import com.helger.font.exo2.EFontResourceExo2;
-import com.helger.font.kurinto.mono.EFontResourceKurintoMono;
-import com.helger.font.kurinto.sans.EFontResourceKurintoSans;
-import com.helger.font.lato2.EFontResourceLato2;
-import com.helger.font.markazi.EFontResourceMarkazi;
-import com.helger.font.noto_sans_hk.EFontResourceNotoSansHK;
-import com.helger.font.noto_sans_sc.EFontResourceNotoSansSC;
-import com.helger.font.noto_sans_tc.EFontResourceNotoSansTC;
-import com.helger.font.open_sans.EFontResourceOpenSans;
-import com.helger.font.roboto.EFontResourceRoboto;
-import com.helger.font.source_sans_pro.EFontResourceSourceSansPro;
+import java.io.File;
+import java.util.Map;
 
 /**
  * Test class for {@link PLText}
@@ -66,7 +65,7 @@ import com.helger.font.source_sans_pro.EFontResourceSourceSansPro;
 public final class PLTextTest
 {
   @Rule
-  public final TestRule m_aRule = new PLDebugTestRule();
+  public final TestRule m_aRule = new PLDebugTestRule ();
 
   @Test
   public void testBasic () throws PDFCreationException
@@ -111,7 +110,7 @@ public final class PLTextTest
                                                                      .setFillColor (PLColor.PINK));
     aPS1.addElement (new PLText ("Text with different borders,\nmargins and paddings", r10).setHorzAlign (
                                                                                                           EHorzAlignment.CENTER)
-                                                                                           .setBorder (new BorderStyleSpec(PLColor.RED,
+                                                                                           .setBorder (new BorderStyleSpec (PLColor.RED,
                                                                                                                             5),
                                                                                                        new BorderStyleSpec (PLColor.GREEN,
                                                                                                                             5),
@@ -197,7 +196,7 @@ public final class PLTextTest
                                                                                            .setPadding (5)
                                                                                            .setFillColor (PLColor.YELLOW)
                                                                                            .setLineSpacing (fLineSpacing));
-    aPS1.addElement (new PLPageBreak(false));
+    aPS1.addElement (new PLPageBreak (false));
     String sVeryLongText = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
                            "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
                            "Tataa: €";
@@ -401,7 +400,7 @@ public final class PLTextTest
       aPS1.addElement (new PLText ("[Standard] [" + aEntry.getKey () + "]: " + s + "\n",
                                    new FontSpec (aEntry.getValue (), 10)));
     }
-    for (final IHasFontResource aHasFont : new CommonsArrayList<>(EFontResourceAlegreyaSans.ALGREYA_SANS_NORMAL,
+    for (final IHasFontResource aHasFont : new CommonsArrayList <> (EFontResourceAlegreyaSans.ALGREYA_SANS_NORMAL,
                                                                     EFontResourceAlegreyaSans.ALGREYA_SANS_BLACK,
                                                                     EFontResourceAnaheim.ANAHEIM_REGULAR,
                                                                     EFontResourceExo2.EXO2_NORMAL,
@@ -496,7 +495,7 @@ public final class PLTextTest
     }
 
     {
-      aPS1.addElement (new PLSpacerY(20));
+      aPS1.addElement (new PLSpacerY (20));
       final String s2 = "!" +
                         StringHelper.getRepeated ("Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.",
                                                   50);

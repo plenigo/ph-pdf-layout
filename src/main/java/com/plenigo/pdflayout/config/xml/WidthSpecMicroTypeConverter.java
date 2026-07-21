@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,30 +30,33 @@ import org.jspecify.annotations.Nullable;
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class WidthSpecMicroTypeConverter implements IMicroTypeConverter<WidthSpec> {
-    private static final String ATTR_TYPE = "type";
-    private static final String ATTR_VALUE = "value";
+public final class WidthSpecMicroTypeConverter implements IMicroTypeConverter <WidthSpec>
+{
+  private static final String ATTR_TYPE = "type";
+  private static final String ATTR_VALUE = "value";
 
-    @NonNull
-    public IMicroElement convertToMicroElement(@NonNull final WidthSpec aValue,
-                                               @Nullable final String sNamespaceURI,
-                                               @NonNull final String sTagName) {
-        final IMicroElement aElement = new MicroElement(sNamespaceURI, sTagName);
+  @NonNull
+  public IMicroElement convertToMicroElement (@NonNull final WidthSpec aValue,
+                                              @Nullable final String sNamespaceURI,
+                                              @NonNull final String sTagName)
+  {
+    final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
-        aElement.setAttribute(ATTR_TYPE, aValue.getTypeID());
-        if (aValue.isAbsolute())
-            aElement.setAttribute(ATTR_VALUE, aValue.getValue());
-        return aElement;
-    }
+    aElement.setAttribute (ATTR_TYPE, aValue.getTypeID ());
+    if (aValue.isAbsolute ())
+      aElement.setAttribute (ATTR_VALUE, aValue.getValue ());
+    return aElement;
+  }
 
-    @NonNull
-    public WidthSpec convertToNative(@NonNull final IMicroElement aElement) {
-        final String sTypeID = aElement.getAttributeValue(ATTR_TYPE);
-        final EValueUOMType eWidthType = EValueUOMType.getFromIDOrNull(sTypeID);
-        if (eWidthType == null)
-            throw new IllegalStateException("Failed to resolve width type with ID '" + sTypeID + "!");
+  @NonNull
+  public WidthSpec convertToNative (@NonNull final IMicroElement aElement)
+  {
+    final String sTypeID = aElement.getAttributeValue (ATTR_TYPE);
+    final EValueUOMType eWidthType = EValueUOMType.getFromIDOrNull (sTypeID);
+    if (eWidthType == null)
+      throw new IllegalStateException ("Failed to resolve width type with ID '" + sTypeID + "!");
 
-        final float fValue = eWidthType.isValueRequired() ? aElement.getAttributeValueAsFloat(ATTR_VALUE, Float.NaN) : 0;
-        return new WidthSpec(eWidthType, fValue);
-    }
+    final float fValue = eWidthType.isValueRequired () ? aElement.getAttributeValueAsFloat (ATTR_VALUE, Float.NaN) : 0;
+    return new WidthSpec (eWidthType, fValue);
+  }
 }

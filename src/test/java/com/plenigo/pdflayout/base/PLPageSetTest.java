@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2025 Philip Helger (www.helger.com)
+ * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 package com.plenigo.pdflayout.base;
-
-import java.io.File;
 
 import com.helger.base.string.StringHelper;
 import com.plenigo.pdflayout.IPDDocumentCustomizer;
@@ -45,6 +43,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
+import java.io.File;
+
 /**
  * Test class for {@link PLPageSet}
  *
@@ -53,7 +53,7 @@ import org.junit.rules.TestRule;
 public final class PLPageSetTest
 {
   @Rule
-  public final TestRule m_aRule = new PLDebugTestRule();
+  public final TestRule m_aRule = new PLDebugTestRule ();
 
   @Test
   public void testHeader () throws PDFCreationException
@@ -63,7 +63,7 @@ public final class PLPageSetTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (100, 50, 30, 20);
 
-    aPS1.setPageHeader (new PLBox(new PLText(sHeader + sHeader + "last line of header", r10).setBorder (PLColor.RED))
+    aPS1.setPageHeader (new PLBox (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (PLColor.RED))
                                                                                                                        .setBorder (PLColor.GREEN));
     aPS1.addElement (new PLText ("First body line", r10).setBorder (PLColor.BLUE));
     aPS1.addElement (new PLBox (new PLText ("Second body line", r10).setBorder (PLColor.BLUE)).setBorder (
@@ -100,7 +100,7 @@ public final class PLPageSetTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
 
     final PLTable aTable = new PLTable (WidthSpec.star ());
-    aTable.addRow (new PLTableCell(new PLText (sHeader + sHeader + "last line of header", r10).setFillColor (
+    aTable.addRow (new PLTableCell (new PLText (sHeader + sHeader + "last line of header", r10).setFillColor (
                                                                                                               PLColor.PINK)).setHorzAlign (EHorzAlignment.RIGHT));
     aPS1.setPageHeader (aTable);
     aPS1.addElement (new PLText ("First body line", r10).setBorder (PLColor.BLUE));
@@ -347,7 +347,7 @@ public final class PLPageSetTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (5)
                                                          .setPadding (5)
-                                                         .setBorder (new BorderStyleSpec(5))
+                                                         .setBorder (new BorderStyleSpec (5))
                                                          .setFillColor (PLColor.ORANGE);
 
     aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10));
@@ -526,7 +526,7 @@ public final class PLPageSetTest
   public void testCreateWatermark () throws PDFCreationException
   {
     final IPDDocumentCustomizer aWatermarkCustomizer = aDoc -> {
-      final PDFont aFont = new PDType1Font(Standard14Fonts.FontName.COURIER);
+      final PDFont aFont = new PDType1Font (Standard14Fonts.FontName.COURIER);
       final float fFontSize = 100.0f;
       final String sMessage = "Draft Document";
 
